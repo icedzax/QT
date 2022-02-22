@@ -1,26 +1,20 @@
 <template>
-  <div class="container">
+  <div class="container h-auto">
     <div
-      class="grid overflow-hidden grid-cols-2 lg:grid-cols-3 grid-rows-1 gap-2"
+      class="grid overflow-hidden grid-cols-2 lg:grid-cols-3 grid-rows-1 gap-0.5"
     >
       <div class="row-start-1 row-span-1 col-start-1 col-span-2 lg:col-span-5">
-        <div class="grid overflow-hidden grid-cols-5 grid-rows-1 gap-2">
+        <div class="grid overflow-hidden grid-cols-5 grid-rows-1 gap-0.5">
           <div class="row-start-1 row-span-1 col-start-1 col-span-1 h-10">
-            <img
-              src="../img/ZUBBLOGO.jpg"
-              alt=""
-              class="h-8 w-15 lg:h-10 lg:w-36"
-            />
+            <img src="../img/ZUBBLOGO.jpg" alt="" class="w-auto h-auto mt-2" />
           </div>
           <div
-            class="row-start-1 row-span-1 col-start-2 col-span-3 font-bold text-xl sm:text-2xl mt-1 md:ml-20"
+            class="row-start-1 row-span-1 col-start-2 col-span-3 font-bold text-base sm:text-2xl mt-1 md:ml-20 text-center"
           >
             บริษัท เหล็กทรัพย์ จำกัด
           </div>
-          <div
-            class="row-start-1 row-span-2 col-span-1 border-2 border-gray-300 rounded-lg"
-          >
-            <div class="">QR code</div>
+          <div class="row-start-1 row-span-2 col-span-1">
+            <img src="../img/QR.png" alt="" class="w-auto h-auto md:h-20" />
           </div>
           <div
             class="row-start-2 row-span-1 col-start-1 col-span-4 text-xs xl:text-sm"

@@ -4,19 +4,19 @@
     <div
       class="box grid overflow-hidden grid-cols-2 xl:grid-cols-3 grid-rows-2 gap-2 flex flex-wrap mt-1"
     >
-      <div
-        class="row-start-1 row-span-2 col-start-1 col-span-2 h-32 sm:h-28 md:h-24"
-      >
+      <div class="h-auto row-start-1 row-span-2 col-start-1 col-span-2">
         <Header></Header>
       </div>
       <div
-        class="xl:row-start-1 xl:row-span-2 xl:col-start-3 xl:col-span-1 xl:h-24 xl:h-24 invisible xl:visible"
+        class="xl:row-start-1 xl:row-span-2 xl:col-start-3 xl:col-span-1 xl:h-24 invisible xl:visible"
       >
         <Header_r></Header_r>
       </div>
     </div>
 
-    <div class="h-24 flex justify-center xl:hidden -mt-60 md:-mt-36 lg:-mt-28">
+    <div
+      class="boxi h-auto flex justify-center xl:hidden -mt-40 sm:-mt-32 md:-mt-32 lg:-mt-24"
+    >
       <Header_r></Header_r>
     </div>
     <!--  ก้อนผู้เสนอราคาและลูกค้า  -->
@@ -24,12 +24,12 @@
       class="box grid overflow-hidden grid-cols-2 grid-rows-2 gap-2 flex flex-wrap mt-1"
     >
       <div
-        class="h-32 row-start-1 row-span-5 col-start-1 col-span-2 md:col-span-1 md:h-36"
+        class="row-start-1 row-span-5 col-start-1 col-span-2 md:col-span-1 h-auto"
       >
         <Sale></Sale>
       </div>
       <div
-        class="h-32 row-span-5 col-start-1 col-span-2 md:col-start-2 md:col-span-1 md:h-36"
+        class="row-span-5 col-start-1 col-span-2 md:col-start-2 md:col-span-1 h-auto"
       >
         <Customer></Customer>
       </div>
@@ -38,7 +38,7 @@
     <div
       class="box grid overflow-hidden grid-cols-1 grid-rows-1 gap-1 flex flex-wrap mt-1"
     >
-      <div class="h-48 row-start-1 row-span-5 col-start-1 col-span-2">
+      <div class="h-auto row-start-1 row-span-5 col-start-1 col-span-2">
         <Order></Order>
       </div>
     </div>
@@ -87,5 +87,13 @@ export default {
 
   min-h-full
   rounded;
+}
+.boxi {
+  @apply bg-white
+  p-2
+  min-w-full
+  shadow
+  min-h-full
+  rounded-b;
 }
 </style>
