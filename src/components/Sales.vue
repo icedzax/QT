@@ -57,7 +57,7 @@ export default {
       lineID: "@zubbsteel (มีตัว @ ด้วย)",
     };
   },
-  created() {
+  async created() {
     let result = await UserService.index().data;
     console.log(result);
   },
