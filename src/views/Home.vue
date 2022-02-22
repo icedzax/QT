@@ -1,5 +1,5 @@
 <script setup>
-import ButtonRepo from '@/components/ButtonRepo.vue'
+import ButtonRepo from "@/components/ButtonRepo.vue";
 </script>
 
 <template>
@@ -23,7 +23,18 @@ import ButtonRepo from '@/components/ButtonRepo.vue'
           >
         </div>
         <ButtonRepo />
+        <span>From A: {{ auth }}</span>
       </div>
     </div>
   </div>
 </template>
+<script>
+import { auth } from "../state/user";
+export default {
+  data() {
+    return {
+      auth,
+    };
+  },
+};
+</script>
