@@ -25,4 +25,3 @@ setInterval(() => {
     </main>
   </div>
 </template>
-<style></style>
