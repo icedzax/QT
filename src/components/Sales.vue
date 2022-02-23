@@ -45,7 +45,6 @@
   </div>
 </template>
 <script>
-import UserService from "../services/UserService";
 export default {
   data() {
     return {
@@ -56,10 +55,6 @@ export default {
       email: "retail_zubb@zubbsteel.com",
       lineID: "@zubbsteel (มีตัว @ ด้วย)",
     };
-  },
-  async created() {
-    let result = await UserService.index().data;
-    console.log(result);
   },
 };
 </script>
