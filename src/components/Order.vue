@@ -218,11 +218,11 @@
   </div>
 </template>
 <script>
-import { auth } from "../state/user";
+import { fg } from "../state/fg";
 export default {
   data() {
     return {
-      auth,
+      fg,
       select_Order: "",
       rmd_mat: "",
       rmd_size: "",
@@ -246,21 +246,21 @@ export default {
       return this.List;
     },
     ch_data() {
-      return this.auth;
+      return this.fg;
     },
     size() {
-      auth.steel.map((data) => {
+      fg.steel.map((data) => {
         let dat = data.rmd_size + "-" + data.rmd_mat;
         this.manage_STEEL.push(dat);
       });
-      console.log("ALLSTEEL=>", this.manage_STEEL);
+      // console.log("ALLSTEEL=>", this.manage_STEEL);
     },
     rmd_prices() {
       return this.rmd_numunit * this.vat;
     },
   },
   created() {
-    console.log(auth.steel);
+    console.log(fg.steel);
   },
   methods: {
     enter() {
@@ -275,17 +275,18 @@ export default {
         });
 
         this.TestList.push({ mat: this.rmd_mat, size: this.rmd_size });
-        console.log(this.TestList);
+        //console.log(this.TestList);
         if (this.List.length !== 0) {
           this.table_showlist = "Y";
         }
 
         this.rmd_mat = "";
-
+        document.getElementById("typeahead_id").value = "";
         this.rmd_stdweight = "";
         this.rmd_numunit = "";
         this.vat = "";
         this.rmd_price = "";
+        // console.log("kk");
       } else {
         alert("กรอกข้อมูลก่อนบันทึกรายการ :)");
       }
@@ -302,24 +303,20 @@ export default {
       }
     },
     selectItemEventHandler(e) {
-      if (e == undefined) {
-        document.getElementById("typeahead_id").value = "";
-      } else {
-        let arr = e.split("-");
-        let exam_numunit = Math.floor(Math.random() * 10) + 1;
-        let exam_price = Math.floor(Math.random() * 100) + 1;
+      let arr = e.split("-");
+      let exam_numunit = Math.floor(Math.random() * 10) + 1;
+      let exam_price = Math.floor(Math.random() * 100) + 1;
 
-        auth.steel.map((data) => {
-          if (data.rmd_size == arr[0] && data.rmd_mat == arr[1]) {
-            this.rmd_size = arr[0];
-            this.rmd_mat = arr[1];
-            this.rmd_stdweight = data.rmd_stdweight;
-            this.rmd_numunit = exam_numunit;
-            this.vat = exam_price;
-            this.rmd_price = this.rmd_numunit * this.vat;
-          }
-        });
-      }
+      fg.steel.map((data) => {
+        if (data.rmd_size == arr[0] && data.rmd_mat == arr[1]) {
+          this.rmd_size = arr[0];
+          this.rmd_mat = arr[1];
+          this.rmd_stdweight = data.rmd_stdweight;
+          this.rmd_numunit = exam_numunit;
+          this.vat = exam_price;
+          this.rmd_price = this.rmd_numunit * this.vat;
+        }
+      });
 
       //return e;
     },

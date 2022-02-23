@@ -27,19 +27,19 @@ setInterval(() => {
 </template>
 <script>
 import UserService from "./services/UserService";
-import { auth } from "./state/user";
+import { fg } from "./state/fg";
 
 export default {
   data() {
     return {
-      auth,
+      fg,
     };
   },
   async created() {
     //this.State = result.data;
     // if (auth.steel.length === 0) {
     let result = await UserService.index();
-    auth.steel = result.data;
+    fg.steel = result.data;
     // }
 
     //console.log(auth.steel);

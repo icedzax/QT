@@ -4,7 +4,6 @@ import { reactive } from "vue";
 const auth = reactive({
   user: {},
   status: false,
-  steel: {},
 });
 
 export { auth };
