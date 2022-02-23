@@ -41,9 +41,7 @@ export default {
       param: null,
     };
   },
-  created() {
-    localStorage.setItem("id", this.getId);
-  },
+
   computed: {
     lst() {
       return localStorage.getItem("lst");
