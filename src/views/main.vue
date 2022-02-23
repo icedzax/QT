@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <!--  ก้อน Header  -->
     <div
       class="box grid overflow-hidden grid-cols-2 xl:grid-cols-3 grid-rows-2 gap-2 flex flex-wrap mt-1"
     >
@@ -64,6 +63,7 @@
       </div>
     </div>
   </div>
+  <!--  change file name  -->
 </template>
 <script>
 import Header from "../components/header.vue";
