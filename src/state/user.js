@@ -15,6 +15,7 @@ const users = [
 const auth = reactive({
   user: {},
   status: false,
+  steel: {},
 });
 const login = (username, password) => {
   const user = users.find(

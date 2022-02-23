@@ -2,7 +2,7 @@ import Api from "../services/Api";
 
 export default {
   index() {
-    return Api().get("users");
+    return Api().get("/Fg");
   },
   show(userId) {
     return Api().get("user/" + userId);

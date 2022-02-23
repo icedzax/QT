@@ -25,3 +25,26 @@ setInterval(() => {
     </main>
   </div>
 </template>
+<script>
+import UserService from "./services/UserService";
+import { auth } from "./state/user";
+
+export default {
+  data() {
+    return {
+      auth,
+    };
+  },
+  async created() {
+    //this.State = result.data;
+    // if (auth.steel.length === 0) {
+    let result = await UserService.index();
+    auth.steel = result.data;
+    // }
+
+    //console.log(auth.steel);
+
+    // this.setState({ steel: result.data });
+  },
+};
+</script>
