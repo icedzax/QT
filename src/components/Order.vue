@@ -218,11 +218,11 @@
   </div>
 </template>
 <script>
-import { auth } from "../state/user";
+import { fg } from "../state/fg";
 export default {
   data() {
     return {
-      auth,
+      fg,
       select_Order: "",
       rmd_mat: "",
       rmd_size: "",
@@ -246,10 +246,10 @@ export default {
       return this.List;
     },
     ch_data() {
-      return this.auth;
+      return this.fg;
     },
     size() {
-      auth.steel.map((data) => {
+      fg.steel.map((data) => {
         let dat = data.rmd_size + "-" + data.rmd_mat;
         this.manage_STEEL.push(dat);
       });
@@ -260,7 +260,7 @@ export default {
     },
   },
   created() {
-    console.log(auth.steel);
+    console.log(fg.steel);
   },
   methods: {
     enter() {
@@ -307,7 +307,7 @@ export default {
       let exam_numunit = Math.floor(Math.random() * 10) + 1;
       let exam_price = Math.floor(Math.random() * 100) + 1;
 
-      auth.steel.map((data) => {
+      fg.steel.map((data) => {
         if (data.rmd_size == arr[0] && data.rmd_mat == arr[1]) {
           this.rmd_size = arr[0];
           this.rmd_mat = arr[1];

@@ -1,5 +1,5 @@
 import { reactive } from "vue";
 
-const fg = reactive([]);
+const fg = reactive({ steel: {} });
 
 export { fg };
