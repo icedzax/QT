@@ -1,42 +1,9 @@
 import { reactive } from "vue";
+//เอา localstorage Key : id ไปยิง API เพื่อ login
 
-const users = [
-  {
-    username: "user1",
-    password: "abc",
-    fullname: "MrChoke",
-  },
-  {
-    username: "user2",
-    password: "abc",
-    fullname: "Guest",
-  },
-];
 const auth = reactive({
-  user: {},
-  status: false,
+  user: {}, //ถ้า login สำเร็จให้เป็นให้เอา data ของ user ที่ได้จาก api มาใส่
+  status: false, //ถ้า login สำเร็จให้เป็น true
 });
-const login = (username, password) => {
-  const user = users.find(
-    (u) => u.username === username && u.password === password
-  );
-  if (user) {
-    auth.user = user;
-    auth.status = true;
-    // SystemNoti.setdata({ type: "success", msg: `Welcome ${user.fullname}` });
-  } else {
-    // SystemNoti.setdata({
-    //   type: "error",
-    //   msg: `User ${username} not found or Password incorrect`,
-    // });
-    return false;
-  }
-  return true;
-};
-const logout = () => {
-  const olduser = Object.assign({}, auth.user);
-  SystemNoti.setdata({ type: "success", msg: `See ya ${olduser.fullname}` });
-  auth.user = {};
-  auth.status = false;
-};
-export { login, logout, auth };
+
+export { auth };
