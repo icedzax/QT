@@ -1,12 +1,18 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "../src/views/Home.vue";
 import Main from "../src/views/Main.vue";
+import Set from "../src/components/Set.vue";
 import { auth } from "./state/user";
 const routes = [
   {
     path: "/",
     name: "Home",
     component: Home,
+  },
+  {
+    path: "/set/:id",
+    name: "Set",
+    component: Set,
   },
   {
     path: "/main",
@@ -28,7 +34,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(""),
+  history: createWebHistory(),
   routes,
 });
 

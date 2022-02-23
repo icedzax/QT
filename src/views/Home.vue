@@ -23,8 +23,12 @@ import ButtonRepo from "@/components/ButtonRepo.vue";
           >
         </div>
         <ButtonRepo />
-        <span>From A: {{ auth }}</span>
       </div>
+      <div>
+        <input type="text" v-model="param" />
+        <button class="px-2" @click="setLst">Save</button>
+      </div>
+      <div class="text-green-600 bg-green-100">{{ getId }}</div>
     </div>
   </div>
 </template>
@@ -34,7 +38,24 @@ export default {
   data() {
     return {
       auth,
+      param: null,
     };
+  },
+  created() {
+    localStorage.setItem("id", this.getId);
+  },
+  computed: {
+    lst() {
+      return localStorage.getItem("lst");
+    },
+    getId() {
+      return this.$route.params.id;
+    },
+  },
+  methods: {
+    setLst() {
+      localStorage.setItem("lst", this.param);
+    },
   },
 };
 </script>
