@@ -219,6 +219,8 @@
 </template>
 <script>
 import { fg } from "../state/fg";
+import { auth } from "../state/user";
+
 export default {
   data() {
     return {
@@ -260,7 +262,7 @@ export default {
     },
   },
   created() {
-    console.log(fg.steel);
+    console.log(auth);
   },
   methods: {
     enter() {
