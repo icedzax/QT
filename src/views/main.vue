@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div
-      class="box grid overflow-hidden grid-cols-2 xl:grid-cols-3 grid-rows-2 gap-2 flex flex-wrap mt-1"
+      class="box grid overflow-hidden grid-cols-2 xl:grid-cols-3 grid-rows-2 gap-2 flex-wrap mt-1"
     >
       <div class="h-auto row-start-1 row-span-2 col-start-1 col-span-2">
         <Header></Header>
@@ -20,7 +20,7 @@
     </div>
     <!--  ก้อนผู้เสนอราคาและลูกค้า  -->
     <div
-      class="box grid overflow-hidden grid-cols-2 grid-rows-2 gap-2 flex flex-wrap mt-1"
+      class="box grid overflow-hidden grid-cols-2 grid-rows-2 gap-2 flex-wrap mt-1"
     >
       <div
         class="row-start-1 row-span-5 col-start-1 col-span-2 md:col-span-1 h-auto"
@@ -35,7 +35,7 @@
     </div>
     <!--  ก้อนรายการสินค้า  -->
     <div
-      class="box grid overflow-hidden grid-cols-1 grid-rows-1 gap-1 flex flex-wrap mt-1"
+      class="box grid overflow-hidden grid-cols-1 grid-rows-1 gap-1 flex-wrap mt-1"
     >
       <div class="h-auto row-start-1 row-span-5 col-start-1 col-span-2">
         <Order></Order>
@@ -43,7 +43,7 @@
     </div>
     <!--  ก้อนเงื่อนไขและสรุปรายการ  -->
     <div
-      class="box grid overflow-hidden grid-cols-2 xl:grid-cols-3 grid-rows-2 gap-2 flex flex-wrap mt-1"
+      class="box grid overflow-hidden grid-cols-2 xl:grid-cols-3 grid-rows-2 gap-2 flex-wrap mt-1"
     >
       <div
         class="row-start-1 row-span-5 col-start-1 col-span-2 xl:col-span-2 h-auto"
@@ -56,7 +56,7 @@
     </div>
     <!--  ก้อนลายเซนต์  -->
     <div
-      class="box grid overflow-hidden grid-cols-1 grid-rows-1 gap-1 flex flex-wrap mt-1 mb-1"
+      class="box grid overflow-hidden grid-cols-1 grid-rows-1 gap-1 flex-wrap mt-1 mb-1"
     >
       <div class="row-start-1 row-span-5 col-start-1 col-span-2 h-auto">
         <License></License>

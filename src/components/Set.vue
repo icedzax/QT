@@ -8,7 +8,7 @@ export default {
   data() {
     return {};
   },
-  created() {
+  mounted() {
     localStorage.setItem("id", this.getId);
   },
   computed: {
