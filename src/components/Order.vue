@@ -61,7 +61,7 @@
             <input
               type="text"
               :value="items.mat"
-              class="w-5/6 rounded-xl text-xs p-1 text-center"
+              class="w-5/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
               disabled
             />
           </td>
@@ -69,7 +69,7 @@
             <input
               type="text"
               :value="items.size"
-              class="w-5/6 rounded-xl text-xs p-1 text-center"
+              class="w-5/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
               disabled
             />
           </td>
@@ -77,7 +77,7 @@
             <input
               type="text"
               :value="items.stdweight"
-              class="w-5/6 rounded-xl text-xs p-1 text-center"
+              class="w-5/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
               disabled
             />
           </td>
@@ -85,7 +85,7 @@
             <input
               type="text"
               :value="items.numunit"
-              class="w-5/6 rounded-xl text-xs p-1 text-center"
+              class="w-5/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
               disabled
             />
           </td>
@@ -93,7 +93,7 @@
             <input
               type="text"
               :value="items.vatt"
-              class="w-3/6 rounded-xl text-xs p-1 text-center"
+              class="w-3/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
               disabled
             />
           </td>
@@ -101,7 +101,7 @@
             <input
               type="text"
               :value="items.price"
-              class="w-3/6 rounded-xl text-xs p-1 text-center"
+              class="w-3/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
               disabled
             />
           </td>
@@ -193,6 +193,17 @@
           </td>
         </tr>
       </tbody>
+      <tbody class="text-center" v-if="this.table_showlist !== 'N'">
+        <td colspan="5"></td>
+        <td>
+          <button
+            @click="save"
+            class="text-center rounded-full p-1 px-2 text-sm border-2 border-green-400 text-black hover:text-green-500 font-semibold shadow-lg"
+          >
+            บันทึก 💾
+          </button>
+        </td>
+      </tbody>
     </table>
     <div>{{ size }}</div>
     <!-- <table>
@@ -219,12 +230,13 @@
 </template>
 <script>
 import { fg } from "../state/fg";
-import { auth } from "../state/user";
+import { order } from "../state/order";
 
 export default {
   data() {
     return {
       fg,
+      order,
       select_Order: "",
       rmd_mat: "",
       rmd_size: "",
@@ -258,12 +270,11 @@ export default {
       // console.log("ALLSTEEL=>", this.manage_STEEL);
     },
     rmd_prices() {
+      this.rmd_price = this.rmd_numunit * this.vat;
       return this.rmd_numunit * this.vat;
     },
   },
-  created() {
-    console.log(auth);
-  },
+  created() {},
   methods: {
     enter() {
       if (this.rmd_mat !== "") {
@@ -276,8 +287,8 @@ export default {
           price: this.rmd_price,
         });
 
-        this.TestList.push({ mat: this.rmd_mat, size: this.rmd_size });
-        //console.log(this.TestList);
+        //this.TestList.push({ mat: this.rmd_mat, size: this.rmd_size });
+        console.log(this.List);
         if (this.List.length !== 0) {
           this.table_showlist = "Y";
         }
@@ -304,6 +315,18 @@ export default {
         this.List = [];
       }
     },
+    save() {
+      if (
+        confirm(
+          "ต้องการบันทึกรายการทั้งหมด " +
+            this.List.length +
+            " รายการใช่หรือไม่?"
+        )
+      ) {
+        alert("บันทึกรายการแล้ว");
+        order.list = this.List;
+      }
+    },
     selectItemEventHandler(e) {
       let arr = e.split("-");
       let exam_numunit = Math.floor(Math.random() * 10) + 1;
@@ -316,7 +339,6 @@ export default {
           this.rmd_stdweight = data.rmd_stdweight;
           this.rmd_numunit = exam_numunit;
           this.vat = exam_price;
-          this.rmd_price = this.rmd_numunit * this.vat;
         }
       });
 
