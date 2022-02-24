@@ -84,22 +84,23 @@
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <input
               type="text"
-              :value="items.numunit"
+              v-model="items.numunit"
+              @keyup="edit(items.mat, items.size, items.numunit, items.vatt)"
               class="w-5/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
             />
           </td>
           <td class="py-1 w-2/12 text-center text-xs md:text-sm">
             <input
               type="text"
-              :value="items.vatt"
+              v-model="items.vatt"
+              @keyup="edit(items.mat, items.size, items.numunit, items.vatt)"
               class="w-3/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
-              disabled
             />
           </td>
           <td class="py-1 w-2/12 text-center text-xs md:text-sm">
             <input
               type="text"
-              :value="items.price"
+              v-model="items.price"
               class="w-3/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
               disabled
             />
@@ -291,6 +292,7 @@ export default {
       return this.rmd_numunit * this.vat;
     },
   },
+  watch: {},
   created() {},
   methods: {
     enter() {
@@ -344,6 +346,7 @@ export default {
       ) {
         alert("บันทึกรายการแล้ว");
         order.list = this.List;
+        console.log(order.list);
       }
     },
     selectItemEventHandler(e) {
@@ -371,6 +374,13 @@ export default {
       });
 
       //return e;
+    },
+    edit(mat, size, unit, vat) {
+      this.List.filter((data) => {
+        if (data.mat == mat && data.size == size) {
+          data.price = unit * vat;
+        }
+      });
     },
   },
 };
