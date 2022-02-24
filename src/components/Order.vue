@@ -61,7 +61,7 @@
             <input
               type="text"
               :value="items.mat"
-              class="w-5/6 rounded-xl text-xs p-1 text-center"
+              class="w-5/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
               disabled
             />
           </td>
@@ -69,7 +69,7 @@
             <input
               type="text"
               :value="items.size"
-              class="w-5/6 rounded-xl text-xs p-1 text-center"
+              class="w-5/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
               disabled
             />
           </td>
@@ -77,7 +77,7 @@
             <input
               type="text"
               :value="items.stdweight"
-              class="w-5/6 rounded-xl text-xs p-1 text-center"
+              class="w-5/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
               disabled
             />
           </td>
@@ -85,15 +85,14 @@
             <input
               type="text"
               :value="items.numunit"
-              class="w-5/6 rounded-xl text-xs p-1 text-center"
-              disabled
+              class="w-5/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
             />
           </td>
           <td class="py-1 w-2/12 text-center text-xs md:text-sm">
             <input
               type="text"
               :value="items.vatt"
-              class="w-3/6 rounded-xl text-xs p-1 text-center"
+              class="w-3/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
               disabled
             />
           </td>
@@ -101,7 +100,7 @@
             <input
               type="text"
               :value="items.price"
-              class="w-3/6 rounded-xl text-xs p-1 text-center"
+              class="w-3/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
               disabled
             />
           </td>
@@ -182,6 +181,7 @@
               viewBox="0 0 48 48"
               enable-background="new 0 0 48 48"
               class="w-5 h-5"
+              v-if="this.chkrepeat == 'N' || this.List.length == 0"
               @click="enter"
             >
               <circle fill="#4CAF50" cx="24" cy="24" r="21" />
@@ -190,8 +190,33 @@
                 <rect x="14" y="21" width="20" height="6" />
               </g>
             </svg>
+            <svg
+              version="1"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              enable-background="new 0 0 48 48"
+              class="w-5 h-5 cursor-default"
+              v-else-if="this.chkrepeat == 'Y'"
+            >
+              <circle fill="#808080" cx="24" cy="24" r="21" />
+              <g fill="#fff">
+                <rect x="21" y="14" width="6" height="20" />
+                <rect x="14" y="21" width="20" height="6" />
+              </g>
+            </svg>
           </td>
         </tr>
+      </tbody>
+      <tbody class="text-center" v-if="this.table_showlist !== 'N'">
+        <td colspan="5"></td>
+        <td>
+          <button
+            @click="save"
+            class="text-center rounded-full p-1 px-2 text-sm border-2 border-green-400 text-black hover:text-green-500 font-semibold shadow-lg"
+          >
+            บันทึก 💾
+          </button>
+        </td>
       </tbody>
     </table>
     <div>{{ size }}</div>
@@ -219,10 +244,13 @@
 </template>
 <script>
 import { fg } from "../state/fg";
+import { order } from "../state/order";
+
 export default {
   data() {
     return {
       fg,
+      order,
       select_Order: "",
       rmd_mat: "",
       rmd_size: "",
@@ -234,11 +262,14 @@ export default {
       List: [],
       TestList: [],
       table_showlist: "N",
+      chkrepeat: "N",
       TestSteel: [
         { steel: "เหล็กไอบีม", type: "A" },
         { steel: "เหล็กฉาก", type: "C" },
         { steel: "เหล็กแบนรีด", type: "D" },
       ],
+      chk_mat: [],
+      chk_size: [],
     };
   },
   computed: {
@@ -256,15 +287,16 @@ export default {
       // console.log("ALLSTEEL=>", this.manage_STEEL);
     },
     rmd_prices() {
+      this.rmd_price = this.rmd_numunit * this.vat;
       return this.rmd_numunit * this.vat;
     },
   },
-  created() {
-    console.log(fg.steel);
-  },
+  created() {},
   methods: {
     enter() {
       if (this.rmd_mat !== "") {
+        this.chk_mat.push(this.rmd_mat);
+        this.chk_size.push(this.rmd_size);
         this.List.push({
           mat: this.rmd_mat,
           size: this.rmd_size,
@@ -274,8 +306,8 @@ export default {
           price: this.rmd_price,
         });
 
-        this.TestList.push({ mat: this.rmd_mat, size: this.rmd_size });
-        //console.log(this.TestList);
+        //this.TestList.push({ mat: this.rmd_mat, size: this.rmd_size });
+        console.log(this.List);
         if (this.List.length !== 0) {
           this.table_showlist = "Y";
         }
@@ -302,8 +334,29 @@ export default {
         this.List = [];
       }
     },
+    save() {
+      if (
+        confirm(
+          "ต้องการบันทึกรายการทั้งหมด " +
+            this.List.length +
+            " รายการใช่หรือไม่?"
+        )
+      ) {
+        alert("บันทึกรายการแล้ว");
+        order.list = this.List;
+      }
+    },
     selectItemEventHandler(e) {
       let arr = e.split("-");
+      if (this.List.length !== 0) {
+        if (this.chk_mat.includes(arr[1]) && this.chk_size.includes(arr[0])) {
+          this.chkrepeat = "Y";
+          alert("มีอยู่ในรายการแล้ว");
+        } else {
+          this.chkrepeat = "N";
+        }
+      }
+
       let exam_numunit = Math.floor(Math.random() * 10) + 1;
       let exam_price = Math.floor(Math.random() * 100) + 1;
 
@@ -314,7 +367,6 @@ export default {
           this.rmd_stdweight = data.rmd_stdweight;
           this.rmd_numunit = exam_numunit;
           this.vat = exam_price;
-          this.rmd_price = this.rmd_numunit * this.vat;
         }
       });
 
