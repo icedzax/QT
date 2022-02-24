@@ -86,7 +86,6 @@
               type="text"
               :value="items.numunit"
               class="w-5/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
-              disabled
             />
           </td>
           <td class="py-1 w-2/12 text-center text-xs md:text-sm">
@@ -182,9 +181,24 @@
               viewBox="0 0 48 48"
               enable-background="new 0 0 48 48"
               class="w-5 h-5"
+              v-if="this.chkrepeat == 'N' || this.List.length == 0"
               @click="enter"
             >
               <circle fill="#4CAF50" cx="24" cy="24" r="21" />
+              <g fill="#fff">
+                <rect x="21" y="14" width="6" height="20" />
+                <rect x="14" y="21" width="20" height="6" />
+              </g>
+            </svg>
+            <svg
+              version="1"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              enable-background="new 0 0 48 48"
+              class="w-5 h-5 cursor-default"
+              v-else-if="this.chkrepeat == 'Y'"
+            >
+              <circle fill="#808080" cx="24" cy="24" r="21" />
               <g fill="#fff">
                 <rect x="21" y="14" width="6" height="20" />
                 <rect x="14" y="21" width="20" height="6" />
@@ -248,11 +262,14 @@ export default {
       List: [],
       TestList: [],
       table_showlist: "N",
+      chkrepeat: "N",
       TestSteel: [
         { steel: "เหล็กไอบีม", type: "A" },
         { steel: "เหล็กฉาก", type: "C" },
         { steel: "เหล็กแบนรีด", type: "D" },
       ],
+      chk_mat: [],
+      chk_size: [],
     };
   },
   computed: {
@@ -278,6 +295,8 @@ export default {
   methods: {
     enter() {
       if (this.rmd_mat !== "") {
+        this.chk_mat.push(this.rmd_mat);
+        this.chk_size.push(this.rmd_size);
         this.List.push({
           mat: this.rmd_mat,
           size: this.rmd_size,
@@ -329,6 +348,15 @@ export default {
     },
     selectItemEventHandler(e) {
       let arr = e.split("-");
+      if (this.List.length !== 0) {
+        if (this.chk_mat.includes(arr[1]) && this.chk_size.includes(arr[0])) {
+          this.chkrepeat = "Y";
+          alert("มีอยู่ในรายการแล้ว");
+        } else {
+          this.chkrepeat = "N";
+        }
+      }
+
       let exam_numunit = Math.floor(Math.random() * 10) + 1;
       let exam_price = Math.floor(Math.random() * 100) + 1;
 
