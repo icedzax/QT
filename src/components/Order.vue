@@ -66,25 +66,25 @@
           <td class="py-1 w-2/12 text-center">
             <input
               type="text"
-              :value="items.mat"
+              v-model="items.mat"
               class="w-5/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
-              disabled
+              :disabled="this.chk_app == 'Y'"
             />
           </td>
           <td class="py-1 w-4/12 text-center">
             <input
               type="text"
-              :value="items.size"
+              v-model="items.size"
               class="w-5/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
-              disabled
+              :disabled="this.chk_app == 'Y'"
             />
           </td>
           <td class="py-1 w-1/12 text-center">
             <input
               type="text"
-              :value="items.stdweight"
+              v-model="items.stdweight"
               class="w-5/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
-              disabled
+              :disabled="this.chk_app == 'Y'"
             />
           </td>
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
@@ -143,7 +143,6 @@
               type="text"
               v-model="rmd_mat"
               class="w-5/6 rounded-xl text-xs p-1 text-center"
-              disabled
             />
           </td>
           <td class="py-1 w-4/12 text-center">
@@ -161,7 +160,6 @@
               type="text"
               v-model="rmd_stdweight"
               class="w-5/6 rounded-xl text-xs p-1 text-center"
-              disabled
             />
           </td>
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
@@ -316,8 +314,23 @@ export default {
   methods: {
     enter() {
       if (this.rmd_mat !== "") {
+        let search_size;
+        const input_size = document.getElementById("typeahead_id").value;
+        if (input_size.indexOf("-") !== -1) {
+          let arr = input_size.split("-");
+          search_size = arr[0];
+        } else {
+          search_size = input_size;
+        }
+
+        fg.steel.map((data) => {
+          if (data.rmd_size !== search_size) {
+            this.rmd_size = search_size;
+          }
+        });
         this.chk_mat.push(this.rmd_mat);
         this.chk_size.push(this.rmd_size);
+
         this.List.push({
           mat: this.rmd_mat,
           size: this.rmd_size,
@@ -328,7 +341,7 @@ export default {
         });
 
         //this.TestList.push({ mat: this.rmd_mat, size: this.rmd_size });
-        //console.log(this.List);
+        console.log(this.List);
         if (this.List.length !== 0) {
           this.table_showlist = "Y";
         }
@@ -369,6 +382,9 @@ export default {
         // console.log(order.list);
       }
     },
+    testkey(e) {
+      console.log(e);
+    },
     selectItemEventHandler(e) {
       let arr = e.split("-");
       if (this.List.length !== 0) {
@@ -392,7 +408,7 @@ export default {
           this.vat = exam_price;
         }
       });
-
+      console.log(e);
       //return e;
     },
     edit(mat, size, unit, vat) {
