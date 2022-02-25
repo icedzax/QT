@@ -27,7 +27,7 @@
       </div>
       <div class="text-right">
         น้ำหนักรวม +/- :
-        {{ this.sumweight }} Kg.
+        {{ sumweight }} Kg.
       </div>
 
       <div class="row-start-2 col-span-2">1.เงินสด/โอนเงินก่อนรับสินค้า</div>
@@ -42,11 +42,20 @@
   </div>
 </template>
 <script>
+//import { order } from "../state/order";
 export default {
+  props: ["sw"],
   data() {
     return {
-      sumweight: "500",
+      fixsw: "",
     };
+  },
+  create() {},
+  computed: {
+    sumweight() {
+      const newsw = this.sw.toFixed(2);
+      return newsw;
+    },
   },
 };
 </script>
