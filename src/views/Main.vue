@@ -48,10 +48,10 @@
       <div
         class="row-start-1 row-span-5 col-start-1 col-span-2 xl:col-span-2 h-auto"
       >
-        <Rule :sw="this.sumweight"></Rule>
+        <Rule :sw="sumw"></Rule>
       </div>
       <div class="row-span-5 col-start-1 col-span-2 xl:col-start-3 h-auto">
-        <Total :sp="this.sumprice"></Total>
+        <Total :sp="sump"></Total>
       </div>
     </div>
     <!--  ก้อนลายเซนต์  -->
@@ -99,16 +99,31 @@ export default {
   created() {},
   computed: {
     oo() {
+      return order.list;
+    },
+    sumw() {
+      this.sumweight = 0;
       const num_orderlist = Object.entries(order.list);
 
       if (num_orderlist.length !== 0) {
         order.list.map((data) => {
-          this.sumweight =
-            parseFloat(this.sumweight) + parseFloat(data.stdweight);
-          this.sumprice = parseFloat(this.sumprice) + parseFloat(data.price);
+          this.sumweight = this.sumweight + parseFloat(data.stdweight);
+          console.log(data.stdweight);
         });
       }
-      return order.list;
+      return this.sumweight;
+    },
+    sump() {
+      this.sumprice = 0;
+      const num_orderlist = Object.entries(order.list);
+
+      if (num_orderlist.length !== 0) {
+        order.list.map((data) => {
+          this.sumprice = this.sumprice + parseFloat(data.price);
+          console.log(data.stdweight);
+        });
+      }
+      return this.sumprice;
     },
   },
 };
