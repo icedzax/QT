@@ -328,7 +328,7 @@ export default {
         });
 
         //this.TestList.push({ mat: this.rmd_mat, size: this.rmd_size });
-        console.log(this.List);
+        //console.log(this.List);
         if (this.List.length !== 0) {
           this.table_showlist = "Y";
         }
@@ -366,7 +366,7 @@ export default {
         alert("บันทึกรายการแล้ว");
         order.list = this.List;
         this.chk_sav = this.List.length;
-        console.log(order.list);
+        // console.log(order.list);
       }
     },
     selectItemEventHandler(e) {

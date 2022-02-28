@@ -8,55 +8,46 @@
       >
         รวมมูลค่าสินค้า
       </div>
-      <div class="row-start-1 col-start-3 xl:col-start-2">{{ this.All1 }}</div>
+      <div class="row-start-1 col-start-3 xl:col-start-2">{{ sumprice }}</div>
       <div
         class="row-start-2 col-start-2 xl:col-start-1 col-span-1 font-semibold"
       >
         ค่าขนส่ง
       </div>
-      <div class="row-start-2 col-start-3 xl:col-start-2">
-        {{ this.transport }}
-      </div>
+      <div class="row-start-2 col-start-3 xl:col-start-2">10</div>
       <div
         class="row-start-3 col-start-2 xl:col-start-1 col-span-1 font-semibold"
       >
         มูลค่าทั้งสิ้น
       </div>
-      <div class="row-start-3 col-start-3 xl:col-start-2">{{ this.All2 }}</div>
+      <div class="row-start-3 col-start-3 xl:col-start-2">10</div>
       <div
         class="row-start-4 col-start-2 xl:col-start-1 col-span-1 font-semibold"
       >
         ภาษีมูลค่าเพิ่ม
       </div>
-      <div class="row-start-4 col-start-3 xl:col-start-2">{{ this.VAT }}</div>
+      <div class="row-start-4 col-start-3 xl:col-start-2">10</div>
       <div
         class="row-start-5 col-start-2 xl:col-start-1 col-span-1 font-semibold"
       >
         รวมสุทธิ
       </div>
       <div class="row-start-5 col-start-3 xl:col-start-2">
-        {{ this.sumtotal }}
+        {{ 10 }}
       </div>
     </div>
   </div>
 </template>
 <script>
 export default {
+  props: ["sp"],
   data() {
-    return {
-      All1: "10742.00",
-      transport: "0.00",
-      All2: "10742.00",
-      VAT: "751.94",
-      Total: "",
-    };
+    return {};
   },
-  created() {
-    this.sumtotal();
-  },
-  methods: {
-    sumtotal() {
-      this.sumtotal = parseFloat(this.All2) + parseFloat(this.VAT);
+  created() {},
+  computed: {
+    sumprice() {
+      return this.sp;
     },
   },
 };
