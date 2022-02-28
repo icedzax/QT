@@ -38,7 +38,7 @@
       class="box grid overflow-hidden grid-cols-1 grid-rows-1 gap-1 flex-wrap mt-1"
     >
       <div class="h-auto row-start-1 row-span-5 col-start-1 col-span-2 pb-36">
-        <Order></Order>
+        <Ordervue></Ordervue>
       </div>
     </div>
     <!--  ก้อนเงื่อนไขและสรุปรายการ  -->
@@ -48,10 +48,10 @@
       <div
         class="row-start-1 row-span-5 col-start-1 col-span-2 xl:col-span-2 h-auto"
       >
-        <Rule></Rule>
+        <Rule :sw="sumw"></Rule>
       </div>
       <div class="row-span-5 col-start-1 col-span-2 xl:col-start-3 h-auto">
-        <Total></Total>
+        <Total :sp="sump"></Total>
       </div>
     </div>
     <!--  ก้อนลายเซนต์  -->
@@ -62,6 +62,8 @@
         <License></License>
       </div>
     </div>
+
+    <!-- <div>{{ oo }}</div> -->
   </div>
   <!--  change file name  -->
 </template>
@@ -70,12 +72,60 @@ import Header from "../components/header.vue";
 import Header_r from "../components/header_right.vue";
 import Sale from "../components/Sales.vue";
 import Customer from "../components/Customer.vue";
-import Order from "../components/Order.vue";
+import Ordervue from "../components/Order.vue";
 import Rule from "../components/Rule.vue";
 import Total from "../components/Total.vue";
 import License from "../components/License.vue";
+
+import { order } from "../state/order";
 export default {
-  components: { Header, Sale, Customer, Order, Rule, Total, License, Header_r },
+  data() {
+    return {
+      order,
+      sumweight: 0,
+      sumprice: 0,
+    };
+  },
+  components: {
+    Header,
+    Sale,
+    Customer,
+    Ordervue,
+    Rule,
+    Total,
+    License,
+    Header_r,
+  },
+  created() {},
+  computed: {
+    oo() {
+      return order.list;
+    },
+    sumw() {
+      this.sumweight = 0;
+      const num_orderlist = Object.entries(order.list);
+
+      if (num_orderlist.length !== 0) {
+        order.list.map((data) => {
+          this.sumweight = this.sumweight + parseFloat(data.stdweight);
+          console.log(data.stdweight);
+        });
+      }
+      return this.sumweight;
+    },
+    sump() {
+      this.sumprice = 0;
+      const num_orderlist = Object.entries(order.list);
+
+      if (num_orderlist.length !== 0) {
+        order.list.map((data) => {
+          this.sumprice = this.sumprice + parseFloat(data.price);
+          console.log(data.stdweight);
+        });
+      }
+      return this.sumprice;
+    },
+  },
 };
 </script>
 <style>

@@ -48,7 +48,7 @@
 export default {
   data() {
     return {
-      bid_name: "คุณจันทรา",
+      bid_name: "คุณมานะ",
       tel: "024206999",
       phone: "",
       fax: "024206313",

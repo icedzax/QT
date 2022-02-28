@@ -66,25 +66,25 @@
           <td class="py-1 w-2/12 text-center">
             <input
               type="text"
-              :value="items.mat"
+              v-model="items.mat"
               class="w-5/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
-              disabled
+              :disabled="this.chk_app == 'Y'"
             />
           </td>
           <td class="py-1 w-4/12 text-center">
             <input
               type="text"
-              :value="items.size"
+              v-model="items.size"
               class="w-5/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
-              disabled
+              :disabled="this.chk_app == 'Y'"
             />
           </td>
           <td class="py-1 w-1/12 text-center">
             <input
               type="text"
-              :value="items.stdweight"
+              v-model="items.stdweight"
               class="w-5/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
-              disabled
+              :disabled="this.chk_app == 'Y'"
             />
           </td>
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
@@ -121,7 +121,7 @@
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 512 512"
                 fill="red"
-                @click="deletes(index)"
+                @click="deletes(index, items.stdweight, items.price)"
                 class="w-5 h-5"
               >
                 <title>Remove</title>
@@ -143,7 +143,6 @@
               type="text"
               v-model="rmd_mat"
               class="w-5/6 rounded-xl text-xs p-1 text-center"
-              disabled
             />
           </td>
           <td class="py-1 w-4/12 text-center">
@@ -161,7 +160,6 @@
               type="text"
               v-model="rmd_stdweight"
               class="w-5/6 rounded-xl text-xs p-1 text-center"
-              disabled
             />
           </td>
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
@@ -316,8 +314,23 @@ export default {
   methods: {
     enter() {
       if (this.rmd_mat !== "") {
+        let search_size;
+        const input_size = document.getElementById("typeahead_id").value;
+        if (input_size.indexOf("-") !== -1) {
+          let arr = input_size.split("-");
+          search_size = arr[0];
+        } else {
+          search_size = input_size;
+        }
+
+        fg.steel.map((data) => {
+          if (data.rmd_size !== search_size) {
+            this.rmd_size = search_size;
+          }
+        });
         this.chk_mat.push(this.rmd_mat);
         this.chk_size.push(this.rmd_size);
+
         this.List.push({
           mat: this.rmd_mat,
           size: this.rmd_size,
@@ -344,11 +357,16 @@ export default {
         alert("กรอกข้อมูลก่อนบันทึกรายการ :)");
       }
     },
-    deletes(no) {
+    deletes(no, w, p) {
+      let np = 0;
       let num = parseInt(no) + 1;
       if (confirm("นำรายการที่ " + num + " ออกใช่หรือไม่?")) {
         this.List.splice(no, 1);
       }
+      // this.List.map((data) => {
+      //   np = np + data.price;
+      // });
+      order.list = this.List;
     },
     deleteAll() {
       if (confirm("Clear ข้อมูลทั้งหมดใช่หรือไม่?")) {
@@ -366,8 +384,11 @@ export default {
         alert("บันทึกรายการแล้ว");
         order.list = this.List;
         this.chk_sav = this.List.length;
-        console.log(order.list);
+        // console.log(order.list);
       }
+    },
+    testkey(e) {
+      console.log(e);
     },
     selectItemEventHandler(e) {
       let arr = e.split("-");
@@ -392,7 +413,7 @@ export default {
           this.vat = exam_price;
         }
       });
-
+      console.log(e);
       //return e;
     },
     edit(mat, size, unit, vat) {
@@ -426,7 +447,10 @@ export default {
   border-radius: 13px;
   padding-top: 2px;
   padding-bottom: 2px;
-  word-wrap: break-word;
+}
+div.simple-typeahead-list {
+  height: 130px;
+  font-size: 12px;
 }
 .cls-1 {
   fill: #2e79bd;
