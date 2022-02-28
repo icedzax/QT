@@ -1,7 +1,7 @@
 import Api from "../services/Api";
 
 export default {
-  index() {
+  fgList() {
     return Api().get("/Fg");
   },
   show(userId) {

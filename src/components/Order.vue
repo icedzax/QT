@@ -34,10 +34,7 @@
             จำนวนเงิน
           </th>
           <th class="border-b border-slate-300 w-1/12">
-            <button
-              class="text-center"
-              v-if="this.chk_app == 'N' && this.List.length !== 0"
-            >
+            <button class="text-center" v-if="validateSave">
               <svg
                 id="Layer_1"
                 data-name="Layer 1"
@@ -61,14 +58,14 @@
         </tr>
       </thead>
       <!-- Remove the nasty inline CSS fixed height on production and replace it with a CSS class — this is just for demonstration purposes! -->
-      <tbody v-if="this.table_showlist !== 'N'" class="bg-grey-light w-full">
+      <tbody class="bg-grey-light w-full">
         <tr v-for="(items, index) in List" :key="index" class="full mb-4">
           <td class="py-1 w-2/12 text-center">
             <input
               type="text"
               v-model="items.mat"
               class="w-5/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
-              :disabled="this.chk_app == 'Y'"
+              :disabled="isApproved"
             />
           </td>
           <td class="py-1 w-4/12 text-center">
@@ -76,7 +73,7 @@
               type="text"
               v-model="items.size"
               class="w-5/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
-              :disabled="this.chk_app == 'Y'"
+              :disabled="isApproved"
             />
           </td>
           <td class="py-1 w-1/12 text-center">
@@ -84,7 +81,7 @@
               type="text"
               v-model="items.stdweight"
               class="w-5/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
-              :disabled="this.chk_app == 'Y'"
+              :disabled="isApproved"
             />
           </td>
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
@@ -93,7 +90,7 @@
               v-model="items.numunit"
               @keyup="edit(items.mat, items.size, items.numunit, items.vatt)"
               class="w-5/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
-              :disabled="this.chk_app == 'Y'"
+              :disabled="isApproved"
             />
           </td>
           <td class="py-1 w-2/12 text-center text-xs md:text-sm">
@@ -102,7 +99,7 @@
               v-model="items.vatt"
               @keyup="edit(items.mat, items.size, items.numunit, items.vatt)"
               class="w-3/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
-              :disabled="this.chk_app == 'Y'"
+              :disabled="isApproved"
             />
           </td>
           <td class="py-1 w-2/12 text-center text-xs md:text-sm">
@@ -114,7 +111,7 @@
             />
           </td>
           <td class="py-1 w-1/12 text-center">
-            <button class="text-center" v-if="this.chk_app !== 'Y'">
+            <button class="text-center" v-if="!isApproved">
               <svg
                 id="Layer_1"
                 data-name="Layer 1"
@@ -136,50 +133,52 @@
           </td>
         </tr>
       </tbody>
-      <tbody class="bg-grey-light w-full" v-if="this.chk_app == 'N'">
+      <tbody class="bg-grey-light w-full" v-if="!isApproved">
         <tr class="full mb-4">
           <td class="py-1 w-2/12 text-center">
             <input
               type="text"
-              v-model="rmd_mat"
               class="w-5/6 rounded-xl text-xs p-1 text-center"
             />
           </td>
           <td class="py-1 w-4/12 text-center">
             <vue3-simple-typeahead
               id="typeahead_id"
-              placeholder="Enter Size..."
-              :items="manage_STEEL"
+              :placeholder="options.placeholder"
+              :items="fg.items"
+              @selectItem="selectItem"
+              @onInput="onInput"
+              @onBlur="onBlur"
               :minInputLength="1"
-              @selectItem="selectItemEventHandler"
+              :itemProjection="
+                (fg) => {
+                  return fg.rmd_size + ' - ' + fg.rmd_mat;
+                }
+              "
             >
             </vue3-simple-typeahead>
           </td>
           <td class="py-1 w-1/12 text-center">
             <input
               type="text"
-              v-model="rmd_stdweight"
               class="w-5/6 rounded-xl text-xs p-1 text-center"
             />
           </td>
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <input
               type="text"
-              v-model="rmd_numunit"
               class="w-5/6 rounded-xl text-xs p-1 text-center"
             />
           </td>
           <td class="py-1 w-2/12 text-center text-xs md:text-sm">
             <input
               type="text"
-              v-model="vat"
               class="w-3/6 rounded-xl text-xs p-1 text-center"
             />
           </td>
           <td class="py-1 w-2/12 text-center text-xs md:text-sm">
             <input
               type="text"
-              v-model="rmd_prices"
               class="w-4/6 rounded-xl text-xs p-1 text-center"
               disabled
             />
@@ -191,7 +190,7 @@
               viewBox="0 0 48 48"
               enable-background="new 0 0 48 48"
               class="w-5 h-5"
-              v-if="this.chkrepeat == 'N' || this.List.length == 0"
+              v-if="this.List.length == 0"
               @click="enter"
             >
               <circle fill="#4CAF50" cx="24" cy="24" r="21" />
@@ -206,7 +205,7 @@
               viewBox="0 0 48 48"
               enable-background="new 0 0 48 48"
               class="w-5 h-5 cursor-default"
-              v-else-if="this.chkrepeat == 'Y' || this.chk_app == 'Y'"
+              v-else-if="isApproved"
             >
               <circle fill="#808080" cx="24" cy="24" r="21" />
               <g fill="#fff">
@@ -217,9 +216,9 @@
           </td>
         </tr>
       </tbody>
-      <tbody class="text-center" v-if="this.table_showlist !== 'N'">
+      <tbody class="text-center">
         <td colspan="5"></td>
-        <td v-if="this.chk_app !== 'Y'">
+        <td v-if="!isApproved">
           <button
             @click="save"
             class="text-center rounded-lg p-1 px-2 text-sm border-2 border-green-500 text-black hover:text-green-600 font-semibold shadow-lg ring-1 ring-green-200"
@@ -234,138 +233,83 @@
           </button>
         </td>
       </tbody>
+      <div>{{ data }}</div>
     </table>
-    <div>{{ size }}</div>
-    <!-- <table>
-      <thead>
-        <th>DATA</th>
-      </thead>
-      <tbody>
-        <tr v-for="(i, index) in Lists" :key="index">
-          <td>{{ i }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <table>
-      <th>test</th>
-      <th>testuu</th>
-      <tbody>
-        <tr v-for="(u, index) in this.TestSteel" :key="index">
-          <td>{{ u }}</td>
-          <td>{{ u.type }}</td>
-        </tr>
-      </tbody>
-    </table> -->
   </div>
 </template>
 <script>
 import { fg } from "../state/fg";
 import { order } from "../state/order";
+import UserService from "../services/UserService.js";
 
 export default {
   data() {
     return {
       fg,
+      options: {
+        placeholder: "Matcode,Description,Size...",
+        minInputLength: 1,
+      },
       order,
-      select_Order: "",
-      rmd_mat: "",
-      rmd_size: "",
-      rmd_stdweight: "",
-      rmd_numunit: "",
-      rmd_price: "",
-      vat: "",
-      manage_STEEL: [],
+      listFiltered: [],
+      data: {
+        input: "",
+        selection: null,
+      },
+
       List: [],
-      TestList: [],
-      table_showlist: "N",
+
       chkrepeat: "N",
-      chk_sav: "",
-      chk_app: "N",
-      TestSteel: [
-        { steel: "เหล็กไอบีม", type: "A" },
-        { steel: "เหล็กฉาก", type: "C" },
-        { steel: "เหล็กแบนรีด", type: "D" },
-      ],
-      chk_mat: [],
-      chk_size: [],
+      isApproved: false,
     };
   },
   computed: {
+    validateSave() {
+      if (this.isApproved && order.list.length < 1) return;
+    },
+    validateAdd() {
+      if (this.isApproved && order.list.length < 1) return;
+    },
     Lists() {
       return this.List;
     },
-    ch_data() {
-      return this.fg;
-    },
-    size() {
-      fg.steel.map((data) => {
-        let dat = data.rmd_size + "-" + data.rmd_mat;
-        this.manage_STEEL.push(dat);
+    fgSearchList() {
+      return this.fg.items.map((f) => {
+        return f.rmd_size + " - " + f.rmd_mat;
       });
-      // console.log("ALLSTEEL=>", this.manage_STEEL);
     },
     rmd_prices() {
       this.rmd_price = this.rmd_numunit * this.vat;
       return this.rmd_numunit * this.vat;
     },
   },
-  watch: {},
-  created() {},
+
+  async created() {
+    let result = await UserService.fgList();
+
+    fg.items = result.data;
+    this.listFiltered = fg.items;
+  },
   methods: {
-    enter() {
-      if (this.rmd_mat !== "") {
-        let search_size;
-        const input_size = document.getElementById("typeahead_id").value;
-        if (input_size.indexOf("-") !== -1) {
-          let arr = input_size.split("-");
-          search_size = arr[0];
-        } else {
-          search_size = input_size;
-        }
-
-        fg.steel.map((data) => {
-          if (data.rmd_size !== search_size) {
-            this.rmd_size = search_size;
-          }
-        });
-        this.chk_mat.push(this.rmd_mat);
-        this.chk_size.push(this.rmd_size);
-
-        this.List.push({
-          mat: this.rmd_mat,
-          size: this.rmd_size,
-          stdweight: this.rmd_stdweight,
-          numunit: this.rmd_numunit,
-          vatt: this.vat,
-          price: this.rmd_price,
-        });
-
-        //this.TestList.push({ mat: this.rmd_mat, size: this.rmd_size });
-        console.log(this.List);
-        if (this.List.length !== 0) {
-          this.table_showlist = "Y";
-        }
-
-        this.rmd_mat = "";
-        document.getElementById("typeahead_id").value = "";
-        this.rmd_stdweight = "";
-        this.rmd_numunit = "";
-        this.vat = "";
-        this.rmd_price = "";
-        // console.log("kk");
-      } else {
-        alert("กรอกข้อมูลก่อนบันทึกรายการ :)");
-      }
+    selectItem(item) {
+      this.data.selection = item;
     },
+    onInput(event) {
+      this.data.selection = null;
+      this.data.input = event.input;
+      this.listFiltered = event.items;
+    },
+    onBlur(event) {
+      this.data.input = event.input;
+      this.listFiltered = event.items;
+    },
+
     deletes(no, w, p) {
       let np = 0;
       let num = parseInt(no) + 1;
       if (confirm("นำรายการที่ " + num + " ออกใช่หรือไม่?")) {
         this.List.splice(no, 1);
       }
-      // this.List.map((data) => {
-      //   np = np + data.price;
-      // });
       order.list = this.List;
     },
     deleteAll() {
@@ -383,39 +327,9 @@ export default {
       ) {
         alert("บันทึกรายการแล้ว");
         order.list = this.List;
-        this.chk_sav = this.List.length;
-        // console.log(order.list);
       }
     },
-    testkey(e) {
-      console.log(e);
-    },
-    selectItemEventHandler(e) {
-      let arr = e.split("-");
-      if (this.List.length !== 0) {
-        if (this.chk_mat.includes(arr[1]) && this.chk_size.includes(arr[0])) {
-          this.chkrepeat = "Y";
-          alert("มีอยู่ในรายการแล้ว");
-        } else {
-          this.chkrepeat = "N";
-        }
-      }
-
-      let exam_numunit = Math.floor(Math.random() * 10) + 1;
-      let exam_price = Math.floor(Math.random() * 100) + 1;
-
-      fg.steel.map((data) => {
-        if (data.rmd_size == arr[0] && data.rmd_mat == arr[1]) {
-          this.rmd_size = arr[0];
-          this.rmd_mat = arr[1];
-          this.rmd_stdweight = data.rmd_stdweight;
-          this.rmd_numunit = exam_numunit;
-          this.vat = exam_price;
-        }
-      });
-      console.log(e);
-      //return e;
-    },
+    //ใช้ index ของ list ในการเข้ามาแก้ไข จะแก้ไขไม่ได้ถ้า user เพิ่มสินค้าแบบพิมพ์เอง จะไม่มี matcode
     edit(mat, size, unit, vat) {
       this.List.filter((data) => {
         if (data.mat == mat && data.size == size) {
@@ -424,7 +338,7 @@ export default {
       });
     },
     approve() {
-      if (this.chk_sav.length == 0) {
+      if (order.list.length < 1) {
         alert("บันทึกข้อมูลอย่างน้อย 1 ครั้งก่อนทำการ Approve ");
       } else {
         if (
@@ -433,7 +347,7 @@ export default {
           )
         ) {
           alert("Approve เรียบร้อยแล้ว :)");
-          this.chk_app = "Y";
+          this.isApproved = true;
         }
       }
     },

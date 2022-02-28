@@ -26,7 +26,6 @@ setInterval(() => {
   </div>
 </template>
 <script>
-import UserService from "./services/UserService";
 import { fg } from "./state/fg";
 
 export default {
@@ -38,12 +37,8 @@ export default {
   async created() {
     //this.State = result.data;
     // if (auth.steel.length === 0) {
-    let result = await UserService.index();
-    fg.steel = result.data;
     // }
-
     //console.log(auth.steel);
-
     // this.setState({ steel: result.data });
   },
 };
