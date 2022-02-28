@@ -447,7 +447,10 @@ export default {
   border-radius: 13px;
   padding-top: 2px;
   padding-bottom: 2px;
-  word-wrap: break-word;
+}
+div.simple-typeahead-list {
+  height: 130px;
+  font-size: 12px;
 }
 .cls-1 {
   fill: #2e79bd;
