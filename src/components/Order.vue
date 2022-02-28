@@ -121,7 +121,7 @@
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 512 512"
                 fill="red"
-                @click="deletes(index)"
+                @click="deletes(index, items.stdweight, items.price)"
                 class="w-5 h-5"
               >
                 <title>Remove</title>
@@ -357,11 +357,16 @@ export default {
         alert("กรอกข้อมูลก่อนบันทึกรายการ :)");
       }
     },
-    deletes(no) {
+    deletes(no, w, p) {
+      let np = 0;
       let num = parseInt(no) + 1;
       if (confirm("นำรายการที่ " + num + " ออกใช่หรือไม่?")) {
         this.List.splice(no, 1);
       }
+      // this.List.map((data) => {
+      //   np = np + data.price;
+      // });
+      order.list = this.List;
     },
     deleteAll() {
       if (confirm("Clear ข้อมูลทั้งหมดใช่หรือไม่?")) {
