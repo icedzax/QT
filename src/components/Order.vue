@@ -23,13 +23,14 @@
           >
             จำนวนหน่วย
           </th>
+          <th class="border-b border-slate-300 w-2/12"></th>
           <th
-            class="font-light border-b border-slate-300 w-2/12 text-xs md:text-sm"
+            class="font-light border-b border-slate-300 w-1/12 text-xs md:text-sm"
           >
             ราคาต่อหน่วยก่อน VAT 7%
           </th>
           <th
-            class="font-light border-b border-slate-300 w-2/12 text-xs md:text-sm"
+            class="font-light border-b border-slate-300 w-1/12 text-xs md:text-sm"
           >
             จำนวนเงิน
           </th>
@@ -80,7 +81,7 @@
             <input
               type="text"
               v-model="items.stdweight"
-              class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
+              class="w-5/6 rounded-xl text-xs p-1 text-center border-none focus:outline-none"
               :disabled="isApproved"
             />
           </td>
@@ -93,20 +94,31 @@
               :disabled="isApproved"
             />
           </td>
-          <td class="py-1 w-2/12 text-center text-xs md:text-sm">
+          <td class="py-1 w-1/12 text-center text-xs md:text-sm">
+            <select
+              v-model="items.ptype"
+              class="rounded-xl text-xs p-1 text-center w-5/6 border-none"
+              :disabled="isApproved"
+            >
+              <option v-for="(i, index) in this.tprice" :key="index">
+                {{ i }}
+              </option>
+            </select>
+          </td>
+          <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <input
               type="text"
               v-model="items.vatt"
               @keyup="edit(items.mat, items.size, items.numunit, items.vatt)"
-              class="w-3/6 rounded-xl text-xs p-1 text-center border-none"
+              class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
               :disabled="isApproved"
             />
           </td>
-          <td class="py-1 w-2/12 text-center text-xs md:text-sm">
+          <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <input
               type="text"
               v-model="items.price"
-              class="w-4/6 rounded-xl text-xs p-1 text-center border-none"
+              class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
               disabled
             />
           </td>
@@ -173,17 +185,27 @@
               v-model="exam_numunit"
             />
           </td>
-          <td class="py-1 w-2/12 text-center text-xs md:text-sm">
+          <td class="py-1 w-1/12 text-center">
+            <select
+              v-model="selectedType"
+              class="rounded-xl text-xs p-1 text-center w-5/6"
+            >
+              <option v-for="(i, index) in this.tprice" :key="index">
+                {{ i }}
+              </option>
+            </select>
+          </td>
+          <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <input
               type="text"
-              class="w-3/6 rounded-xl text-xs p-1 text-center"
+              class="w-5/6 rounded-xl text-xs p-1 text-center"
               v-model="exam_price"
             />
           </td>
-          <td class="py-1 w-2/12 text-center text-xs md:text-sm">
+          <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <input
               type="text"
-              class="w-4/6 rounded-xl text-xs p-1 text-center"
+              class="w-5/6 rounded-xl text-xs p-1 text-center"
               v-model="rmd_prices"
               disabled
             />
@@ -223,7 +245,7 @@
       </tbody>
       <tbody class="text-center">
         <td colspan="5"></td>
-        <td v-if="!isApproved && this.List.length > 0">
+        <td v-if="!isApproved && this.List.length > 0" colspan="2">
           <button
             @click="save"
             class="text-center rounded-lg p-1 px-2 text-sm border-2 border-green-500 text-black hover:text-green-600 font-semibold shadow-lg ring-1 ring-green-200"
@@ -245,6 +267,7 @@
 <script>
 import { fg } from "../state/fg";
 import { order } from "../state/order";
+import { auth } from "../state/user";
 import UserService from "../services/UserService.js";
 
 export default {
@@ -261,7 +284,17 @@ export default {
         input: "",
         selection: null,
       },
-
+      type: {
+        retail: ["R1:ราคาสดรับเอง", "R2:ราคาสดส่ง", "R3:ราคาเงินเชื่อ"],
+        Wholesale: [
+          "T1:100 ตัน",
+          "W0:ราคายกรถ",
+          "W1:ราคาคละไซด์",
+          "W2:ราคายกมัด",
+          "W3:ราคาปลีก",
+        ],
+      },
+      tprice: [],
       List: [],
       chk_mat: [],
       chk_size: [],
@@ -306,8 +339,14 @@ export default {
 
     fg.items = result.data;
     this.listFiltered = fg.items;
-    console.log(this.data.input);
-    console.log(this.data.selection);
+    console.log(auth);
+    if ((auth.saleOrg = 1000)) {
+      this.tprice = this.type.retail;
+      this.selectedType = this.type.retail[1];
+    } else if ((state.user.saleOrg = 2000)) {
+      this.tprice = this.type.Wholesale;
+      this.selectedType = this.type.Wholesale[0];
+    }
   },
   methods: {
     selectItem(item) {
@@ -380,6 +419,7 @@ export default {
           numunit: this.exam_numunit,
           vatt: this.exam_price,
           price: this.rmd_price,
+          ptype: this.selectedType,
         });
 
         //this.TestList.push({ mat: this.rmd_mat, size: this.rmd_size });
