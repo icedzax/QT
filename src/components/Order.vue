@@ -223,7 +223,7 @@
       </tbody>
       <tbody class="text-center">
         <td colspan="5"></td>
-        <td v-if="!isApproved">
+        <td v-if="!isApproved && this.List.length > 0">
           <button
             @click="save"
             class="text-center rounded-lg p-1 px-2 text-sm border-2 border-green-500 text-black hover:text-green-600 font-semibold shadow-lg ring-1 ring-green-200"
