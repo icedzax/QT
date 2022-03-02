@@ -51,18 +51,53 @@ export default {
   created() {},
   computed: {
     sumprice() {
-      return this.sp;
+      let fixsp = this.sp.toFixed(2);
+      let a = fixsp.toString();
+      const afSP = this.addComma(a);
+
+      return afSP;
     },
     sumprice_2() {
-      return this.sp + this.transport;
+      let fixsp = this.sp.toFixed(2);
+      let sum = fixsp + this.transport;
+
+      let a = parseFloat(sum).toFixed(2).toString();
+      const afSP = this.addComma(a);
+      return afSP;
     },
     cal_vat() {
       const v = (this.sp * 0.07).toFixed(2);
-      return v;
+      let a = v.toString();
+      const afSP = this.addComma(a);
+      return afSP;
     },
     total_price() {
-      const sum = parseFloat(this.sumprice_2) + parseFloat(this.cal_vat);
-      return sum.toFixed(2);
+      let sp2 = this.delcomma(this.sumprice_2);
+      let cv = this.delcomma(this.cal_vat);
+      const sum = parseFloat(sp2) + parseFloat(cv);
+      let a = parseFloat(sum).toFixed(2).toString();
+      const afSP = this.addComma(a);
+      return afSP;
+    },
+  },
+  methods: {
+    addComma(a) {
+      let x = a.split(".");
+      let x1 = x[0];
+
+      let x2 = x.length > 1 ? "." + x[1] : "";
+
+      var rgx = /(\d+)(\d{3})/;
+
+      while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, "$1" + "," + "$2");
+      }
+      let aa = x1 + x2;
+      return aa;
+    },
+    delcomma(a) {
+      let x = a.replace(",", "");
+      return x;
     },
   },
 };
