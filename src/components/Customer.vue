@@ -22,6 +22,7 @@
         >
         </vue3-simple-typeahead>
       </div>
+
       <div>
         <p class="font-semibold">ที่อยู่</p>
       </div>
@@ -52,7 +53,7 @@ export default {
       cus,
 
       options: {
-        placeholder: "Matcode,Description,Size...",
+        placeholder: "Customer Name...",
         minInputLength: 1,
       },
       listFiltered: [],
