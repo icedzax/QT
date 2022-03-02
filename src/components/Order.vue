@@ -35,7 +35,7 @@
             จำนวนเงิน
           </th>
           <th class="border-b border-slate-300 w-1/12">
-            <button class="text-center" v-if="!isApproved">
+            <button class="text-center" v-if="!approveStat">
               <svg
                 id="Layer_1"
                 data-name="Layer 1"
@@ -66,7 +66,7 @@
               type="text"
               v-model="items.mat"
               class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
-              :disabled="isApproved"
+              :disabled="approveStat"
             />
           </td>
           <td class="py-1 w-4/12 text-center">
@@ -74,7 +74,7 @@
               type="text"
               v-model="items.size"
               class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
-              :disabled="isApproved"
+              :disabled="approveStat"
             />
           </td>
           <td class="py-1 w-1/12 text-center">
@@ -82,23 +82,23 @@
               type="text"
               v-model="items.stdweight"
               class="w-5/6 rounded-xl text-xs p-1 text-center border-none focus:outline-none"
-              :disabled="isApproved"
+              :disabled="approveStat"
             />
           </td>
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <input
               type="text"
               v-model="items.numunit"
-              @keyup="edit(items.mat, items.size, items.numunit, items.vatt)"
+              @keyup="edit(index, items.numunit, items.vatt)"
               class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
-              :disabled="isApproved"
+              :disabled="approveStat"
             />
           </td>
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <select
               v-model="items.ptype"
               class="rounded-xl text-xs p-1 text-center w-5/6 border-none"
-              :disabled="isApproved"
+              :disabled="approveStat"
             >
               <option v-for="(i, index) in this.tprice" :key="index">
                 {{ i }}
@@ -109,9 +109,9 @@
             <input
               type="text"
               v-model="items.vatt"
-              @keyup="edit(items.mat, items.size, items.numunit, items.vatt)"
+              @keyup="edit(index, items.numunit, items.vatt)"
               class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
-              :disabled="isApproved"
+              :disabled="approveStat"
             />
           </td>
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
@@ -123,7 +123,7 @@
             />
           </td>
           <td class="py-1 w-1/12 text-center">
-            <button class="text-center" v-if="!isApproved">
+            <button class="text-center" v-if="!approveStat">
               <svg
                 id="Layer_1"
                 data-name="Layer 1"
@@ -145,7 +145,7 @@
           </td>
         </tr>
       </tbody>
-      <tbody class="bg-grey-light w-full" v-if="!isApproved">
+      <tbody class="bg-grey-light w-full" v-if="!approveStat">
         <tr class="full mb-4">
           <td class="py-1 w-2/12 text-center">
             <input
@@ -217,7 +217,7 @@
               viewBox="0 0 48 48"
               enable-background="new 0 0 48 48"
               class="w-5 h-5"
-              v-if="(this.List.length == 0 || !isApproved) && !chkrepeat"
+              v-if="(this.List.length == 0 || !approveStat) && !chkrepeat"
               @click="enter"
             >
               <circle fill="#4CAF50" cx="24" cy="24" r="21" />
@@ -226,26 +226,27 @@
                 <rect x="14" y="21" width="20" height="6" />
               </g>
             </svg>
-            <svg
+            <!-- <svg
               version="1"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 48 48"
               enable-background="new 0 0 48 48"
               class="w-5 h-5 cursor-default"
-              v-else-if="isApproved || chkrepeat"
+              v-else-if="approveStat || chkrepeat"
             >
               <circle fill="#808080" cx="24" cy="24" r="21" />
               <g fill="#fff">
                 <rect x="21" y="14" width="6" height="20" />
                 <rect x="14" y="21" width="20" height="6" />
               </g>
-            </svg>
+            </svg> -->
           </td>
         </tr>
       </tbody>
-      <tbody class="text-center">
+
+      <!-- <tbody class="text-center">
         <td colspan="5"></td>
-        <td v-if="!isApproved && this.List.length > 0" colspan="2">
+        <td v-if="!approveStat && this.List.length > 0" colspan="2">
           <button
             @click="save"
             class="text-center rounded-lg p-1 px-2 text-sm border-2 border-green-500 text-black hover:text-green-600 font-semibold shadow-lg ring-1 ring-green-200"
@@ -259,8 +260,8 @@
             อนุมัติ ✅
           </button>
         </td>
-      </tbody>
-      <!-- <div>{{ data }}</div> -->
+      </tbody> -->
+      <!-- <div>{{ approveStat }}</div> -->
     </table>
   </div>
 </template>
@@ -299,7 +300,6 @@ export default {
       chk_mat: [],
       chk_size: [],
       chkrepeat: false,
-      isApproved: false,
       rmdmat: "",
       rmd_price: "",
       rmdweight: "",
@@ -307,22 +307,20 @@ export default {
       exam_price: "",
     };
   },
+  props: ["statusApp"],
   computed: {
+    approveStat() {
+      return this.statusApp;
+    },
     // validateSave() {
-    //   if (this.isApproved) return;
+    //   if (this.approveStat) return;
     // },
     validateAdd() {
-      if (this.isApproved && order.list.length < 1) return;
+      if (this.approveStat && order.list.length < 1) return;
     },
     Lists() {
       return this.List;
     },
-
-    // rmdweight() {
-    //   if (this.data.selection !== null) {
-    //     return this.data.selection.rmd_stdweight;
-    //   }
-    // },
     fgSearchList() {
       return this.fg.items.map((f) => {
         return f.rmd_size + " - " + f.rmd_mat;
@@ -339,7 +337,7 @@ export default {
 
     fg.items = result.data;
     this.listFiltered = fg.items;
-    console.log(auth);
+    console.log(order);
     if ((auth.saleOrg = 1000)) {
       this.tprice = this.type.retail;
       this.selectedType = this.type.retail[1];
@@ -356,20 +354,6 @@ export default {
       this.rmdweight = this.data.selection.rmd_stdweight;
       this.exam_numunit = Math.floor(Math.random() * 10) + 1;
       this.exam_price = Math.floor(Math.random() * 100) + 1;
-
-      if (this.chk_size.includes(item.rmd_size)) {
-        this.chkrepeat = true;
-        alert("มีอยู่ในรายการแล้ว");
-      } else {
-        this.chkrepeat = false;
-      }
-      // if (this.List.length !== 0) {
-      //   if (this.chk_mat.includes(arr[1]) && this.chk_size.includes(arr[0])) {
-      //
-      //   } else {
-      //     this.chkrepeat = "N";
-      //   }
-      // }
     },
     onInput(event) {
       this.data.selection = null;
@@ -437,40 +421,17 @@ export default {
 
         // this.data.input = "";
         // this.data.selection = null;
+        order.list = this.List;
       } else {
         alert("กรอกข้อมูลก่อนบันทึกรายการ :)");
       }
     },
-    save() {
-      if (
-        confirm(
-          "ต้องการบันทึกรายการทั้งหมด " +
-            this.List.length +
-            " รายการใช่หรือไม่?"
-        )
-      ) {
-        alert("บันทึกรายการแล้ว");
-        order.list = this.List;
-      }
-      console.log(order.list);
-    },
-    //อันนี้แก้ไขจำนวนและราคาแยกเป็นแถวๆ data.mat คือ mat ใหม่ที่ใส่เข้าไป อาจจะมาจาก api หรือ input ก็ได้
-    edit(mat, size, unit, vat) {
-      this.List.filter((data) => {
-        if (data.mat == mat && data.size == size) {
+    edit(index, unit, vat) {
+      this.List.filter((data, i) => {
+        if (i == index) {
           data.price = unit * vat;
         }
       });
-    },
-    approve() {
-      if (
-        confirm(
-          "กดบันทึกก่อน Approve ทุกครั้ง หาก Approve แล้วจะไม่สามารถแก้ไขข้อมูลได้ ต้องการ Approve ใช่หรือไม่?"
-        )
-      ) {
-        alert("Approve เรียบร้อยแล้ว :)");
-        this.isApproved = true;
-      }
     },
   },
 };
