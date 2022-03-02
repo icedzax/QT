@@ -23,18 +23,19 @@
           >
             จำนวนหน่วย
           </th>
+          <th class="border-b border-slate-300 w-2/12"></th>
           <th
-            class="font-light border-b border-slate-300 w-2/12 text-xs md:text-sm"
+            class="font-light border-b border-slate-300 w-1/12 text-xs md:text-sm"
           >
             ราคาต่อหน่วยก่อน VAT 7%
           </th>
           <th
-            class="font-light border-b border-slate-300 w-2/12 text-xs md:text-sm"
+            class="font-light border-b border-slate-300 w-1/12 text-xs md:text-sm"
           >
             จำนวนเงิน
           </th>
           <th class="border-b border-slate-300 w-1/12">
-            <button class="text-center" v-if="validateSave">
+            <button class="text-center" v-if="!isApproved">
               <svg
                 id="Layer_1"
                 data-name="Layer 1"
@@ -64,7 +65,7 @@
             <input
               type="text"
               v-model="items.mat"
-              class="w-5/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
+              class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
               :disabled="isApproved"
             />
           </td>
@@ -72,7 +73,7 @@
             <input
               type="text"
               v-model="items.size"
-              class="w-5/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
+              class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
               :disabled="isApproved"
             />
           </td>
@@ -80,7 +81,7 @@
             <input
               type="text"
               v-model="items.stdweight"
-              class="w-5/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
+              class="w-5/6 rounded-xl text-xs p-1 text-center border-none focus:outline-none"
               :disabled="isApproved"
             />
           </td>
@@ -89,24 +90,35 @@
               type="text"
               v-model="items.numunit"
               @keyup="edit(items.mat, items.size, items.numunit, items.vatt)"
-              class="w-5/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
+              class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
               :disabled="isApproved"
             />
           </td>
-          <td class="py-1 w-2/12 text-center text-xs md:text-sm">
+          <td class="py-1 w-1/12 text-center text-xs md:text-sm">
+            <select
+              v-model="items.ptype"
+              class="rounded-xl text-xs p-1 text-center w-5/6 border-none"
+              :disabled="isApproved"
+            >
+              <option v-for="(i, index) in this.tprice" :key="index">
+                {{ i }}
+              </option>
+            </select>
+          </td>
+          <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <input
               type="text"
               v-model="items.vatt"
               @keyup="edit(items.mat, items.size, items.numunit, items.vatt)"
-              class="w-3/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
+              class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
               :disabled="isApproved"
             />
           </td>
-          <td class="py-1 w-2/12 text-center text-xs md:text-sm">
+          <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <input
               type="text"
               v-model="items.price"
-              class="w-4/6 rounded-xl text-xs p-1 text-center ring-1 ring-green-200 bg-gray-200 border-2 border-green-400"
+              class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
               disabled
             />
           </td>
@@ -118,7 +130,7 @@
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 512 512"
                 fill="red"
-                @click="deletes(index, items.stdweight, items.price)"
+                @click="deletes(index)"
                 class="w-5 h-5"
               >
                 <title>Remove</title>
@@ -139,6 +151,7 @@
             <input
               type="text"
               class="w-5/6 rounded-xl text-xs p-1 text-center"
+              v-model="rmdmat"
             />
           </td>
           <td class="py-1 w-4/12 text-center">
@@ -162,24 +175,38 @@
             <input
               type="text"
               class="w-5/6 rounded-xl text-xs p-1 text-center"
+              v-model="rmdweight"
             />
           </td>
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <input
               type="text"
               class="w-5/6 rounded-xl text-xs p-1 text-center"
+              v-model="exam_numunit"
             />
           </td>
-          <td class="py-1 w-2/12 text-center text-xs md:text-sm">
+          <td class="py-1 w-1/12 text-center">
+            <select
+              v-model="selectedType"
+              class="rounded-xl text-xs p-1 text-center w-5/6"
+            >
+              <option v-for="(i, index) in this.tprice" :key="index">
+                {{ i }}
+              </option>
+            </select>
+          </td>
+          <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <input
               type="text"
-              class="w-3/6 rounded-xl text-xs p-1 text-center"
+              class="w-5/6 rounded-xl text-xs p-1 text-center"
+              v-model="exam_price"
             />
           </td>
-          <td class="py-1 w-2/12 text-center text-xs md:text-sm">
+          <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <input
               type="text"
-              class="w-4/6 rounded-xl text-xs p-1 text-center"
+              class="w-5/6 rounded-xl text-xs p-1 text-center"
+              v-model="rmd_prices"
               disabled
             />
           </td>
@@ -190,7 +217,7 @@
               viewBox="0 0 48 48"
               enable-background="new 0 0 48 48"
               class="w-5 h-5"
-              v-if="this.List.length == 0"
+              v-if="(this.List.length == 0 || !isApproved) && !chkrepeat"
               @click="enter"
             >
               <circle fill="#4CAF50" cx="24" cy="24" r="21" />
@@ -205,7 +232,7 @@
               viewBox="0 0 48 48"
               enable-background="new 0 0 48 48"
               class="w-5 h-5 cursor-default"
-              v-else-if="isApproved"
+              v-else-if="isApproved || chkrepeat"
             >
               <circle fill="#808080" cx="24" cy="24" r="21" />
               <g fill="#fff">
@@ -218,7 +245,7 @@
       </tbody>
       <tbody class="text-center">
         <td colspan="5"></td>
-        <td v-if="!isApproved">
+        <td v-if="!isApproved && this.List.length > 0" colspan="2">
           <button
             @click="save"
             class="text-center rounded-lg p-1 px-2 text-sm border-2 border-green-500 text-black hover:text-green-600 font-semibold shadow-lg ring-1 ring-green-200"
@@ -233,13 +260,14 @@
           </button>
         </td>
       </tbody>
-      <div>{{ data }}</div>
+      <!-- <div>{{ data }}</div> -->
     </table>
   </div>
 </template>
 <script>
 import { fg } from "../state/fg";
 import { order } from "../state/order";
+import { auth } from "../state/user";
 import UserService from "../services/UserService.js";
 
 export default {
@@ -256,31 +284,53 @@ export default {
         input: "",
         selection: null,
       },
-
+      type: {
+        retail: ["R1:ราคาสดรับเอง", "R2:ราคาสดส่ง", "R3:ราคาเงินเชื่อ"],
+        Wholesale: [
+          "T1:100 ตัน",
+          "W0:ราคายกรถ",
+          "W1:ราคาคละไซด์",
+          "W2:ราคายกมัด",
+          "W3:ราคาปลีก",
+        ],
+      },
+      tprice: [],
       List: [],
-
-      chkrepeat: "N",
+      chk_mat: [],
+      chk_size: [],
+      chkrepeat: false,
       isApproved: false,
+      rmdmat: "",
+      rmd_price: "",
+      rmdweight: "",
+      exam_numunit: "",
+      exam_price: "",
     };
   },
   computed: {
-    validateSave() {
-      if (this.isApproved && order.list.length < 1) return;
-    },
+    // validateSave() {
+    //   if (this.isApproved) return;
+    // },
     validateAdd() {
       if (this.isApproved && order.list.length < 1) return;
     },
     Lists() {
       return this.List;
     },
+
+    // rmdweight() {
+    //   if (this.data.selection !== null) {
+    //     return this.data.selection.rmd_stdweight;
+    //   }
+    // },
     fgSearchList() {
       return this.fg.items.map((f) => {
         return f.rmd_size + " - " + f.rmd_mat;
       });
     },
     rmd_prices() {
-      this.rmd_price = this.rmd_numunit * this.vat;
-      return this.rmd_numunit * this.vat;
+      this.rmd_price = this.exam_numunit * this.exam_price;
+      return this.rmd_price;
     },
   },
 
@@ -289,10 +339,37 @@ export default {
 
     fg.items = result.data;
     this.listFiltered = fg.items;
+    console.log(auth);
+    if ((auth.saleOrg = 1000)) {
+      this.tprice = this.type.retail;
+      this.selectedType = this.type.retail[1];
+    } else if ((state.user.saleOrg = 2000)) {
+      this.tprice = this.type.Wholesale;
+      this.selectedType = this.type.Wholesale[0];
+    }
   },
   methods: {
     selectItem(item) {
       this.data.selection = item;
+
+      this.rmdmat = this.data.selection.rmd_mat;
+      this.rmdweight = this.data.selection.rmd_stdweight;
+      this.exam_numunit = Math.floor(Math.random() * 10) + 1;
+      this.exam_price = Math.floor(Math.random() * 100) + 1;
+
+      if (this.chk_size.includes(item.rmd_size)) {
+        this.chkrepeat = true;
+        alert("มีอยู่ในรายการแล้ว");
+      } else {
+        this.chkrepeat = false;
+      }
+      // if (this.List.length !== 0) {
+      //   if (this.chk_mat.includes(arr[1]) && this.chk_size.includes(arr[0])) {
+      //
+      //   } else {
+      //     this.chkrepeat = "N";
+      //   }
+      // }
     },
     onInput(event) {
       this.data.selection = null;
@@ -304,7 +381,7 @@ export default {
       this.listFiltered = event.items;
     },
 
-    deletes(no, w, p) {
+    deletes(no) {
       let np = 0;
       let num = parseInt(no) + 1;
       if (confirm("นำรายการที่ " + num + " ออกใช่หรือไม่?")) {
@@ -315,6 +392,53 @@ export default {
     deleteAll() {
       if (confirm("Clear ข้อมูลทั้งหมดใช่หรือไม่?")) {
         this.List = [];
+      }
+    },
+    enter() {
+      let m = "";
+      let s = "";
+      let w = "";
+
+      if (this.data.input !== "") {
+        if (this.data.selection == null) {
+          m = this.rmdmat;
+          s = this.data.input;
+          w = this.rmdweight;
+        } else {
+          m = this.data.selection.rmd_mat;
+          s = this.data.selection.rmd_size;
+          w = this.data.selection.rmd_stdweight;
+        }
+        this.chk_mat.push(m);
+        this.chk_size.push(s);
+
+        this.List.push({
+          mat: m,
+          size: s,
+          stdweight: w,
+          numunit: this.exam_numunit,
+          vatt: this.exam_price,
+          price: this.rmd_price,
+          ptype: this.selectedType,
+        });
+
+        //this.TestList.push({ mat: this.rmd_mat, size: this.rmd_size });
+        console.log(this.List);
+        if (this.List.length !== 0) {
+          this.table_showlist = "Y";
+        }
+
+        this.rmdmat = "";
+        this.rmdweight = "";
+        this.exam_numunit = "";
+        this.exam_price = "";
+        this.rmd_price = "";
+        document.getElementById("typeahead_id").value = "";
+
+        // this.data.input = "";
+        // this.data.selection = null;
+      } else {
+        alert("กรอกข้อมูลก่อนบันทึกรายการ :)");
       }
     },
     save() {
@@ -328,8 +452,9 @@ export default {
         alert("บันทึกรายการแล้ว");
         order.list = this.List;
       }
+      console.log(order.list);
     },
-    //ใช้ index ของ list ในการเข้ามาแก้ไข จะแก้ไขไม่ได้ถ้า user เพิ่มสินค้าแบบพิมพ์เอง จะไม่มี matcode
+    //อันนี้แก้ไขจำนวนและราคาแยกเป็นแถวๆ data.mat คือ mat ใหม่ที่ใส่เข้าไป อาจจะมาจาก api หรือ input ก็ได้
     edit(mat, size, unit, vat) {
       this.List.filter((data) => {
         if (data.mat == mat && data.size == size) {
@@ -338,17 +463,13 @@ export default {
       });
     },
     approve() {
-      if (order.list.length < 1) {
-        alert("บันทึกข้อมูลอย่างน้อย 1 ครั้งก่อนทำการ Approve ");
-      } else {
-        if (
-          confirm(
-            "หาก Approve แล้ว จะไม่สามารถแก้ไขรายละเอียดได้ ยืนยัน Approve ใช่หรือไม่?"
-          )
-        ) {
-          alert("Approve เรียบร้อยแล้ว :)");
-          this.isApproved = true;
-        }
+      if (
+        confirm(
+          "กดบันทึกก่อน Approve ทุกครั้ง หาก Approve แล้วจะไม่สามารถแก้ไขข้อมูลได้ ต้องการ Approve ใช่หรือไม่?"
+        )
+      ) {
+        alert("Approve เรียบร้อยแล้ว :)");
+        this.isApproved = true;
       }
     },
   },
