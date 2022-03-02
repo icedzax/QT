@@ -89,7 +89,7 @@
             <input
               type="text"
               v-model="items.numunit"
-              @keyup="edit(items.mat, items.size, items.numunit, items.vatt)"
+              @keyup="edit(index, items.numunit, items.vatt)"
               class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
               :disabled="isApproved"
             />
@@ -109,7 +109,7 @@
             <input
               type="text"
               v-model="items.vatt"
-              @keyup="edit(items.mat, items.size, items.numunit, items.vatt)"
+              @keyup="edit(index, items.numunit, items.vatt)"
               class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
               :disabled="isApproved"
             />
@@ -356,20 +356,6 @@ export default {
       this.rmdweight = this.data.selection.rmd_stdweight;
       this.exam_numunit = Math.floor(Math.random() * 10) + 1;
       this.exam_price = Math.floor(Math.random() * 100) + 1;
-
-      if (this.chk_size.includes(item.rmd_size)) {
-        this.chkrepeat = true;
-        alert("มีอยู่ในรายการแล้ว");
-      } else {
-        this.chkrepeat = false;
-      }
-      // if (this.List.length !== 0) {
-      //   if (this.chk_mat.includes(arr[1]) && this.chk_size.includes(arr[0])) {
-      //
-      //   } else {
-      //     this.chkrepeat = "N";
-      //   }
-      // }
     },
     onInput(event) {
       this.data.selection = null;
@@ -454,10 +440,9 @@ export default {
       }
       console.log(order.list);
     },
-    //อันนี้แก้ไขจำนวนและราคาแยกเป็นแถวๆ data.mat คือ mat ใหม่ที่ใส่เข้าไป อาจจะมาจาก api หรือ input ก็ได้
-    edit(mat, size, unit, vat) {
-      this.List.filter((data) => {
-        if (data.mat == mat && data.size == size) {
+    edit(index, unit, vat) {
+      this.List.filter((data, i) => {
+        if (i == index) {
           data.price = unit * vat;
         }
       });
