@@ -6,55 +6,89 @@
       <div class="font-semibold">ลูกค้า</div>
       <div class="col-span-3">
         <vue3-simple-typeahead
-          id="typeahead_id1"
-          placeholder="Enter Customer Name ..."
-          :items="cus_name"
+          id="typeahead_id"
+          :placeholder="options.placeholder"
+          :items="customers"
+          @selectItem="selectItem"
+          @onInput="onInput"
+          @onBlur="onBlur"
+          @input="lookupUser"
           :minInputLength="1"
-          @selectItem="selectItemEventHandler"
-          class="h-8"
+          :itemProjection="
+            (customers) => {
+              return `${customers.KUNNR} ${customers.CNAME}`;
+            }
+          "
         >
         </vue3-simple-typeahead>
       </div>
-      <div><p class="h-10 font-semibold">ที่อยู่</p></div>
-      <div class="col-span-3 border-2 border-gray-200 rounded">
-        <p class="h-10">{{ this.address }}</p>
+      <div>
+        <p class="font-semibold">ที่อยู่</p>
+      </div>
+      <div class="col-span-3 rounded">
+        <p class="">{{ cusdata.ADDRS }}</p>
       </div>
       <div class="font-semibold">ชื่อผู้ติดต่อ</div>
-      <div class="col-span-3">{{ this.contact_name }}</div>
+      <div class="col-span-3">{{ cusdata.CONTACTNAME }}</div>
       <div class="font-semibold">เบอร์ติดต่อ</div>
-      <div>{{ this.tel }}</div>
+      <div>{{ cusdata.TELNU }}</div>
       <div class="font-semibold">มือถือ</div>
-      <div>{{ this.phone }}</div>
+      <div>{{ cusdata.MOBILE }}</div>
       <div class="font-semibold">โทรสาร</div>
-      <div>{{ this.fax }}</div>
+      <div>{{ cusdata.FAXNU }}</div>
       <div class="font-semibold">อีเมลล์</div>
-      <div>{{ this.email }}</div>
+      <div>{{ cusdata.EMAIL }}</div>
     </div>
   </div>
 </template>
 <script>
+import { cus } from "../state/cus";
+import { debounce } from "lodash";
+import CusService from "../services/CusService.js";
 export default {
   data() {
     return {
-      customer_name: "",
-      address: "",
-      contact_name: "สมพร พฤติวานิชกุล",
-      tel: "",
-      phone: "0814448333",
-      fax: "",
-      email: "",
-      cus_name: ["น้อง A", "น้อง B", "น้อง C", "น้อง D", "น้อง E", "น้อง F"],
+      customers: [],
+      cus,
+
+      options: {
+        placeholder: "Matcode,Description,Size...",
+        minInputLength: 1,
+      },
+      listFiltered: [],
+      data: {
+        input: "",
+        selection: null,
+      },
     };
   },
+  computed: {
+    cusdata() {
+      return this.data.selection || "";
+    },
+  },
   methods: {
-    selectItemEventHandler(e) {
-      this.customer_name = e;
-      console.log("ลูกค้า=>", this.customer_name);
+    lookupUser: debounce(async function () {
+      const result = await CusService.search({ cus_name: this.data.input });
+      this.customers = result.data;
+    }, 500),
+    selectItem(item) {
+      this.data.selection = item;
+      CusService.select({ KUNNR: this.data.selection.KUNNR });
+    },
+    onInput(event) {
+      this.data.selection = null;
+      this.data.input = event.input;
+      this.listFiltered = event.items;
+    },
+    onBlur(event) {
+      this.data.input = event.input;
+      this.listFiltered = event.items;
     },
   },
 };
 </script>
-<style>
+<style scoped>
 #typeahead_id1 {
   font-size: 11px;
   width: 80%;
