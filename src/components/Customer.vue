@@ -74,6 +74,7 @@ export default {
     }, 500),
     selectItem(item) {
       this.data.selection = item;
+      CusService.select({ KUNNR: this.data.selection.KUNNR });
     },
     onInput(event) {
       this.data.selection = null;

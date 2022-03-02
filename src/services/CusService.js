@@ -4,6 +4,9 @@ export default {
   search(body) {
     return Api().post(`/CusSearch/`, body);
   },
+  select(body) {
+    return Api().post(`/CusSelect/`, body);
+  },
   show(userId) {
     return Api().get("user/" + userId);
   },
