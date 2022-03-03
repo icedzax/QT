@@ -38,7 +38,7 @@
       class="box grid overflow-hidden grid-cols-1 grid-rows-1 gap-1 flex-wrap mt-1"
     >
       <div class="h-auto row-start-1 row-span-5 col-start-1 col-span-2 pb-36">
-        <Ordervue></Ordervue>
+        <Ordervue :mat="mat_param"></Ordervue>
       </div>
     </div>
     <!--  ก้อนเงื่อนไขและสรุปรายการ  -->
@@ -89,7 +89,7 @@ export default {
   props: {
     mat_param: {
       type: String,
-      default: "",
+      default: null,
     },
   },
   components: {

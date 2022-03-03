@@ -271,6 +271,12 @@ import { auth } from "../state/user";
 import UserService from "../services/UserService.js";
 
 export default {
+  props: {
+    mat: {
+      type: String,
+      default: null,
+    },
+  },
   data() {
     return {
       fg,
@@ -347,6 +353,9 @@ export default {
     } else if ((state.user.saleOrg = 2000)) {
       this.tprice = this.type.Wholesale;
       this.selectedType = this.type.Wholesale[0];
+    }
+
+    if (this.mat) {
     }
   },
   methods: {
@@ -434,7 +443,8 @@ export default {
         this.exam_numunit = "";
         this.exam_price = "";
         this.rmd_price = "";
-        document.getElementById("typeahead_id").value = "";
+        // document.getElementById("typeahead_id").value = "";
+        this.data.input = "";
 
         // this.data.input = "";
         // this.data.selection = null;
