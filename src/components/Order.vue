@@ -305,6 +305,7 @@ export default {
       rmdweight: "",
       exam_numunit: "",
       exam_price: "",
+      selectedType: null,
     };
   },
   computed: {
