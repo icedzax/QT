@@ -8,6 +8,7 @@ const routes = [
     path: "/",
     name: "Home",
     component: Main,
+    props: (route) => ({ mat_param: route.query.q }),
   },
   {
     path: "/set/:id",
@@ -18,6 +19,7 @@ const routes = [
     path: "/main",
     name: "Main",
     component: Main,
+    props: (route) => ({ mat_param: route.query.q }),
   },
   {
     path: "/about",

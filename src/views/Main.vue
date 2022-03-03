@@ -86,6 +86,12 @@ export default {
       sumprice: 0,
     };
   },
+  props: {
+    mat_param: {
+      type: String,
+      default: "",
+    },
+  },
   components: {
     Header,
     Sale,
@@ -96,7 +102,9 @@ export default {
     License,
     Header_r,
   },
-  created() {},
+  created() {
+    // console.log(this.mat_param);
+  },
   computed: {
     oo() {
       return order.list;
