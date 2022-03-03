@@ -16,6 +16,11 @@
         </div>
         <div class="row-start-1 row-span-1 col-start-2 col-span-1 xl:pl-8">
           ZQ-X01-6305005
+          <button
+            class="text-center rounded-full p-1 px-2 text-sm border-2 border-green-500 text-black hover:text-green-600 font-semibold shadow-lg ring-1 ring-green-200"
+          >
+            บันทึก
+          </button>
         </div>
         <div class="row-start-2 row-span-1 col-start-1 col-span-1">
           วันที่เสนอราคา
