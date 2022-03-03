@@ -243,25 +243,6 @@
           </td>
         </tr>
       </tbody>
-
-      <!-- <tbody class="text-center">
-        <td colspan="5"></td>
-        <td v-if="!approveStat && this.List.length > 0" colspan="2">
-          <button
-            @click="save"
-            class="text-center rounded-lg p-1 px-2 text-sm border-2 border-green-500 text-black hover:text-green-600 font-semibold shadow-lg ring-1 ring-green-200"
-          >
-            บันทึก 💾
-          </button>
-          <button
-            @click="approve"
-            class="ml-2 text-center rounded-lg p-1 px-2 text-sm border-2 border-blue-400 text-black hover:text-blue-600 font-semibold shadow-lg ring-1 ring-blue-200"
-          >
-            อนุมัติ ✅
-          </button>
-        </td>
-      </tbody> -->
-      <!-- <div>{{ approveStat }}</div> -->
     </table>
   </div>
 </template>
@@ -280,6 +261,7 @@ export default {
   },
   data() {
     return {
+      num: "",
       fg,
       options: {
         placeholder: "Matcode,Description,Size...",
@@ -335,6 +317,7 @@ export default {
     },
     rmd_prices() {
       this.rmd_price = this.exam_numunit * this.exam_price;
+      this.rmd_price = parseFloat(this.rmd_price).toFixed(2);
       return this.rmd_price;
     },
   },
@@ -440,7 +423,7 @@ export default {
     edit(index, unit, vat) {
       this.List.filter((data, i) => {
         if (i == index) {
-          data.price = unit * vat;
+          data.price = parseFloat(unit * vat).toFixed(2);
         }
       });
     },
