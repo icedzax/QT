@@ -118,7 +118,7 @@
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <input
               type="text"
-              v-model="items.price"
+              v-model="items.cal_price"
               class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
               disabled
             />
@@ -349,10 +349,15 @@ export default {
   methods: {
     async PriceType(type, i, isInput) {
       console.log("isInput", isInput);
+      let typ = this.selectedType.split(":");
+
       const payload = {
         VKORG: 1000,
-        MATNR: isInput ? order.list[i].mat : this.data.selection.rmd_mat,
-        KONDA: "R1",
+        MATNR:
+          isInput & (order.list.length !== 0)
+            ? order.list[i].mat
+            : this.data.selection.rmd_mat,
+        KONDA: typ[0],
         KMEIN: "PC",
       };
       console.log(payload);
@@ -361,13 +366,15 @@ export default {
       if (price.data[0]) {
         console.log(price.data[0]);
 
-        if (isInput) {
+        if (isInput & (order.list.length !== 0)) {
           order.list[i].price_unit = await price.data[0].KBETR;
           order.list[i].price = order.list[i].amount * price.data[0].KBETR;
+          console.log("one");
         } else {
           this.inputField.price_unit = price.data[0].KBETR;
           this.inputField.cal_price =
             this.inputField.amount * price.data[0].KBETR;
+          console.log("two");
         }
       } else {
         console.log(false);
@@ -375,10 +382,12 @@ export default {
     },
     async selectItem(item) {
       this.data.selection = item;
+      let typ = this.selectedType.split(":");
+
       const payload = {
         VKORG: 1000,
         MATNR: this.data.selection.rmd_mat,
-        KONDA: "R1",
+        KONDA: typ[0],
         KMEIN: this.data.selection.MEINS,
       };
       console.log(payload);
@@ -387,12 +396,15 @@ export default {
       this.inputField.rmd_mat = this.data.selection.rmd_mat;
       this.inputField.rmd_weight = this.data.selection.rmd_stdweight;
       this.inputField.rmd_size = this.data.selection.rmd_size;
-
+      this.inputField.amount = 1;
       console.log(price.data[0]);
       if (price.data[0]) {
         this.inputField.price_unit = price.data[0].KBETR;
         this.inputField.cal_price =
           this.inputField.amount * price.data[0].KBETR;
+      } else {
+        this.inputField.price_unit = 1;
+        this.inputField.cal_price = 1;
       }
     },
     onInput(event) {
