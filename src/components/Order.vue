@@ -23,7 +23,7 @@
           >
             จำนวนหน่วย
           </th>
-          <th class="border-b border-slate-300 w-2/12"></th>
+          <th class="border-b border-slate-300 w-2/12">ราคา</th>
           <th
             class="font-light border-b border-slate-300 w-1/12 text-xs md:text-sm"
           >
@@ -64,7 +64,7 @@
           <td class="py-1 w-2/12 text-center">
             <input
               type="text"
-              v-model="items.mat"
+              v-model="items.rmd_mat"
               class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
               :disabled="approveStat"
             />
@@ -72,7 +72,7 @@
           <td class="py-1 w-4/12 text-center">
             <input
               type="text"
-              v-model="items.size"
+              v-model="items.rmd_size"
               class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
               :disabled="approveStat"
             />
@@ -80,7 +80,7 @@
           <td class="py-1 w-1/12 text-center">
             <input
               type="text"
-              v-model="items.stdweight"
+              v-model="items.rmd_weight"
               class="w-5/6 rounded-xl text-xs p-1 text-center border-none focus:outline-none"
               :disabled="approveStat"
             />
@@ -88,8 +88,8 @@
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <input
               type="text"
-              v-model="items.numunit"
-              @keyup="edit(index, items.numunit, items.vatt)"
+              v-model="items.amount"
+              @keyup="edit(index, items.amount, items.price_unit)"
               class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
               :disabled="approveStat"
             />
@@ -97,6 +97,7 @@
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <select
               v-model="items.ptype"
+              @change="PriceType(items.ptype, index, false)"
               class="rounded-xl text-xs p-1 text-center w-5/6 border-none"
               :disabled="approveStat"
             >
@@ -108,8 +109,8 @@
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <input
               type="text"
-              v-model="items.vatt"
-              @keyup="edit(index, items.numunit, items.vatt)"
+              v-model="items.price_unit"
+              @keyup="edit(index, items.amount, items.price_unit)"
               class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
               :disabled="approveStat"
             />
@@ -151,7 +152,7 @@
             <input
               type="text"
               class="w-5/6 rounded-xl text-xs p-1 text-center"
-              v-model="rmdmat"
+              v-model="inputField.rmd_mat"
             />
           </td>
           <td class="py-1 w-4/12 text-center">
@@ -175,19 +176,20 @@
             <input
               type="text"
               class="w-5/6 rounded-xl text-xs p-1 text-center"
-              v-model="rmdweight"
+              v-model="inputField.rmd_weight"
             />
           </td>
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <input
               type="text"
               class="w-5/6 rounded-xl text-xs p-1 text-center"
-              v-model="exam_numunit"
+              v-model="inputField.amount"
             />
           </td>
           <td class="py-1 w-1/12 text-center">
             <select
               v-model="selectedType"
+              @change="PriceType(selectedType, 0, true)"
               class="rounded-xl text-xs p-1 text-center w-5/6"
             >
               <option v-for="(i, index) in this.tprice" :key="index">
@@ -199,14 +201,14 @@
             <input
               type="text"
               class="w-5/6 rounded-xl text-xs p-1 text-center"
-              v-model="exam_price"
+              v-model="inputField.price_unit"
             />
           </td>
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <input
               type="text"
               class="w-5/6 rounded-xl text-xs p-1 text-center"
-              v-model="rmd_prices"
+              v-model="calPrice"
               disabled
             />
           </td>
@@ -226,20 +228,6 @@
                 <rect x="14" y="21" width="20" height="6" />
               </g>
             </svg>
-            <!-- <svg
-              version="1"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 48 48"
-              enable-background="new 0 0 48 48"
-              class="w-5 h-5 cursor-default"
-              v-else-if="approveStat || chkrepeat"
-            >
-              <circle fill="#808080" cx="24" cy="24" r="21" />
-              <g fill="#fff">
-                <rect x="21" y="14" width="6" height="20" />
-                <rect x="14" y="21" width="20" height="6" />
-              </g>
-            </svg> -->
           </td>
         </tr>
       </tbody>
@@ -251,14 +239,9 @@ import { fg } from "../state/fg";
 import { order } from "../state/order";
 import { auth } from "../state/user";
 import UserService from "../services/UserService.js";
+import FgService from "../services/FgService.js";
 
 export default {
-  props: {
-    mat: {
-      type: String,
-      default: null,
-    },
-  },
   data() {
     return {
       num: "",
@@ -284,19 +267,21 @@ export default {
         ],
       },
       tprice: [],
-      List: [],
-      chk_mat: [],
-      chk_size: [],
+      inputField: {
+        rmd_mat: null,
+        rmd_size: null,
+        rmd_weight: null,
+        cal_price: 0,
+        amount: 1,
+        price_unit: 1,
+      },
+
       chkrepeat: false,
-      rmdmat: "",
-      rmd_price: "",
-      rmdweight: "",
-      exam_numunit: "",
-      exam_price: "",
+
       selectedType: null,
     };
   },
-  props: ["statusApp"],
+  props: ["statusApp", "mat"],
   computed: {
     approveStat() {
       return this.statusApp;
@@ -307,18 +292,22 @@ export default {
     validateAdd() {
       if (this.approveStat && order.list.length < 1) return;
     },
-    Lists() {
-      return this.List;
+    List() {
+      return this.order.list;
     },
     fgSearchList() {
       return this.fg.items.map((f) => {
         return f.rmd_size + " - " + f.rmd_mat;
       });
     },
-    rmd_prices() {
-      this.rmd_price = this.exam_numunit * this.exam_price;
-      this.rmd_price = parseFloat(this.rmd_price).toFixed(2);
-      return this.rmd_price;
+    calPrice() {
+      return this.inputField.amount * this.inputField.price_unit || null;
+    },
+    pushMat() {
+      console.log("pushMat");
+      return this.fg.items.filter((f) => {
+        return f.rmd_mat == this.mat;
+      });
     },
   },
 
@@ -326,7 +315,23 @@ export default {
     let result = await UserService.fgList();
 
     fg.items = result.data;
-    this.listFiltered = fg.items;
+
+    if (this.mat) {
+      const prepush = await this.pushMat[0];
+      console.log(prepush);
+      order.list.push({
+        rmd_mat: prepush.rmd_mat,
+        rmd_size: prepush.rmd_size,
+        rmd_weighr: prepush.rmd_weight,
+        amount: 1,
+        price_unit: 11,
+        price: 1234,
+        ptype: "2000",
+      });
+      order.list = this.List;
+
+      this.$router.replace({});
+    }
     console.log(order);
     if ((auth.saleOrg = 1000)) {
       this.tprice = this.type.retail;
@@ -335,18 +340,60 @@ export default {
       this.tprice = this.type.Wholesale;
       this.selectedType = this.type.Wholesale[0];
     }
-
-    if (this.mat) {
-    }
+  },
+  mounted() {
+    // if (this.mat) {
+    //   console.log(this.pushMat);
+    // }
   },
   methods: {
-    selectItem(item) {
-      this.data.selection = item;
+    async PriceType(type, i, isInput) {
+      console.log("isInput", isInput);
+      const payload = {
+        VKORG: 1000,
+        MATNR: isInput ? order.list[i].mat : this.data.selection.rmd_mat,
+        KONDA: "R1",
+        KMEIN: "PC",
+      };
+      console.log(payload);
+      const price = await FgService.getPrice(payload);
 
-      this.rmdmat = this.data.selection.rmd_mat;
-      this.rmdweight = this.data.selection.rmd_stdweight;
-      this.exam_numunit = Math.floor(Math.random() * 10) + 1;
-      this.exam_price = Math.floor(Math.random() * 100) + 1;
+      if (price.data[0]) {
+        console.log(price.data[0]);
+
+        if (isInput) {
+          order.list[i].price_unit = await price.data[0].KBETR;
+          order.list[i].price = order.list[i].amount * price.data[0].KBETR;
+        } else {
+          this.inputField.price_unit = price.data[0].KBETR;
+          this.inputField.cal_price =
+            this.inputField.amount * price.data[0].KBETR;
+        }
+      } else {
+        console.log(false);
+      }
+    },
+    async selectItem(item) {
+      this.data.selection = item;
+      const payload = {
+        VKORG: 1000,
+        MATNR: this.data.selection.rmd_mat,
+        KONDA: "R1",
+        KMEIN: this.data.selection.MEINS,
+      };
+      console.log(payload);
+      const price = await FgService.getPrice(payload);
+
+      this.inputField.rmd_mat = this.data.selection.rmd_mat;
+      this.inputField.rmd_weight = this.data.selection.rmd_stdweight;
+      this.inputField.rmd_size = this.data.selection.rmd_size;
+
+      console.log(price.data[0]);
+      if (price.data[0]) {
+        this.inputField.price_unit = price.data[0].KBETR;
+        this.inputField.cal_price =
+          this.inputField.amount * price.data[0].KBETR;
+      }
     },
     onInput(event) {
       this.data.selection = null;
@@ -359,69 +406,40 @@ export default {
     },
 
     deletes(no) {
-      let np = 0;
       let num = parseInt(no) + 1;
       if (confirm("นำรายการที่ " + num + " ออกใช่หรือไม่?")) {
-        this.List.splice(no, 1);
+        order.list.splice(no, 1);
       }
-      order.list = this.List;
     },
     deleteAll() {
       if (confirm("Clear ข้อมูลทั้งหมดใช่หรือไม่?")) {
-        this.List = [];
+        this.order.list = [];
       }
     },
     enter() {
-      let m = "";
-      let s = "";
-      let w = "";
-
-      if (this.data.input !== "") {
-        if (this.data.selection == null) {
-          m = this.rmdmat;
-          s = this.data.input;
-          w = this.rmdweight;
-        } else {
-          m = this.data.selection.rmd_mat;
-          s = this.data.selection.rmd_size;
-          w = this.data.selection.rmd_stdweight;
-        }
-        this.chk_mat.push(m);
-        this.chk_size.push(s);
-
-        this.List.push({
-          mat: m,
-          size: s,
-          stdweight: w,
-          numunit: this.exam_numunit,
-          vatt: this.exam_price,
-          price: this.rmd_price,
+      if (this.data.input) {
+        this.order.list.push({
+          rmd_mat: this.inputField.rmd_mat,
+          rmd_size: this.inputField.rmd_size,
+          rmd_weight: this.inputField.rmd_weight,
+          amount: this.inputField.amount,
+          price_unit: this.inputField.price_unit || 1,
+          cal_price: this.inputField.cal_price || 1,
           ptype: this.selectedType,
         });
 
-        //this.TestList.push({ mat: this.rmd_mat, size: this.rmd_size });
-        console.log(this.List);
-        if (this.List.length !== 0) {
+        if (this.order.list.length !== 0) {
           this.table_showlist = "Y";
         }
 
-        this.rmdmat = "";
-        this.rmdweight = "";
-        this.exam_numunit = "";
-        this.exam_price = "";
-        this.rmd_price = "";
-        // document.getElementById("typeahead_id").value = "";
-        this.data.input = "";
-
-        // this.data.input = "";
-        // this.data.selection = null;
-        order.list = this.List;
+        this.data.input = {};
+        this.inputField = {};
       } else {
-        alert("กรอกข้อมูลก่อนบันทึกรายการ :)");
+        alert("กรุณาเลือกสินค้า");
       }
     },
     edit(index, unit, vat) {
-      this.List.filter((data, i) => {
+      this.order.list.filter((data, i) => {
         if (i == index) {
           data.price = parseFloat(unit * vat).toFixed(2);
         }
