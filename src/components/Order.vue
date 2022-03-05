@@ -23,7 +23,7 @@
           >
             จำนวนหน่วย
           </th>
-          <th class="border-b border-slate-300 w-2/12"></th>
+          <th class="border-b border-slate-300 w-2/12">ราคา</th>
           <th
             class="font-light border-b border-slate-300 w-1/12 text-xs md:text-sm"
           >
@@ -97,6 +97,7 @@
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <select
               v-model="items.ptype"
+              @change="PriceType(items.ptype, index, false)"
               class="rounded-xl text-xs p-1 text-center w-5/6 border-none"
               :disabled="approveStat"
             >
@@ -151,7 +152,7 @@
             <input
               type="text"
               class="w-5/6 rounded-xl text-xs p-1 text-center"
-              v-model="rmdmat"
+              v-model="inputField.rmd_mat"
             />
           </td>
           <td class="py-1 w-4/12 text-center">
@@ -175,19 +176,20 @@
             <input
               type="text"
               class="w-5/6 rounded-xl text-xs p-1 text-center"
-              v-model="rmdweight"
+              v-model="inputField.rmd_weight"
             />
           </td>
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <input
               type="text"
               class="w-5/6 rounded-xl text-xs p-1 text-center"
-              v-model="exam_numunit"
+              v-model="inputField.amount"
             />
           </td>
           <td class="py-1 w-1/12 text-center">
             <select
               v-model="selectedType"
+              @change="PriceType(selectedType, 0, false)"
               class="rounded-xl text-xs p-1 text-center w-5/6"
             >
               <option v-for="(i, index) in this.tprice" :key="index">
@@ -199,14 +201,14 @@
             <input
               type="text"
               class="w-5/6 rounded-xl text-xs p-1 text-center"
-              v-model="exam_price"
+              v-model="inputField.price_unit"
             />
           </td>
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <input
               type="text"
               class="w-5/6 rounded-xl text-xs p-1 text-center"
-              v-model="rmd_prices"
+              v-model="inputField.cal_price"
               disabled
             />
           </td>
@@ -226,20 +228,6 @@
                 <rect x="14" y="21" width="20" height="6" />
               </g>
             </svg>
-            <!-- <svg
-              version="1"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 48 48"
-              enable-background="new 0 0 48 48"
-              class="w-5 h-5 cursor-default"
-              v-else-if="approveStat || chkrepeat"
-            >
-              <circle fill="#808080" cx="24" cy="24" r="21" />
-              <g fill="#fff">
-                <rect x="21" y="14" width="6" height="20" />
-                <rect x="14" y="21" width="20" height="6" />
-              </g>
-            </svg> -->
           </td>
         </tr>
       </tbody>
@@ -251,14 +239,9 @@ import { fg } from "../state/fg";
 import { order } from "../state/order";
 import { auth } from "../state/user";
 import UserService from "../services/UserService.js";
+import FgService from "../services/FgService.js";
 
 export default {
-  props: {
-    mat: {
-      type: String,
-      default: null,
-    },
-  },
   data() {
     return {
       num: "",
@@ -284,19 +267,21 @@ export default {
         ],
       },
       tprice: [],
-      List: [],
+      inputField: {
+        rmd_mat: null,
+        rmd_weight: null,
+        cal_price: 0,
+        amount: 0,
+        price_unit: 0,
+      },
       chk_mat: [],
       chk_size: [],
       chkrepeat: false,
-      rmdmat: "",
-      rmd_price: "",
-      rmdweight: "",
-      exam_numunit: "",
-      exam_price: "",
+
       selectedType: null,
     };
   },
-  props: ["statusApp"],
+  props: ["statusApp", "mat"],
   computed: {
     approveStat() {
       return this.statusApp;
@@ -307,8 +292,8 @@ export default {
     validateAdd() {
       if (this.approveStat && order.list.length < 1) return;
     },
-    Lists() {
-      return this.List;
+    List() {
+      return this.order.list;
     },
     fgSearchList() {
       return this.fg.items.map((f) => {
@@ -320,13 +305,35 @@ export default {
       this.rmd_price = parseFloat(this.rmd_price).toFixed(2);
       return this.rmd_price;
     },
+    pushMat() {
+      console.log("pushMat");
+      return this.fg.items.filter((f) => {
+        return f.rmd_mat == this.mat;
+      });
+    },
   },
 
   async created() {
     let result = await UserService.fgList();
 
     fg.items = result.data;
-    this.listFiltered = fg.items;
+
+    if (this.mat) {
+      const prepush = await this.pushMat[0];
+      console.log(prepush);
+      order.list.push({
+        mat: prepush.rmd_mat,
+        size: prepush.rmd_size,
+        stdweight: prepush.rmd_stdweight,
+        numunit: 1,
+        vatt: 11,
+        price: 1234,
+        ptype: "2000",
+      });
+      order.list = this.List;
+
+      this.$router.replace({});
+    }
     console.log(order);
     if ((auth.saleOrg = 1000)) {
       this.tprice = this.type.retail;
@@ -335,18 +342,58 @@ export default {
       this.tprice = this.type.Wholesale;
       this.selectedType = this.type.Wholesale[0];
     }
-
-    if (this.mat) {
-    }
+  },
+  mounted() {
+    // if (this.mat) {
+    //   console.log(this.pushMat);
+    // }
   },
   methods: {
-    selectItem(item) {
-      this.data.selection = item;
+    async PriceType(type, i, isInput) {
+      console.log("isInput", isInput);
+      const payload = {
+        VKORG: 1000,
+        MATNR: isInput ? order.list[i].mat : this.data.selection.rmd_mat,
+        KONDA: "R1",
+        KMEIN: "PC",
+      };
+      console.log(payload);
+      const price = await FgService.getPrice(payload);
 
-      this.rmdmat = this.data.selection.rmd_mat;
-      this.rmdweight = this.data.selection.rmd_stdweight;
-      this.exam_numunit = Math.floor(Math.random() * 10) + 1;
-      this.exam_price = Math.floor(Math.random() * 100) + 1;
+      if (price.data[0]) {
+        console.log(price.data[0]);
+        if (isInput) {
+          order.list[i].vatt = await price.data[0].KBETR;
+          order.list[i].price = order.list[i].numunit * price.data[0].KBETR;
+        } else {
+          this.inputField.price_unit = await price.data[0].KBETR;
+          this.inputField.cal_price =
+            this.inputField.price_unitt * price.data[0].KBETR;
+        }
+      } else {
+        console.log(false);
+      }
+    },
+    async selectItem(item) {
+      this.data.selection = item;
+      const payload = {
+        VKORG: 1000,
+        MATNR: this.data.selection.rmd_mat,
+        KONDA: "R1",
+        KMEIN: this.data.selection.MEINS,
+      };
+      console.log(payload);
+      const price = await FgService.getPrice(payload);
+
+      this.inputField.rmd_mat = this.data.selection.rmd_mat;
+      this.inputField.rmd_weight = this.data.selection.rmd_stdweight;
+
+      // this.exam_numunit = Math.floor(Math.random() * 10) + 1;
+      console.log(price.data[0]);
+      if (price.data[0]) {
+        this.inputField.cal_price =
+          (await this.inputField.amount) * price.data[0].KBETR;
+      }
     },
     onInput(event) {
       this.data.selection = null;
