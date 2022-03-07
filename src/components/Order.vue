@@ -4,37 +4,41 @@
       <thead class="w-full">
         <tr class="w-full mb-4">
           <th
-            class="font-light border-b border-slate-300 w-2/12 text-xs md:text-sm"
+            class="font-light border border-slate-200 w-2/12 text-xs md:text-sm"
           >
             ลำดับ
           </th>
           <th
-            class="font-light border-b border-slate-300 w-4/12 text-xs md:text-sm"
+            class="font-light border border-slate-200 w-4/12 text-xs md:text-sm"
           >
             รายการสินค้า
           </th>
           <th
-            class="font-light border-b border-slate-300 w-1/12 text-xs md:text-sm"
+            class="font-light border border-slate-200 w-1/12 text-xs md:text-sm"
           >
             น้ำหนักหน่วย +/-
           </th>
           <th
-            class="font-light border-b border-slate-300 w-1/12 text-xs md:text-sm"
+            class="font-light border border-slate-200 w-1/12 text-xs md:text-sm"
           >
             จำนวนหน่วย
           </th>
-          <th class="border-b border-slate-300 w-2/12">ราคา</th>
           <th
-            class="font-light border-b border-slate-300 w-1/12 text-xs md:text-sm"
+            class="font-light border border-slate-200 w-2/12 text-xs md:text-sm"
+          >
+            ราคา
+          </th>
+          <th
+            class="font-light border border-slate-200 w-1/12 text-xs md:text-sm"
           >
             ราคาต่อหน่วยก่อน VAT 7%
           </th>
           <th
-            class="font-light border-b border-slate-300 w-1/12 text-xs md:text-sm"
+            class="font-light border border-slate-200 w-1/12 text-xs md:text-sm"
           >
             จำนวนเงิน
           </th>
-          <th class="border-b border-slate-300 w-1/12">
+          <th class="w-1/12">
             <button class="text-center" v-if="!approveStat">
               <svg
                 id="Layer_1"
@@ -61,44 +65,54 @@
       <!-- Remove the nasty inline CSS fixed height on production and replace it with a CSS class — this is just for demonstration purposes! -->
       <tbody class="bg-grey-light w-full">
         <tr v-for="(items, index) in List" :key="index" class="full mb-4">
-          <td class="py-1 w-2/12 text-center">
+          <td
+            class="py-1 w-2/12 text-center text-xs md:text-sm border-b border-slate-200"
+          >
             <input
               type="text"
               v-model="items.rmd_mat"
-              class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
+              class="w-5/6 text-xs p-1 text-center border-none"
               :disabled="approveStat"
             />
           </td>
-          <td class="py-1 w-4/12 text-center">
+          <td
+            class="py-1 w-4/12 text-center text-xs md:text-sm border border-slate-200"
+          >
             <input
               type="text"
               v-model="items.rmd_size"
-              class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
+              class="w-5/6 text-xs p-1 text-center border-none"
               :disabled="approveStat"
             />
           </td>
-          <td class="py-1 w-1/12 text-center">
+          <td
+            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
+          >
             <input
               type="text"
               v-model="items.rmd_weight"
-              class="w-5/6 rounded-xl text-xs p-1 text-center border-none focus:outline-none"
+              class="w-5/6 text-xs p-1 text-center border-none focus:outline-none"
               :disabled="approveStat"
             />
           </td>
-          <td class="py-1 w-1/12 text-center text-xs md:text-sm">
+          <td
+            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
+          >
             <input
               type="text"
               v-model="items.amount"
               @keyup="edit(index, items.amount, items.price_unit, true)"
-              class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
+              class="w-5/6 text-xs p-1 text-center border-none"
               :disabled="approveStat"
             />
           </td>
-          <td class="py-1 w-1/12 text-center text-xs md:text-sm">
+          <td
+            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
+          >
             <select
               v-model="items.ptype"
               @change="PriceType(items.ptype, index, false)"
-              class="rounded-xl text-xs p-1 text-center w-5/6 border-none"
+              class="text-xs p-1 text-center w-5/6 border-none"
               :disabled="approveStat"
             >
               <option v-for="(i, index) in this.tprice" :key="index">
@@ -106,20 +120,24 @@
               </option>
             </select>
           </td>
-          <td class="py-1 w-1/12 text-center text-xs md:text-sm">
+          <td
+            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
+          >
             <input
               type="text"
               v-model="items.price_unit"
               @keyup="edit(index, items.amount, items.price_unit, true)"
-              class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
+              class="w-5/6 text-xs p-1 text-center border-none"
               :disabled="approveStat"
             />
           </td>
-          <td class="py-1 w-1/12 text-center text-xs md:text-sm">
+          <td
+            class="py-1 w-1/12 text-center text-xs md:text-sm border-b border-slate-200"
+          >
             <input
               type="text"
               v-model="items.cal_price"
-              class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
+              class="w-5/6 text-xs p-1 text-center border-none"
               disabled
             />
           </td>
@@ -151,7 +169,7 @@
           <td class="py-1 w-2/12 text-center">
             <input
               type="text"
-              class="w-5/6 rounded-xl text-xs p-1 text-center"
+              class="w-5/6 text-xs p-1 text-center"
               v-model="inputField.rmd_mat"
             />
           </td>
@@ -175,14 +193,14 @@
           <td class="py-1 w-1/12 text-center">
             <input
               type="text"
-              class="w-5/6 rounded-xl text-xs p-1 text-center"
+              class="w-5/6 text-xs p-1 text-center"
               v-model="inputField.rmd_weight"
             />
           </td>
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <input
               type="text"
-              class="w-5/6 rounded-xl text-xs p-1 text-center"
+              class="w-5/6 text-xs p-1 text-center"
               v-model="inputField.amount"
               @keyup="
                 edit(index, inputField.amount, inputField.price_unit, false)
@@ -193,7 +211,7 @@
             <select
               v-model="selectedType"
               @change="PriceType(selectedType, this.x, true)"
-              class="rounded-xl text-xs p-1 text-center w-5/6"
+              class="text-xs p-1 text-center w-5/6"
             >
               <option v-for="(i, index) in this.tprice" :key="index">
                 {{ i }}
@@ -203,14 +221,14 @@
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <input
               type="text"
-              class="w-5/6 rounded-xl text-xs p-1 text-center"
+              class="w-5/6 text-xs p-1 text-center"
               v-model="inputField.price_unit"
             />
           </td>
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <input
               type="text"
-              class="w-5/6 rounded-xl text-xs p-1 text-center"
+              class="w-5/6 text-xs p-1 text-center"
               v-model="calPrice"
               disabled
             />
@@ -483,7 +501,6 @@ export default {
 #typeahead_id {
   font-size: 11px;
   width: 80%;
-  border-radius: 13px;
   padding-top: 2px;
   padding-bottom: 2px;
 }
