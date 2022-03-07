@@ -409,11 +409,14 @@ export default {
       this.inputField.rmd_mat = this.data.selection.rmd_mat;
       this.inputField.rmd_weight = this.data.selection.rmd_stdweight;
       this.inputField.rmd_size = this.data.selection.rmd_size;
-
+      this.inputField.amount = 1;
       if (price.data[0]) {
         this.inputField.price_unit = price.data[0].KBETR;
         this.inputField.cal_price =
           this.inputField.amount * price.data[0].KBETR;
+      } else {
+        this.inputField.price_unit = 1;
+        this.inputField.cal_price = 1;
       }
     },
     onInput(event) {
