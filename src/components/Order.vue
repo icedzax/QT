@@ -89,7 +89,7 @@
             <input
               type="text"
               v-model="items.amount"
-              @keyup="edit(index, items.amount, items.price_unit)"
+              @keyup="edit(index, items.amount, items.price_unit, true)"
               class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
               :disabled="approveStat"
             />
@@ -110,7 +110,7 @@
             <input
               type="text"
               v-model="items.price_unit"
-              @keyup="edit(index, items.amount, items.price_unit)"
+              @keyup="edit(index, items.amount, items.price_unit, true)"
               class="w-5/6 rounded-xl text-xs p-1 text-center border-none"
               :disabled="approveStat"
             />
@@ -184,12 +184,15 @@
               type="text"
               class="w-5/6 rounded-xl text-xs p-1 text-center"
               v-model="inputField.amount"
+              @keyup="
+                edit(index, inputField.amount, inputField.price_unit, false)
+              "
             />
           </td>
           <td class="py-1 w-1/12 text-center">
             <select
               v-model="selectedType"
-              @change="PriceType(selectedType, 0, true)"
+              @change="PriceType(selectedType, this.x, true)"
               class="rounded-xl text-xs p-1 text-center w-5/6"
             >
               <option v-for="(i, index) in this.tprice" :key="index">
@@ -244,6 +247,7 @@ import FgService from "../services/FgService.js";
 export default {
   data() {
     return {
+      x: "input",
       num: "",
       fg,
       options: {
@@ -303,6 +307,9 @@ export default {
     calPrice() {
       return this.inputField.amount * this.inputField.price_unit || null;
     },
+    calList(unit, price) {
+      return this.inputField.amount * this.inputField.price_unit;
+    },
     pushMat() {
       console.log("pushMat");
       return this.fg.items.filter((f) => {
@@ -348,15 +355,22 @@ export default {
   },
   methods: {
     async PriceType(type, i, isInput) {
-      console.log("isInput", isInput);
-      let typ = this.selectedType.split(":");
+      console.log("isInput", isInput, "mat", this.data.selection.rmd_mat);
+      let typ = type.split(":");
 
+      let new_matnr = "";
+      if (
+        (isInput && order.list.length !== 0 && i !== "input") ||
+        (order.list.length !== 0 && i !== "input")
+      ) {
+        new_matnr = order.list[i].rmd_mat;
+      } else {
+        console.log(i);
+        new_matnr = this.data.selection.rmd_mat;
+      }
       const payload = {
         VKORG: 1000,
-        MATNR:
-          isInput & (order.list.length !== 0)
-            ? order.list[i].mat
-            : this.data.selection.rmd_mat,
+        MATNR: new_matnr,
         KONDA: typ[0],
         KMEIN: "PC",
       };
@@ -364,17 +378,16 @@ export default {
       const price = await FgService.getPrice(payload);
 
       if (price.data[0]) {
-        console.log(price.data[0]);
-
-        if (isInput & (order.list.length !== 0)) {
-          order.list[i].price_unit = await price.data[0].KBETR;
-          order.list[i].price = order.list[i].amount * price.data[0].KBETR;
-          console.log("one");
-        } else {
+        if (isInput) {
           this.inputField.price_unit = price.data[0].KBETR;
-          this.inputField.cal_price =
-            this.inputField.amount * price.data[0].KBETR;
-          console.log("two");
+          this.inputField.cal_price = parseFloat(
+            this.inputField.amount * price.data[0].KBETR
+          ).toFixed(2);
+        } else {
+          order.list[i].price_unit = await price.data[0].KBETR;
+          order.list[i].cal_price = parseFloat(
+            order.list[i].amount * price.data[0].KBETR
+          ).toFixed(2);
         }
       } else {
         console.log(false);
@@ -396,15 +409,11 @@ export default {
       this.inputField.rmd_mat = this.data.selection.rmd_mat;
       this.inputField.rmd_weight = this.data.selection.rmd_stdweight;
       this.inputField.rmd_size = this.data.selection.rmd_size;
-      this.inputField.amount = 1;
-      console.log(price.data[0]);
+
       if (price.data[0]) {
         this.inputField.price_unit = price.data[0].KBETR;
         this.inputField.cal_price =
           this.inputField.amount * price.data[0].KBETR;
-      } else {
-        this.inputField.price_unit = 1;
-        this.inputField.cal_price = 1;
       }
     },
     onInput(event) {
@@ -430,6 +439,7 @@ export default {
     },
     enter() {
       if (this.data.input) {
+        console.log("ราคาที่แอด", this.inputField.cal_price);
         this.order.list.push({
           rmd_mat: this.inputField.rmd_mat,
           rmd_size: this.inputField.rmd_size,
@@ -450,12 +460,18 @@ export default {
         alert("กรุณาเลือกสินค้า");
       }
     },
-    edit(index, unit, vat) {
-      this.order.list.filter((data, i) => {
-        if (i == index) {
-          data.price = parseFloat(unit * vat).toFixed(2);
-        }
-      });
+    edit(index, unit, vat, inputE) {
+      if (this.order.list.length > 0 && inputE) {
+        this.order.list.filter((data, i) => {
+          if (i == index) {
+            data.cal_price = parseFloat(unit * vat).toFixed(2);
+          }
+        });
+        console.log(this.order.list.length);
+      } else {
+        this.inputField.cal_price = parseFloat(unit * vat).toFixed(2);
+        console.log("ราคาที่อัพแน้ว", this.inputField.cal_price);
+      }
     },
   },
 };
