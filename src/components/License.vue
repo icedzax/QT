@@ -12,7 +12,7 @@
           @click="approve"
           class="ml-2 text-center rounded-full p-1 px-2 text-sm border-2 border-blue-400 text-black hover:text-blue-600 font-semibold shadow-lg ring-1 ring-blue-200 focus:outline-none"
         >
-          อนุมัติ ✅
+          ขออนุมัติ ✅
         </button>
         <p v-else>ลายเซ็นผู้อนุมัติ</p>
       </div>
