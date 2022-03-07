@@ -8,11 +8,13 @@
       <div class="">..........................................</div>
       <div class="">
         <button
+          v-if="!this.stat"
           @click="approve"
           class="ml-2 text-center rounded-full p-1 px-2 text-sm border-2 border-blue-400 text-black hover:text-blue-600 font-semibold shadow-lg ring-1 ring-blue-200 focus:outline-none"
         >
           อนุมัติ ✅
         </button>
+        <p v-else>ลายเซ็นผู้อนุมัติ</p>
       </div>
       <div class="">(.........................................)</div>
       <div class="">({{ this.user }})</div>
@@ -25,6 +27,7 @@ export default {
   data() {
     return {
       user: "มานะ",
+      stat: false,
     };
   },
   methods: {
@@ -36,7 +39,7 @@ export default {
       ) {
         alert("Approve เรียบร้อยแล้ว :)");
         order.status = true;
-        console.log(order);
+        this.stat = true;
       }
     },
   },
