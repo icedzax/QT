@@ -51,6 +51,7 @@ export default {
   created() {},
   computed: {
     sumprice() {
+      console.log(this.sp);
       let fixsp = this.sp.toFixed(2);
       let a = fixsp.toString();
       const afSP = this.addComma(a);

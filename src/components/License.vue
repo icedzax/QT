@@ -23,7 +23,10 @@
 </template>
 <script>
 import { order } from "../state/order";
+import { cus } from "../state/cus";
+
 export default {
+  props: ["cus"],
   data() {
     return {
       user: "มานะ",
@@ -32,14 +35,22 @@ export default {
   },
   methods: {
     approve() {
-      if (
-        confirm(
-          "กดบันทึกก่อน Approve ทุกครั้ง หาก Approve แล้วจะไม่สามารถแก้ไขข้อมูลได้ ต้องการ Approve ใช่หรือไม่?"
-        )
-      ) {
-        alert("Approve เรียบร้อยแล้ว :)");
-        order.status = true;
-        this.stat = true;
+      if (cus.name) {
+        if (order.list.length > 0) {
+          if (
+            confirm(
+              "กดบันทึกก่อน Approve ทุกครั้ง หาก Approve แล้วจะไม่สามารถแก้ไขข้อมูลได้ ต้องการ Approve ใช่หรือไม่?"
+            )
+          ) {
+            alert("Approve เรียบร้อยแล้ว :)");
+            order.status = true;
+            this.stat = true;
+          }
+        } else {
+          alert("บันทึกอย่างน้อย 1 รายการ :)");
+        }
+      } else {
+        alert("ใส่ชื่อลูกค้าก่อนขออนุมัติ");
       }
     },
   },

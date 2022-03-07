@@ -30,7 +30,7 @@
       <div
         class="row-span-5 col-start-1 col-span-2 md:col-start-2 md:col-span-1 h-auto"
       >
-        <Customer></Customer>
+        <Customer :cus="chk_cus" :statusApp="approved"></Customer>
       </div>
     </div>
     <!--  ก้อนรายการสินค้า  -->
@@ -59,7 +59,7 @@
       class="box grid overflow-hidden grid-cols-1 grid-rows-1 gap-1 flex-wrap mt-1 mb-1"
     >
       <div class="row-start-1 row-span-5 col-start-1 col-span-2 h-auto">
-        <License></License>
+        <License :cus="chk_cus"></License>
       </div>
     </div>
 
@@ -78,12 +78,14 @@ import Total from "../components/Total.vue";
 import License from "../components/License.vue";
 
 import { order } from "../state/order";
+import { cus } from "../state/cus";
 export default {
   data() {
     return {
       order,
       sumweight: 0,
       sumprice: 0,
+      cus,
     };
   },
   props: {
@@ -126,7 +128,15 @@ export default {
 
       if (num_orderlist.length !== 0) {
         order.list.map((data) => {
+          console.log("DATA=>", data);
+          if (data.cal_price.length > 3) {
+            data.cal_price = this.delcomma(data.cal_price);
+          }
+
           this.sumprice = this.sumprice + parseFloat(data.cal_price);
+          if (data.cal_price.length > 3) {
+            data.cal_price = this.addComma(data.cal_price);
+          }
         });
       }
       return this.sumprice;
@@ -134,6 +144,29 @@ export default {
     approved() {
       const app = order.status;
       return app;
+    },
+    chk_cus() {
+      return cus.name;
+    },
+  },
+  methods: {
+    addComma(a) {
+      let x = a.split(".");
+      let x1 = x[0];
+
+      let x2 = x.length > 1 ? "." + x[1] : "";
+
+      var rgx = /(\d+)(\d{3})/;
+
+      while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, "$1" + "," + "$2");
+      }
+      let aa = x1 + x2;
+      return aa;
+    },
+    delcomma(a) {
+      let x = a.replace(",", "");
+      return x;
     },
   },
 };
