@@ -115,8 +115,7 @@ export default {
 
       if (num_orderlist.length !== 0) {
         order.list.map((data) => {
-          this.sumweight = this.sumweight + parseFloat(data.stdweight);
-          console.log(data.stdweight);
+          this.sumweight = this.sumweight + parseFloat(data.rmd_weight);
         });
       }
       return this.sumweight;
@@ -127,8 +126,7 @@ export default {
 
       if (num_orderlist.length !== 0) {
         order.list.map((data) => {
-          this.sumprice = this.sumprice + parseFloat(data.price);
-          console.log(data.stdweight);
+          this.sumprice = this.sumprice + parseFloat(data.cal_price);
         });
       }
       return this.sumprice;
