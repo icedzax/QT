@@ -6,6 +6,7 @@
       <div class="font-semibold">ลูกค้า</div>
       <div class="col-span-3">
         <vue3-simple-typeahead
+          v-if="!approveStat"
           id="typeahead_id"
           :placeholder="options.placeholder"
           :items="customers"
@@ -21,6 +22,7 @@
           "
         >
         </vue3-simple-typeahead>
+        <p v-else>{{ this.showcus }}</p>
       </div>
 
       <div>
@@ -45,13 +47,17 @@
 <script>
 import { cus } from "../state/cus";
 import { debounce } from "lodash";
+import { order } from "../state/order";
+
 import CusService from "../services/CusService.js";
 export default {
+  props: ["cus", "statusApp"],
   data() {
     return {
       customers: [],
+      showcus: "",
       cus,
-
+      order,
       options: {
         placeholder: "Customer Name...",
         minInputLength: 1,
@@ -63,9 +69,18 @@ export default {
       },
     };
   },
+  created() {
+    console.log(order.status);
+  },
   computed: {
     cusdata() {
       return this.data.selection || "";
+    },
+    approveStat() {
+      return this.statusApp;
+    },
+    c() {
+      return cus.name;
     },
   },
   methods: {
@@ -76,6 +91,8 @@ export default {
     selectItem(item) {
       this.data.selection = item;
       CusService.select({ KUNNR: this.data.selection.KUNNR });
+      this.showcus = this.data.selection.KUNNR + this.data.selection.CNAME;
+      cus.name = this.showcus;
     },
     onInput(event) {
       this.data.selection = null;

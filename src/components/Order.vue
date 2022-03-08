@@ -222,13 +222,16 @@
               type="text"
               class="w-5/6 text-xs p-1 text-center"
               v-model="inputField.price_unit"
+              @keyup="
+                edit(index, inputField.amount, inputField.price_unit, false)
+              "
             />
           </td>
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <input
               type="text"
               class="w-5/6 text-xs p-1 text-center"
-              v-model="calPrice"
+              v-model="inputField.cal_price"
               disabled
             />
           </td>
@@ -324,9 +327,7 @@ export default {
     calPrice() {
       return this.inputField.amount * this.inputField.price_unit || null;
     },
-    calList(unit, price) {
-      return this.inputField.amount * this.inputField.price_unit;
-    },
+
     pushMat() {
       console.log("pushMat");
       return this.fg.items.filter((f) => {
@@ -397,14 +398,20 @@ export default {
       if (price.data[0]) {
         if (isInput) {
           this.inputField.price_unit = price.data[0].KBETR;
+          this.inputField.price_unit = this.addComma(
+            this.inputField.price_unit
+          );
           this.inputField.cal_price = parseFloat(
             this.inputField.amount * price.data[0].KBETR
           ).toFixed(2);
+          this.inputField.cal_price = this.addComma(this.inputField.cal_price);
         } else {
           order.list[i].price_unit = await price.data[0].KBETR;
+          order.list[i].price_unit = this.addComma(order.list[i].price_unit);
           order.list[i].cal_price = parseFloat(
             order.list[i].amount * price.data[0].KBETR
           ).toFixed(2);
+          order.list[i].cal_price = this.addComma(order.list[i].cal_price);
         }
       } else {
         console.log(false);
@@ -413,7 +420,7 @@ export default {
     async selectItem(item) {
       this.data.selection = item;
       let typ = this.selectedType.split(":");
-
+      console.log(item.rmd_mat);
       const payload = {
         VKORG: 1000,
         MATNR: this.data.selection.rmd_mat,
@@ -423,14 +430,16 @@ export default {
       console.log(payload);
       const price = await FgService.getPrice(payload);
 
-      this.inputField.rmd_mat = this.data.selection.rmd_mat;
+      this.inputField.rmd_mat = item.rmd_mat;
       this.inputField.rmd_weight = this.data.selection.rmd_stdweight;
       this.inputField.rmd_size = this.data.selection.rmd_size;
       this.inputField.amount = 1;
       if (price.data[0]) {
-        this.inputField.price_unit = price.data[0].KBETR;
-        this.inputField.cal_price =
-          this.inputField.amount * price.data[0].KBETR;
+        this.inputField.price_unit = this.addComma(price.data[0].KBETR);
+        let a = parseFloat(
+          this.inputField.amount * price.data[0].KBETR
+        ).toFixed(2);
+        this.inputField.cal_price = this.addComma(a);
       } else {
         this.inputField.price_unit = 1;
         this.inputField.cal_price = 1;
@@ -469,6 +478,7 @@ export default {
           cal_price: this.inputField.cal_price || 1,
           ptype: this.selectedType,
         });
+        console.log(this.order.list);
 
         if (this.order.list.length !== 0) {
           this.table_showlist = "Y";
@@ -481,17 +491,45 @@ export default {
       }
     },
     edit(index, unit, vat, inputE) {
+      if (vat.length > 3) {
+        vat = this.delcomma(vat);
+      }
+
       if (this.order.list.length > 0 && inputE) {
         this.order.list.filter((data, i) => {
           if (i == index) {
+            if (vat.length > 3) {
+              data.price_unit = this.addComma(vat);
+            }
+
             data.cal_price = parseFloat(unit * vat).toFixed(2);
+            data.cal_price = this.addComma(data.cal_price);
           }
         });
         console.log(this.order.list.length);
       } else {
         this.inputField.cal_price = parseFloat(unit * vat).toFixed(2);
-        console.log("ราคาที่อัพแน้ว", this.inputField.cal_price);
+        this.inputField.cal_price = this.addComma(this.inputField.cal_price);
       }
+    },
+    addComma(a) {
+      console.log("A:::", a);
+      let x = a.split(".");
+      let x1 = x[0];
+
+      let x2 = x.length > 1 ? "." + x[1] : "";
+
+      var rgx = /(\d+)(\d{3})/;
+
+      while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, "$1" + "," + "$2");
+      }
+      let aa = x1 + x2;
+      return aa;
+    },
+    delcomma(a) {
+      let x = a.replace(",", "");
+      return x;
     },
   },
 };
