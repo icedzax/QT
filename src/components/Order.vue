@@ -449,6 +449,7 @@ export default {
       this.data.selection = null;
       this.data.input = event.input;
       this.listFiltered = event.items;
+      this.inputField.rmd_size = this.data.input;
     },
     onBlur(event) {
       this.data.input = event.input;
