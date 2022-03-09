@@ -24,7 +24,7 @@ export default {
     let arr_info = [];
     let name = "";
     let position = "";
-    let result = await UserService.post(arr_id);
+    let result = await UserService.getUser(arr_id);
     auth.user = result.data;
     arr_info = result.data;
 
