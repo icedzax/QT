@@ -7,7 +7,7 @@ export default {
   show(userId) {
     return Api().get("user/" + userId);
   },
-  post(userId) {
+  getUser(userId) {
     return Api().post("auth/", userId);
   },
   push() {
