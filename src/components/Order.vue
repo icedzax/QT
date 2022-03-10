@@ -419,6 +419,10 @@ export default {
     },
     async selectItem(item) {
       this.data.selection = item;
+      let st = (document.getElementsByClassName(
+        "simple-typeahead-list"
+      )[0].style.visibility = "hidden");
+      console.log(st);
       let typ = this.selectedType.split(":");
       console.log(item.rmd_mat);
       const payload = {
