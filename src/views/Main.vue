@@ -115,7 +115,7 @@ export default {
       this.sumweight = 0;
       const num_orderlist = Object.entries(order.list);
 
-      if (num_orderlist.length !== 0) {
+      if (num_orderlist) {
         order.list.map((data) => {
           this.sumweight = this.sumweight + parseFloat(data.rmd_weight);
         });
@@ -129,12 +129,12 @@ export default {
       if (num_orderlist.length !== 0) {
         order.list.map((data) => {
           console.log("DATA=>", data);
-          if (data.cal_price.length > 3) {
+          if (data.cal_price && data.cal_price.length > 3) {
             data.cal_price = this.delcomma(data.cal_price);
           }
 
           this.sumprice = this.sumprice + parseFloat(data.cal_price);
-          if (data.cal_price.length > 3) {
+          if (data.cal_price && data.cal_price.length > 3) {
             data.cal_price = this.addComma(data.cal_price);
           }
         });

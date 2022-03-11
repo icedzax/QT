@@ -7,6 +7,10 @@ export default {
   show(userId) {
     return Api().get("user/" + userId);
   },
+  temp(empcode) {
+    return Api().get("temp/" + empcode);
+  },
+
   getUser(userId) {
     return Api().post("auth/", userId);
   },

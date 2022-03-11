@@ -267,6 +267,7 @@ import FgService from "../services/FgService.js";
 export default {
   data() {
     return {
+      auth,
       x: "input",
       num: "",
       fg,
@@ -344,16 +345,39 @@ export default {
     if (this.mat) {
       const prepush = await this.pushMat[0];
       console.log(prepush);
-      order.list.push({
+      const payload = {
+        VKORG: 1000,
+        MATNR: this.mat,
+        KONDA: "R1",
+        KMEIN: "PC",
+      };
+      const price = await FgService.getPrice(payload);
+
+      let pre_priceunit = 1;
+      let pre_calprice = 1;
+      let pre_amount = 1;
+
+      if (price.data[0]) {
+        pre_priceunit = price.data[0].KBETR;
+        pre_calprice = pre_amount * pre_priceunit;
+      }
+      const stock_payload = {
         rmd_mat: prepush.rmd_mat,
         rmd_size: prepush.rmd_size,
-        rmd_weighr: prepush.rmd_weight,
-        amount: 1,
-        price_unit: 11,
-        price: 1234,
-        ptype: "2000",
-      });
-      order.list = this.List;
+        rmd_weight: prepush.rmd_stdweight,
+        ptype: "R1:ราคาสดรับเอง",
+        amount: pre_amount,
+        unit: "PC",
+        price_unit: pre_priceunit,
+        cal_price: pre_calprice,
+        qt: auth.temp_qt,
+      };
+      console.log(order.list);
+      // order.list.push(stock_payload);
+
+      // order.list = this.List;
+
+      FgService.insert(stock_payload);
 
       this.$router.replace({});
     }
@@ -373,7 +397,7 @@ export default {
   },
   methods: {
     async PriceType(type, i, isInput) {
-      console.log("isInput", isInput, "mat", this.data.selection.rmd_mat);
+      // console.log("isInput", isInput, "mat", this.data.selection.rmd_mat);
       let typ = type.split(":");
 
       let new_matnr = "";
@@ -383,7 +407,7 @@ export default {
       ) {
         new_matnr = order.list[i].rmd_mat;
       } else {
-        console.log(i);
+        // console.log(i);
         new_matnr = this.data.selection.rmd_mat;
       }
       const payload = {
@@ -483,7 +507,20 @@ export default {
           cal_price: this.inputField.cal_price || 1,
           ptype: this.selectedType,
         });
-        console.log(this.order.list);
+
+        const stock_payload = {
+          rmd_mat: this.inputField.rmd_mat,
+          rmd_size: this.inputField.rmd_size,
+          rmd_weight: this.inputField.rmd_weight,
+          ptype: this.selectedType,
+          amount: this.inputField.amount,
+          unit: "PC",
+          price_unit: this.inputField.price_unit || 1,
+          cal_price: this.inputField.cal_price || 1,
+          qt: auth.temp_qt,
+        };
+
+        FgService.insert(stock_payload);
 
         if (this.order.list.length !== 0) {
           this.table_showlist = "Y";

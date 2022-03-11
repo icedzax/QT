@@ -27,14 +27,38 @@ setInterval(() => {
 </template>
 <script>
 import { fg } from "./state/fg";
-
+import { auth } from "./state/user";
+import { order } from "./state/order";
+import UserService from "./services/UserService.js";
+import FgService from "./services/FgService";
 export default {
   data() {
     return {
       fg,
+      auth,
     };
   },
   async created() {
+    if (!auth.user_id) {
+      auth.user_id = localStorage.getItem("id");
+      auth.user = localStorage.getItem("emp_name");
+    }
+    const us = await UserService.temp(auth.user_id);
+    if (us.data[0]) {
+      auth.temp_qt = await us.data[0].qt;
+    }
+
+    if (auth.temp_qt) {
+      const items = await FgService.items(auth.temp_qt);
+      console.log(items.data);
+      if (items.data[0]) {
+        order.list = items.data;
+      }
+    }
+    // const temp = await FgService.temp(auth.user_id);
+    // if (temp.data[0]) {
+    //   auth.temp_qt = temp.data.qt;
+    // }
     //this.State = result.data;
     // if (auth.steel.length === 0) {
     // }
