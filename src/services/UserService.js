@@ -10,7 +10,9 @@ export default {
   temp(empcode) {
     return Api().get("temp/" + empcode);
   },
-
+  sale(empcode) {
+    return Api().get("sale/" + empcode);
+  },
   getUser(userId) {
     return Api().post("auth/", userId);
   },

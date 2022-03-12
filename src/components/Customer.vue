@@ -46,12 +46,15 @@
 </template>
 <script>
 import { cus } from "../state/cus";
+import { auth } from "../state/user";
+
 import { debounce } from "lodash";
 import { order } from "../state/order";
 
 import CusService from "../services/CusService.js";
+import axios from "axios";
 export default {
-  props: ["cus", "statusApp"],
+  props: ["customername", "statusApp"],
   data() {
     return {
       customers: [],
@@ -88,11 +91,17 @@ export default {
       const result = await CusService.search({ cus_name: this.data.input });
       this.customers = result.data;
     }, 500),
-    selectItem(item) {
+    async selectItem(item) {
       this.data.selection = item;
       CusService.select({ KUNNR: this.data.selection.KUNNR });
       this.showcus = this.data.selection.KUNNR + this.data.selection.CNAME;
       cus.name = this.showcus;
+      const edit_cus = await CusService.setCus({
+        KUNNR: this.data.selection.KUNNR,
+        qt: auth.temp_qt,
+      });
+      cus.KUNNR = this.data.selection.KUNNR;
+      console.log(cus.KUNNR);
     },
     onInput(event) {
       this.data.selection = null;

@@ -13,6 +13,9 @@ export default {
   post(userId) {
     return Api().post("auth/", userId);
   },
+  setCus(body) {
+    return Api().post(`setCus/`, body);
+  },
   push() {
     return Api().push("user/", user.id, user);
   },
