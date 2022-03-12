@@ -4,6 +4,7 @@ import { reactive } from "vue";
 const auth = reactive({
   user: {},
   status: false,
+  qt_temp: "ZQ-X01-6305005",
 });
 
 export { auth };
