@@ -116,7 +116,8 @@ export default {
 
       if (num_orderlist) {
         order.list.map((data) => {
-          this.sumweight = this.sumweight + parseFloat(data.rmd_weight);
+          let price_item = data.amount * data.rmd_weight;
+          this.sumweight = this.sumweight + parseFloat(price_item);
         });
       }
       return this.sumweight;
