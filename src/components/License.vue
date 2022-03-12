@@ -26,7 +26,6 @@ import { order } from "../state/order";
 import { cus } from "../state/cus";
 
 export default {
-  props: ["cus"],
   data() {
     return {
       user: "มานะ",

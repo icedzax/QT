@@ -372,16 +372,17 @@ export default {
         cal_price: pre_calprice,
         qt: auth.temp_qt,
       };
-      console.log(order.list);
-      // order.list.push(stock_payload);
+      // console.log(order.list);
 
-      // order.list = this.List;
+      //หorder.list.push(stock_payload);
+
+      order.list = this.List;
 
       FgService.insert(stock_payload);
 
       this.$router.replace({});
     }
-    console.log(order);
+
     if ((auth.saleOrg = 1000)) {
       this.tprice = this.type.retail;
       this.selectedType = this.type.retail[1];
@@ -389,6 +390,15 @@ export default {
       this.tprice = this.type.Wholesale;
       this.selectedType = this.type.Wholesale[0];
     }
+
+    this.tprice.map((x) => {
+      order.list.map((y) => {
+        const t_type = x.includes(y.ptype);
+        if (t_type) {
+          y.ptype = x;
+        }
+      });
+    });
   },
   mounted() {
     // if (this.mat) {

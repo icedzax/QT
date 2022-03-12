@@ -30,7 +30,7 @@
       <div
         class="row-span-5 col-start-1 col-span-2 md:col-start-2 md:col-span-1 h-auto"
       >
-        <Customer :cus="chk_cus" :statusApp="approved"></Customer>
+        <Customer :customername="chk_cus" :statusApp="approved"></Customer>
       </div>
     </div>
     <!--  ก้อนรายการสินค้า  -->
@@ -59,7 +59,7 @@
       class="box grid overflow-hidden grid-cols-1 grid-rows-1 gap-1 flex-wrap mt-1 mb-1"
     >
       <div class="row-start-1 row-span-5 col-start-1 col-span-2 h-auto">
-        <License :cus="chk_cus"></License>
+        <License></License>
       </div>
     </div>
 

@@ -51,7 +51,7 @@ import { order } from "../state/order";
 
 import CusService from "../services/CusService.js";
 export default {
-  props: ["cus", "statusApp"],
+  props: ["customername", "statusApp"],
   data() {
     return {
       customers: [],
