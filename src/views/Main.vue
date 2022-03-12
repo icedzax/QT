@@ -79,6 +79,7 @@ import License from "../components/License.vue";
 
 import { order } from "../state/order";
 import { cus } from "../state/cus";
+
 export default {
   data() {
     return {
@@ -104,9 +105,7 @@ export default {
     License,
     Header_r,
   },
-  created() {
-    // console.log(this.mat_param);
-  },
+  async created() {},
   computed: {
     oo() {
       return order.list;
