@@ -52,7 +52,7 @@ export default {
       const items = await FgService.items(auth.temp_qt);
       const data_sale = await UserService.sale(auth.user_id);
       auth.data_sale = data_sale.data;
-      console.log(items.data);
+      console.log(auth);
       if (items.data[0]) {
         order.list = items.data;
       }
