@@ -15,7 +15,7 @@
           เลขที่ใบเสนอราคา
         </div>
         <div class="row-start-1 row-span-1 col-start-2 col-span-2 p-1">
-          ZQ-X01-6305005
+          {{ this.docID }}
           <button
             class="text-center rounded-full px-2 text-sm border-2 border-green-500 text-black hover:text-green-600 font-semibold shadow-lg ring-1 ring-green-200"
           >
@@ -32,3 +32,17 @@
     </div>
   </div>
 </template>
+<script>
+import { auth } from "../state/user";
+
+export default {
+  data() {
+    return {
+      docID: auth.temp_qt,
+    };
+  },
+  created() {
+    this.docID = "ZQ-X01-6305005";
+  },
+};
+</script>
