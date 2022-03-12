@@ -45,16 +45,23 @@
   </div>
 </template>
 <script>
+import { auth } from "../state/user";
+import UserService from "../services/UserService";
+
 export default {
   data() {
     return {
-      bid_name: "คุณมานะ",
-      tel: "024206999",
-      phone: "",
-      fax: "024206313",
-      email: "retail_zubb@zubbsteel.com",
-      lineID: "@zubbsteel (มีตัว @ ด้วย)",
+      bid_name: auth.data_sale.sale_name,
+      tel: auth.data_sale.sale_tele1,
+      phone: auth.data_sale.sale_tele2,
+      fax: auth.data_sale.sale_fax,
+      email: auth.data_sale.sale_email,
+      lineID: auth.data_sale.sale_line,
     };
+  },
+  async created() {
+    let data_sale = await UserService.sale(auth.user_id);
+    auth.data_sale = data_sale.data;
   },
 };
 </script>
