@@ -82,6 +82,7 @@
               v-model="items.rmd_size"
               class="w-5/6 text-xs p-1 text-center border-none"
               :disabled="approveStat"
+              @input="changeUpdate(items.id)"
             />
           </td>
           <td
@@ -92,6 +93,7 @@
               v-model="items.rmd_weight"
               class="w-5/6 text-xs p-1 text-center border-none focus:outline-none"
               :disabled="approveStat"
+              @input="changeUpdate(items.id)"
             />
           </td>
           <td
@@ -103,6 +105,7 @@
               @keyup="edit(index, items.amount, items.price_unit, true)"
               class="w-5/6 text-xs p-1 text-center border-none"
               :disabled="approveStat"
+              @input="changeUpdate(items.id)"
             />
           </td>
           <td
@@ -113,6 +116,7 @@
               @change="PriceType(items.ptype, index, false)"
               class="text-xs p-1 text-center w-5/6 border-none"
               :disabled="approveStat"
+              @input="changeUpdate(items.id)"
             >
               <option v-for="(i, index) in this.tprice" :key="index">
                 {{ i }}
@@ -128,6 +132,7 @@
               @keyup="edit(index, items.amount, items.price_unit, true)"
               class="w-5/6 text-xs p-1 text-center border-none"
               :disabled="approveStat"
+              @input="changeUpdate(items.id)"
             />
           </td>
           <td
@@ -148,7 +153,7 @@
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 512 512"
               fill="red"
-              @click="deletes(index)"
+              @click="deletes(index, items.id)"
               class="w-5 h-5"
             >
               <title>Remove</title>
@@ -261,8 +266,10 @@
 import { fg } from "../state/fg";
 import { order } from "../state/order";
 import { auth } from "../state/user";
+import { debounce } from "lodash";
 import UserService from "../services/UserService.js";
 import FgService from "../services/FgService.js";
+import OrderService from "../services/OrderService.js";
 
 export default {
   data() {
@@ -379,7 +386,8 @@ export default {
       order.list = this.List;
 
       FgService.insert(stock_payload);
-
+      const testii = await FgService.items(auth.temp_qt);
+      order.list = testii.data;
       this.$router.replace({});
     }
 
@@ -406,6 +414,26 @@ export default {
     // }
   },
   methods: {
+    changeUpdate: debounce(async function (ids) {
+      const payload = order.list.filter((data) => data.id == ids);
+      let send_ptype = payload[0].ptype.split(":");
+
+      const data_payload = {
+        id: payload[0].id,
+        rmd_mat: payload[0].rmd_mat,
+        rmd_size: payload[0].rmd_size,
+        rmd_weight: payload[0].rmd_weight,
+        ptype: send_ptype[0],
+        amount: payload[0].amount,
+        unit: payload[0].unit,
+        price_unit: this.delcomma(payload[0].price_unit),
+        cal_price: this.delcomma(payload[0].cal_price),
+      };
+      console.log(data_payload);
+      const updateitem = await OrderService.update(data_payload);
+      console.log(updateitem);
+    }, 800),
+
     async PriceType(type, i, isInput) {
       // console.log("isInput", isInput, "mat", this.data.selection.rmd_mat);
       let typ = type.split(":");
@@ -494,10 +522,13 @@ export default {
       this.listFiltered = event.items;
     },
 
-    deletes(no) {
+    async deletes(no, idsent) {
       let num = parseInt(no) + 1;
       if (confirm("นำรายการที่ " + num + " ออกใช่หรือไม่?")) {
-        order.list.splice(no, 1);
+        const delitem = await OrderService.del({ id: idsent });
+        if (delitem.status == 200) {
+          order.list.splice(no, 1);
+        }
       }
     },
     deleteAll() {
@@ -505,9 +536,8 @@ export default {
         this.order.list = [];
       }
     },
-    enter() {
+    async enter() {
       if (this.data.input) {
-        console.log("ราคาที่แอด", this.inputField.cal_price);
         this.order.list.push({
           rmd_mat: this.inputField.rmd_mat,
           rmd_size: this.inputField.rmd_size,
@@ -516,6 +546,7 @@ export default {
           price_unit: this.inputField.price_unit || 1,
           cal_price: this.inputField.cal_price || 1,
           ptype: this.selectedType,
+          unit: "PC",
         });
 
         const stock_payload = {
@@ -525,12 +556,15 @@ export default {
           ptype: this.selectedType,
           amount: this.inputField.amount,
           unit: "PC",
-          price_unit: this.inputField.price_unit || 1,
-          cal_price: this.inputField.cal_price || 1,
+          price_unit: this.delcomma(this.inputField.price_unit) || 1,
+          cal_price: this.delcomma(this.inputField.cal_price) || 1,
           qt: auth.temp_qt,
         };
 
-        FgService.insert(stock_payload);
+        await FgService.insert(stock_payload);
+        const new_order = await FgService.items(auth.temp_qt);
+
+        order.list = new_order.data;
 
         if (this.order.list.length !== 0) {
           this.table_showlist = "Y";
@@ -558,14 +592,12 @@ export default {
             data.cal_price = this.addComma(data.cal_price);
           }
         });
-        console.log(this.order.list.length);
       } else {
         this.inputField.cal_price = parseFloat(unit * vat).toFixed(2);
         this.inputField.cal_price = this.addComma(this.inputField.cal_price);
       }
     },
     addComma(a) {
-      console.log("A:::", a);
       let x = a.split(".");
       let x1 = x[0];
 
@@ -580,8 +612,12 @@ export default {
       return aa;
     },
     delcomma(a) {
-      let x = a.replace(",", "");
-      return x;
+      if (a.length > 3) {
+        let x = a.replace(",", "");
+        return x;
+      } else {
+        return a;
+      }
     },
   },
 };
