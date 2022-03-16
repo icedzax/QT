@@ -85,6 +85,14 @@ export default {
             if (t_type) {
               y.ptype = x;
             }
+            y.cal_price = y.cal_price.toString();
+            y.price_unit = y.price_unit.toString();
+            if (y.cal_price.length > 3) {
+              y.cal_price = this.addComma(y.cal_price);
+            }
+            if (y.price_unit.length > 3) {
+              y.price_unit = this.addComma(y.price_unit);
+            }
           });
         });
       }
@@ -98,6 +106,23 @@ export default {
     // }
     //console.log(auth.steel);
     // this.setState({ steel: result.data });
+  },
+  methods: {
+    addComma(a) {
+      console.log("ส่งมา", a);
+      let x = a.split(".");
+      let x1 = x[0];
+
+      let x2 = x.length > 1 ? "." + x[1] : "";
+
+      var rgx = /(\d+)(\d{3})/;
+
+      while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, "$1" + "," + "$2");
+      }
+      let aa = x1 + x2;
+      return aa;
+    },
   },
 };
 </script>
