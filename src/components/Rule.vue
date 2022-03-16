@@ -98,7 +98,7 @@ import { debounce } from "lodash";
 import OrderService from "../services/OrderService.js";
 
 export default {
-  props: ["sw", "mr"],
+  props: ["sw"],
   data() {
     return {
       fixsw: "",
@@ -113,7 +113,7 @@ export default {
       return newsw;
     },
     ruleX() {
-      return order.rules;
+      return order.con;
     },
   },
   methods: {
@@ -127,12 +127,12 @@ export default {
     async addRules() {
       await OrderService.myRule({ qt: auth.temp_qt, con: this.inputRules });
       const rules = await OrderService.Con(auth.temp_qt);
-      order.rules = rules.data;
+      order.con = rules.data;
     },
     async delRules(index) {
       await OrderService.delcon({ qt: auth.temp_qt, item: index });
       const rules = await OrderService.Con(auth.temp_qt);
-      order.rules = rules.data;
+      order.con = rules.data;
     },
   },
 };

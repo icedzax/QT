@@ -48,7 +48,7 @@
       <div
         class="row-start-1 row-span-5 col-start-1 col-span-2 xl:col-span-2 h-auto"
       >
-        <Rule :sw="sumw" :mr="chk_rules"></Rule>
+        <Rule :sw="sumw"></Rule>
       </div>
       <div class="row-span-5 col-start-1 col-span-2 xl:col-start-3 h-auto">
         <Total :sp="sump"></Total>
@@ -76,11 +76,9 @@ import Orders from "../components/Order.vue";
 import Rule from "../components/Rule.vue";
 import Total from "../components/Total.vue";
 import License from "../components/License.vue";
-import OrderService from "../services/OrderService.js";
 
 import { order } from "../state/order";
 import { cus } from "../state/cus";
-import { auth } from "../state/user";
 
 export default {
   data() {
@@ -149,10 +147,6 @@ export default {
     },
     chk_cus() {
       return cus.name;
-    },
-    async chk_rules() {
-      const is_rules = await OrderService.Con(auth.temp_qt);
-      order.rules = is_rules.data;
     },
   },
   methods: {

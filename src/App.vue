@@ -31,6 +31,8 @@ import { auth } from "./state/user";
 import { order } from "./state/order";
 import UserService from "./services/UserService.js";
 import FgService from "./services/FgService";
+import OrderService from "./services/OrderService.js";
+
 export default {
   data() {
     return {
@@ -51,8 +53,12 @@ export default {
     if (auth.temp_qt) {
       const items = await FgService.items(auth.temp_qt);
       const data_sale = await UserService.sale(auth.user_id);
+      const data_con = await OrderService.Con(auth.temp_qt);
+      if (data_con) {
+        order.con = data_con.data;
+      }
       auth.data_sale = data_sale.data;
-      console.log(auth);
+
       if (items.data[0]) {
         order.list = items.data;
       }
