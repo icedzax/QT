@@ -38,6 +38,17 @@ export default {
     return {
       fg,
       auth,
+      tprice: [],
+      type: {
+        retail: ["R1:ราคาสดรับเอง", "R2:ราคาสดส่ง", "R3:ราคาเงินเชื่อ"],
+        Wholesale: [
+          "T1:100 ตัน",
+          "W0:ราคายกรถ",
+          "W1:ราคาคละไซด์",
+          "W2:ราคายกมัด",
+          "W3:ราคาปลีก",
+        ],
+      },
     };
   },
   async created() {
@@ -59,8 +70,23 @@ export default {
       }
       auth.data_sale = data_sale.data;
 
+      if ((auth.saleOrg = 1000)) {
+        this.tprice = this.type.retail;
+      } else if ((state.user.saleOrg = 2000)) {
+        this.tprice = this.type.Wholesale;
+      }
+
       if (items.data[0]) {
         order.list = items.data;
+
+        this.tprice.map((x) => {
+          order.list.map((y) => {
+            const t_type = x.includes(y.ptype);
+            if (t_type) {
+              y.ptype = x;
+            }
+          });
+        });
       }
     }
     // const temp = await FgService.temp(auth.user_id);

@@ -563,7 +563,7 @@ export default {
         const new_order = await FgService.items(auth.temp_qt);
 
         order.list = new_order.data;
-
+        this.manage_type();
         if (this.order.list.length !== 0) {
           this.table_showlist = "Y";
         }
@@ -616,6 +616,16 @@ export default {
       } else {
         return a;
       }
+    },
+    manage_type() {
+      this.tprice.map((x) => {
+        order.list.map((y) => {
+          const t_type = x.includes(y.ptype);
+          if (t_type) {
+            y.ptype = x;
+          }
+        });
+      });
     },
   },
 };
