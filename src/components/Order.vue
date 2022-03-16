@@ -429,9 +429,7 @@ export default {
         price_unit: this.delcomma(payload[0].price_unit),
         cal_price: this.delcomma(payload[0].cal_price),
       };
-      console.log(data_payload);
       const updateitem = await OrderService.update(data_payload);
-      console.log(updateitem);
     }, 800),
 
     async PriceType(type, i, isInput) {
