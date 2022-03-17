@@ -7,6 +7,7 @@ const auth = reactive({
   temp_qt: null,
   status: false,
   data_sale: [],
+  saleOrg: null,
 });
 
 export { auth };
