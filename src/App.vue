@@ -29,15 +29,18 @@ setInterval(() => {
 import { fg } from "./state/fg";
 import { auth } from "./state/user";
 import { order } from "./state/order";
+import { cus } from "./state/cus";
 import UserService from "./services/UserService.js";
 import FgService from "./services/FgService";
 import OrderService from "./services/OrderService.js";
+import CusService from "./services/CusService";
 
 export default {
   data() {
     return {
       fg,
       auth,
+      cus,
       tprice: [],
       type: {
         retail: ["R1:ราคาสดรับเอง", "R2:ราคาสดส่ง", "R3:ราคาเงินเชื่อ"],
@@ -57,18 +60,26 @@ export default {
       auth.user = localStorage.getItem("emp_name");
     }
     const us = await UserService.temp(auth.user_id);
+    console.log(us);
     if (us.data[0]) {
       auth.temp_qt = await us.data[0].qt;
+      order.kunnr = await us.data[0].KUNNR;
     }
 
     if (auth.temp_qt) {
       const items = await FgService.items(auth.temp_qt);
       const data_sale = await UserService.sale(auth.user_id);
       const data_con = await OrderService.Con(auth.temp_qt);
+
+      const data_cus = await CusService.postCus({ KUNNR: order.kunnr });
+
       if (data_con) {
         order.con = data_con.data;
       }
       auth.data_sale = data_sale.data;
+      cus.address = data_cus.data[0].ADDRS;
+      cus.KUNNR = data_cus.data[0].KUNNR;
+      cus.name = data_cus.data[0].CNAME;
 
       if ((auth.saleOrg = 1000)) {
         this.tprice = this.type.retail;
@@ -97,6 +108,7 @@ export default {
         });
       }
     }
+
     // const temp = await FgService.temp(auth.user_id);
     // if (temp.data[0]) {
     //   auth.temp_qt = temp.data.qt;
@@ -109,7 +121,6 @@ export default {
   },
   methods: {
     addComma(a) {
-      console.log("ส่งมา", a);
       let x = a.split(".");
       let x1 = x[0];
 

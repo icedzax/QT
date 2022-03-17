@@ -6,8 +6,9 @@
       <div class="font-semibold">ลูกค้า</div>
       <div class="col-span-3">
         <vue3-simple-typeahead
-          v-if="!approveStat"
+          v-if="!approveStat || cus.KUNNR == null"
           id="typeahead_id"
+          :defaultItem="defaultItem.default"
           :placeholder="options.placeholder"
           :items="customers"
           @selectItem="selectItem"
@@ -17,19 +18,19 @@
           :minInputLength="1"
           :itemProjection="
             (customers) => {
-              return `${customers.KUNNR} ${customers.CNAME}`;
+              return `${customers.KUNNR}`;
             }
           "
         >
         </vue3-simple-typeahead>
-        <p v-else>{{ this.showcus }}</p>
+        <p v-else>{{ cus.name }}</p>
       </div>
 
       <div>
         <p class="font-semibold">ที่อยู่</p>
       </div>
       <div class="col-span-3 rounded">
-        <p class="">{{ cusdata.ADDRS }}</p>
+        <p class="">{{ cus.address }}</p>
       </div>
       <div class="font-semibold">ชื่อผู้ติดต่อ</div>
       <div class="col-span-3">{{ cusdata.CONTACTNAME }}</div>
@@ -57,6 +58,7 @@ export default {
   props: ["customername", "statusApp"],
   data() {
     return {
+      examdefault: "exammm ....",
       customers: [],
       showcus: "",
       cus,
@@ -70,11 +72,12 @@ export default {
         input: "",
         selection: null,
       },
+      defaultItem: {
+        default: cus.KUNNR,
+      },
     };
   },
-  created() {
-    console.log(order.status);
-  },
+  created() {},
   computed: {
     cusdata() {
       return this.data.selection || "";
@@ -94,14 +97,16 @@ export default {
     async selectItem(item) {
       this.data.selection = item;
       CusService.select({ KUNNR: this.data.selection.KUNNR });
-      this.showcus = this.data.selection.KUNNR + this.data.selection.CNAME;
-      cus.name = this.showcus;
+      this.showcus =
+        this.data.selection.KUNNR + " " + this.data.selection.CNAME;
+      cus.name = this.data.selection.CNAME;
+      cus.address = this.data.selection.ADDRS;
       const edit_cus = await CusService.setCus({
         KUNNR: this.data.selection.KUNNR,
         qt: auth.temp_qt,
       });
       cus.KUNNR = this.data.selection.KUNNR;
-      console.log(cus.KUNNR);
+      console.log(cus);
     },
     onInput(event) {
       this.data.selection = null;

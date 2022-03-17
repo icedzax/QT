@@ -4,6 +4,7 @@ const order = reactive({
   list: [],
   status: false,
   con: [],
+  kunnr: null,
 });
 
 export { order };
