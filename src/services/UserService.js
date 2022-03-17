@@ -16,6 +16,7 @@ export default {
   getUser(userId) {
     return Api().post("auth/", userId);
   },
+
   push() {
     return Api().push("user/", user.id, user);
   },
