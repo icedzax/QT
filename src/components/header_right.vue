@@ -26,7 +26,7 @@
           วันที่เสนอราคา
         </div>
         <div class="row-start-2 row-span-1 col-start-2 col-span-1 p-1">
-          11/05/2020
+          {{ order.date }}
         </div>
       </div>
     </div>
@@ -34,11 +34,12 @@
 </template>
 <script>
 import { auth } from "../state/user";
-
+import { order } from "../state/order";
 export default {
   data() {
     return {
       auth,
+      order,
     };
   },
   created() {},

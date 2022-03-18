@@ -62,8 +62,9 @@ export default {
     const us = await UserService.temp(auth.user_id);
     console.log(us);
     if (us.data[0]) {
-      auth.temp_qt = await us.data[0].qt;
-      order.kunnr = await us.data[0].KUNNR;
+      auth.temp_qt = us.data[0].qt;
+      order.kunnr = us.data[0].KUNNR;
+      order.date = us.data[0].date;
     }
 
     if (auth.temp_qt) {

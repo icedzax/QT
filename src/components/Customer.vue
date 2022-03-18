@@ -6,7 +6,7 @@
       <div class="font-semibold">ลูกค้า</div>
       <div class="col-span-3">
         <vue3-simple-typeahead
-          class="w-4/5 h-6 text-fuchsia-600"
+          class="text-black text-xl"
           v-if="!approveStat || !cus.data.KUNNR"
           id="typeahead_id"
           :placeholder="place_holder"
