@@ -1,5 +1,7 @@
 import { reactive } from "vue";
 
-const cus = reactive({ name: "", KUNNR: null });
+const cus = reactive({
+  data: [],
+});
 
 export { cus };

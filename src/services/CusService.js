@@ -10,6 +10,9 @@ export default {
   show(userId) {
     return Api().get("user/" + userId);
   },
+  postCus(body) {
+    return Api().post(`/getCus/`, body);
+  },
   post(userId) {
     return Api().post("auth/", userId);
   },
