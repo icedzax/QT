@@ -1,6 +1,9 @@
 import Api from "../services/Api";
 
 export default {
+  priceValid(payload) {
+    return Api().post(`/pvalid`, payload);
+  },
   del(body) {
     return Api().post(`/delete`, body);
   },

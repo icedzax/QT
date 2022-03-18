@@ -87,6 +87,18 @@ export default {
             }
           });
         });
+        const ordPayload = order.list.map((o) => {
+          return {
+            MATNR: o.rmd_mat,
+            VKORG: "1000",
+            KONDA: o.ptype.slice(0, 2),
+            KMEIN: o.unit,
+          };
+        });
+        // console.log(ordPayload);
+
+        // const pval = await OrderService.priceValid(ordPayload);
+        // console.log(pval);
       }
     }
     // const temp = await FgService.temp(auth.user_id);
