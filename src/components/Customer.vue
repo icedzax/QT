@@ -76,7 +76,9 @@ export default {
   created() {},
   computed: {
     place_holder() {
-      return `${cus.data.KUNNR} ${cus.data.CNAME}` || "";
+      return cus.data.KUNNR
+        ? `${cus.data.KUNNR} ${cus.data.CNAME}`
+        : "รหัส / ชื่อลูกค้า";
     },
     cusdata() {
       return this.data.selection || cus.data;

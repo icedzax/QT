@@ -351,7 +351,7 @@ export default {
 
     if (this.mat) {
       const prepush = await this.pushMat[0];
-      console.log(prepush);
+      // console.log(prepush);
       const payload = {
         VKORG: 1000,
         MATNR: this.mat,
@@ -372,7 +372,7 @@ export default {
         rmd_mat: prepush.rmd_mat,
         rmd_size: prepush.rmd_size,
         rmd_weight: prepush.rmd_stdweight,
-        ptype: "R1:ราคาสดรับเอง",
+        ptype: "R1",
         amount: pre_amount,
         unit: "PC",
         price_unit: pre_priceunit,
@@ -383,29 +383,27 @@ export default {
 
       //หorder.list.push(stock_payload);
 
-      FgService.insert(stock_payload);
+      await FgService.insert(stock_payload);
       const testii = await FgService.items(auth.temp_qt);
-      order.list = testii.data;
+      order.list = await testii.data;
 
-      if ((auth.saleOrg = 1000)) {
-        this.tprice = this.type.retail;
-        this.selectedType = this.type.retail[1];
-      } else if ((state.user.saleOrg = 2000)) {
-        this.tprice = this.type.Wholesale;
-        this.selectedType = this.type.Wholesale[0];
-      }
-      if (order.list) {
-        this.tprice.map((x) => {
-          order.list.map((y) => {
-            const t_type = x.includes(y.ptype);
-            if (t_type) {
-              y.ptype = x;
-            }
-          });
+      this.tprice.map((x) => {
+        order.list.map((y) => {
+          const t_type = x.includes(y.ptype);
+          if (t_type) {
+            y.ptype = x;
+          }
         });
-      }
+      });
 
       this.$router.replace({});
+    }
+    if ((auth.saleOrg = 1000)) {
+      this.tprice = this.type.retail;
+      this.selectedType = this.type.retail[1];
+    } else if ((state.user.saleOrg = 2000)) {
+      this.tprice = this.type.Wholesale;
+      this.selectedType = this.type.Wholesale[0];
     }
   },
   mounted() {
