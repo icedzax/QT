@@ -387,15 +387,6 @@ export default {
       const testii = await FgService.items(auth.temp_qt);
       order.list = await testii.data;
 
-      this.tprice.map((x) => {
-        order.list.map((y) => {
-          const t_type = x.includes(y.ptype);
-          if (t_type) {
-            y.ptype = x;
-          }
-        });
-      });
-
       this.$router.replace({});
     }
     if ((auth.saleOrg = 1000)) {
@@ -405,6 +396,14 @@ export default {
       this.tprice = this.type.Wholesale;
       this.selectedType = this.type.Wholesale[0];
     }
+    this.tprice.map((x) => {
+      order.list.map((y) => {
+        const t_type = x.includes(y.ptype);
+        if (t_type) {
+          y.ptype = x;
+        }
+      });
+    });
   },
   mounted() {
     // if (this.mat) {
@@ -414,14 +413,17 @@ export default {
   methods: {
     changeUpdate: debounce(async function (ids) {
       const payload = order.list.filter((data) => data.id == ids);
-      let send_ptype = payload[0].ptype.split(":");
+      // let send_ptype = payload[0].ptype.split(":");
 
       const data_payload = {
         id: payload[0].id,
         rmd_mat: payload[0].rmd_mat,
         rmd_size: payload[0].rmd_size,
         rmd_weight: payload[0].rmd_weight,
-        ptype: send_ptype[0],
+        ptype:
+          payload[0].ptype.length > 2
+            ? payload[0].ptype.split(":")
+            : payload[0].ptype,
         amount: payload[0].amount,
         unit: payload[0].unit,
         price_unit: this.delcomma(payload[0].price_unit),
