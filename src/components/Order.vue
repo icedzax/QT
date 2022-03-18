@@ -383,30 +383,30 @@ export default {
 
       //หorder.list.push(stock_payload);
 
-      order.list = this.List;
-
       FgService.insert(stock_payload);
       const testii = await FgService.items(auth.temp_qt);
       order.list = testii.data;
+
+      if ((auth.saleOrg = 1000)) {
+        this.tprice = this.type.retail;
+        this.selectedType = this.type.retail[1];
+      } else if ((state.user.saleOrg = 2000)) {
+        this.tprice = this.type.Wholesale;
+        this.selectedType = this.type.Wholesale[0];
+      }
+      if (order.list) {
+        this.tprice.map((x) => {
+          order.list.map((y) => {
+            const t_type = x.includes(y.ptype);
+            if (t_type) {
+              y.ptype = x;
+            }
+          });
+        });
+      }
+
       this.$router.replace({});
     }
-
-    if ((auth.saleOrg = 1000)) {
-      this.tprice = this.type.retail;
-      this.selectedType = this.type.retail[1];
-    } else if ((state.user.saleOrg = 2000)) {
-      this.tprice = this.type.Wholesale;
-      this.selectedType = this.type.Wholesale[0];
-    }
-
-    this.tprice.map((x) => {
-      order.list.map((y) => {
-        const t_type = x.includes(y.ptype);
-        if (t_type) {
-          y.ptype = x;
-        }
-      });
-    });
   },
   mounted() {
     // if (this.mat) {
