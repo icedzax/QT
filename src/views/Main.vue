@@ -113,7 +113,7 @@ export default {
     sumw() {
       this.sumweight = 0;
 
-      if (order.list) {
+      if (order.list.length !== 0 && order.list !== "NOT FOUND") {
         order.list.map((data) => {
           let price_item = data.amount * data.rmd_weight;
           this.sumweight = this.sumweight + parseFloat(price_item);
@@ -124,7 +124,7 @@ export default {
     sump() {
       this.sumprice = 0;
 
-      if (order.list) {
+      if (order.list.length !== 0 && order.list !== "NOT FOUND") {
         order.list.map((data) => {
           if (data.cal_price && data.cal_price.length > 3) {
             data.cal_price = this.delcomma(data.cal_price);

@@ -88,7 +88,7 @@ export default {
         this.tprice = this.type.Wholesale;
       }
 
-      if (items.data[0]) {
+      if (items.data !== "NOT FOUND") {
         order.list = items.data;
 
         this.tprice.map((x) => {
