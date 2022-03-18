@@ -6,10 +6,10 @@
       <div class="font-semibold">ลูกค้า</div>
       <div class="col-span-3">
         <vue3-simple-typeahead
-          v-if="!approveStat || cus.KUNNR == null"
+          class="w-4/5 h-6 text-fuchsia-600"
+          v-if="!approveStat || !cus.data.KUNNR"
           id="typeahead_id"
-          :defaultItem="defaultItem.default"
-          :placeholder="options.placeholder"
+          :placeholder="place_holder"
           :items="customers"
           @selectItem="selectItem"
           @onInput="onInput"
@@ -18,19 +18,19 @@
           :minInputLength="1"
           :itemProjection="
             (customers) => {
-              return `${customers.KUNNR}`;
+              return `${customers.KUNNR} ${customers.CNAME}`;
             }
           "
         >
         </vue3-simple-typeahead>
-        <p v-else>{{ cus.name }}</p>
+        <p class="font-bold" v-else>{{ place_holder }}</p>
       </div>
 
       <div>
         <p class="font-semibold">ที่อยู่</p>
       </div>
       <div class="col-span-3 rounded">
-        <p class="">{{ cus.address }}</p>
+        <p class="">{{ cusdata.ADDRS }}</p>
       </div>
       <div class="font-semibold">ชื่อผู้ติดต่อ</div>
       <div class="col-span-3">{{ cusdata.CONTACTNAME }}</div>
@@ -53,7 +53,7 @@ import { debounce } from "lodash";
 import { order } from "../state/order";
 
 import CusService from "../services/CusService.js";
-import axios from "axios";
+
 export default {
   props: ["customername", "statusApp"],
   data() {
@@ -64,7 +64,6 @@ export default {
       cus,
       order,
       options: {
-        placeholder: "Customer Name...",
         minInputLength: 1,
       },
       listFiltered: [],
@@ -72,15 +71,15 @@ export default {
         input: "",
         selection: null,
       },
-      defaultItem: {
-        default: cus.KUNNR,
-      },
     };
   },
   created() {},
   computed: {
+    place_holder() {
+      return `${cus.data.KUNNR} ${cus.data.CNAME}` || "";
+    },
     cusdata() {
-      return this.data.selection || "";
+      return this.data.selection || cus.data;
     },
     approveStat() {
       return this.statusApp;
@@ -122,7 +121,7 @@ export default {
 </script>
 <style scoped>
 #typeahead_id1 {
-  font-size: 11px;
+  font-size: 14px;
   width: 80%;
   border-radius: 5px;
   padding-top: 2px;

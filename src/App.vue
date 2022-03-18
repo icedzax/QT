@@ -73,13 +73,13 @@ export default {
 
       const data_cus = await CusService.postCus({ KUNNR: order.kunnr });
 
-      if (data_con) {
+      if (data_con.data[0]) {
         order.con = data_con.data;
       }
       auth.data_sale = data_sale.data;
-      cus.address = data_cus.data[0].ADDRS;
-      cus.KUNNR = data_cus.data[0].KUNNR;
-      cus.name = data_cus.data[0].CNAME;
+      if (data_cus.data[0]) {
+        cus.data = data_cus.data[0];
+      }
 
       if ((auth.saleOrg = 1000)) {
         this.tprice = this.type.retail;
