@@ -98,13 +98,13 @@ export default {
       CusService.select({ KUNNR: this.data.selection.KUNNR });
       this.showcus =
         this.data.selection.KUNNR + " " + this.data.selection.CNAME;
-      cus.name = this.data.selection.CNAME;
-      cus.address = this.data.selection.ADDRS;
+      // cus.name = this.data.selection.CNAME;
+      // cus.address = this.data.selection.ADDRS;
       const edit_cus = await CusService.setCus({
         KUNNR: this.data.selection.KUNNR,
         qt: auth.temp_qt,
       });
-      cus.KUNNR = this.data.selection.KUNNR;
+      // cus.KUNNR = this.data.selection.KUNNR;
       console.log(cus);
     },
     onInput(event) {
