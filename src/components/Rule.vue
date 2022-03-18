@@ -58,7 +58,7 @@
         <div class="w-8 mr-2 py-0.5">
           <input
             type="text"
-            class="h-6 text-xs w-full mr-2 p-2"
+            class="h-6 text-xs w-full mr-2 p-2 border-none"
             :value="ruleX.length + 1"
             disabled
           />
@@ -66,7 +66,7 @@
         <div class="w-3/5 py-0.5">
           <input
             type="text"
-            class="bg-green-200 w-4/5 h-6 text-xs mr-2"
+            class="bg-yellow-50 w-4/5 h-6 text-xs mr-2"
             v-model="inputRules"
           />
         </div>

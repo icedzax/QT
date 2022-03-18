@@ -6,9 +6,10 @@
       <div class="font-semibold">ลูกค้า</div>
       <div class="col-span-3">
         <vue3-simple-typeahead
-          v-if="!approveStat"
+          class="w-4/5 h-6 text-fuchsia-600"
+          v-if="!approveStat || !cus.data.KUNNR"
           id="typeahead_id"
-          :placeholder="options.placeholder"
+          :placeholder="place_holder"
           :items="customers"
           @selectItem="selectItem"
           @onInput="onInput"
@@ -22,7 +23,7 @@
           "
         >
         </vue3-simple-typeahead>
-        <p v-else>{{ this.showcus }}</p>
+        <p class="font-bold" v-else>{{ place_holder }}</p>
       </div>
 
       <div>
@@ -52,17 +53,17 @@ import { debounce } from "lodash";
 import { order } from "../state/order";
 
 import CusService from "../services/CusService.js";
-import axios from "axios";
+
 export default {
   props: ["customername", "statusApp"],
   data() {
     return {
+      examdefault: "exammm ....",
       customers: [],
       showcus: "",
       cus,
       order,
       options: {
-        placeholder: "Customer Name...",
         minInputLength: 1,
       },
       listFiltered: [],
@@ -72,12 +73,13 @@ export default {
       },
     };
   },
-  created() {
-    console.log(order.status);
-  },
+  created() {},
   computed: {
+    place_holder() {
+      return `${cus.data.KUNNR} ${cus.data.CNAME}` || "";
+    },
     cusdata() {
-      return this.data.selection || "";
+      return this.data.selection || cus.data;
     },
     approveStat() {
       return this.statusApp;
@@ -94,14 +96,16 @@ export default {
     async selectItem(item) {
       this.data.selection = item;
       CusService.select({ KUNNR: this.data.selection.KUNNR });
-      this.showcus = this.data.selection.KUNNR + this.data.selection.CNAME;
-      cus.name = this.showcus;
+      this.showcus =
+        this.data.selection.KUNNR + " " + this.data.selection.CNAME;
+      // cus.name = this.data.selection.CNAME;
+      // cus.address = this.data.selection.ADDRS;
       const edit_cus = await CusService.setCus({
         KUNNR: this.data.selection.KUNNR,
         qt: auth.temp_qt,
       });
-      cus.KUNNR = this.data.selection.KUNNR;
-      console.log(cus.KUNNR);
+      // cus.KUNNR = this.data.selection.KUNNR;
+      console.log(cus);
     },
     onInput(event) {
       this.data.selection = null;
@@ -117,7 +121,7 @@ export default {
 </script>
 <style scoped>
 #typeahead_id1 {
-  font-size: 11px;
+  font-size: 14px;
   width: 80%;
   border-radius: 5px;
   padding-top: 2px;
