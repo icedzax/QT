@@ -17,20 +17,27 @@
         <p v-else>ลายเซ็นผู้อนุมัติ</p>
       </div>
       <div class="">(.........................................)</div>
-      <div class="">({{ this.user }})</div>
+      <div class="">({{ sd.sale_name }})</div>
     </div>
   </div>
 </template>
 <script>
 import { order } from "../state/order";
 import { cus } from "../state/cus";
+import { auth } from "../state/user";
 
 export default {
   data() {
     return {
+      auth,
       user: "มานะ",
       stat: false,
     };
+  },
+  computed: {
+    sd() {
+      return auth.data_sale;
+    },
   },
   methods: {
     approve() {
