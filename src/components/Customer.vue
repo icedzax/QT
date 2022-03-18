@@ -84,9 +84,6 @@ export default {
     approveStat() {
       return this.statusApp;
     },
-    c() {
-      return cus.name;
-    },
   },
   methods: {
     lookupUser: debounce(async function () {
