@@ -111,7 +111,7 @@ export default {
           return {
             MATNR: o.rmd_mat,
             VKORG: "1000",
-            KONDA: o.ptype.slice(0, 2),
+            KONDA: o.ptype,
             KMEIN: o.unit,
           };
         });
