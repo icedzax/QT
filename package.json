@@ -9,6 +9,7 @@
   "dependencies": {
     "axios": "^0.26.0",
     "lodash": "^4.17.21",
+    "v3-num": "^0.1.1",
     "vue": "^3.2.31",
     "vue-router": "^4.0.12",
     "vue3-simple-typeahead": "^1.0.5"

@@ -146,28 +146,21 @@
               </option>
             </select>
           </td>
-          <td
-            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
-          >
+          <td class="py-1 w-1/12 text-center border border-slate-200">
             <input
               type="text"
               v-model="items.price_unit"
               @keyup="
                 edit(index, items.amount, items.price_unit, true, items.id)
               "
-              class="w-5/6 text-xs p-1 text-center border-none"
+              class="w-5/6 p-1 text-sm text-center border-none"
               :disabled="approveStat"
             />
           </td>
-          <td
-            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
-          >
-            <input
-              type="text"
-              v-model="items.cal_price"
-              class="w-5/6 text-xs p-1 text-center border-none"
-              disabled
-            />
+          <td class="py-1 w-1/12 text-center border border-slate-200">
+            <v-num #="{ number }" :value="items.cal_price">
+              {{ number }}
+            </v-num>
           </td>
           <td class="py-1 w-1/12 text-center">
             <svg
@@ -268,12 +261,13 @@
             />
           </td>
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
-            <input
-              type="text"
-              class="w-5/6 text-xs p-1 text-center"
-              v-model="inputField.cal_price"
-              disabled
-            />
+            <v-num
+              #="{ number }"
+              :value="inputField.cal_price"
+              maximum-fraction-digits="2"
+            >
+              {{ number }}
+            </v-num>
           </td>
           <td class="py-1 w-1/12">
             <svg
@@ -301,11 +295,11 @@
 import { fg } from "../state/fg";
 import { order } from "../state/order";
 import { auth } from "../state/user";
-import { debounce } from "lodash";
+
 import UserService from "../services/UserService.js";
 import FgService from "../services/FgService.js";
 import OrderService from "../services/OrderService.js";
-
+import VNum from "v3-num";
 export default {
   data() {
     return {
@@ -610,6 +604,7 @@ export default {
 
         this.data.input = {};
         this.inputField = {};
+        this.inputField.cal_price = 0;
       } else {
         alert("กรุณาเลือกสินค้า");
       }
