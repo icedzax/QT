@@ -450,22 +450,22 @@ export default {
       const payload = order.list.filter((data) => data.id == ids);
       // let send_ptype = payload[0].ptype.split(":");
 
+      let pt = payload[0].ptype.split(":");
+      //payload[0].price_unit = await this.delcomma(payload[0].price_unit);
       const data_payload = {
         id: payload[0].id,
         rmd_mat: payload[0].rmd_mat,
         rmd_size: payload[0].rmd_size,
         rmd_weight: payload[0].rmd_weight,
-        ptype:
-          payload[0].ptype.length > 2
-            ? payload[0].ptype.split(":")
-            : payload[0].ptype,
+        ptype: payload[0].ptype.length > 2 ? pt[0] : payload[0].ptype,
         amount: payload[0].amount,
         unit: payload[0].unit,
-        price_unit: this.delcomma(payload[0].price_unit),
-        cal_price: this.delcomma(payload[0].cal_price),
+        price_unit: await this.delcomma(payload[0].price_unit),
+        cal_price: await this.delcomma(payload[0].cal_price),
       };
+
       const updateitem = await OrderService.update(data_payload);
-    }, 800),
+    }, 1700),
 
     async PriceType(unit, type, i, isInput) {
       // console.log("isInput", isInput, "mat", this.data.selection.rmd_mat);
@@ -510,7 +510,6 @@ export default {
         if (isInput) {
           this.inputField.price_unit = 1;
           this.inputField.cal_price = 1;
-          console.log("งง=>", isInput);
         } else {
           order.list[i].price_unit = 1;
           order.list[i].cal_price = 1;
