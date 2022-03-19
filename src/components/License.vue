@@ -7,14 +7,23 @@
       <div class="row-start-1">ขอแสดงความนับถืออย่างสูง</div>
       <div class="">..........................................</div>
       <div class="">
-        <button
+        <!--    <button
           v-if="!this.stat"
           @click="approve"
           class="ml-2 text-center rounded-full p-1 px-2 text-sm border-2 border-blue-400 text-black hover:text-blue-600 font-semibold shadow-lg ring-1 ring-blue-200 focus:outline-none"
         >
           ขออนุมัติ ✅
+        </button> -->
+
+        <button
+          v-if="!sys.loading"
+          @click="approve"
+          type="button"
+          class="py-2.5 px-5 mr-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-flex items-center"
+        >
+          ขออนุมัติ ✅
         </button>
-        <p v-else>ลายเซ็นผู้อนุมัติ</p>
+        <loading-button v-else> </loading-button>
       </div>
       <div class="">(.........................................)</div>
       <div class="">({{ sd.sale_name }})</div>
@@ -23,17 +32,21 @@
 </template>
 <script>
 import { order } from "../state/order";
-import { cus } from "../state/cus";
+import { sys } from "../state/system";
 import { auth } from "../state/user";
+import LoadingButton from "./LoadingButton.vue";
+import OrderService from "../services/OrderService.js";
 
 export default {
+  components: { LoadingButton },
   data() {
     return {
+      sys,
       auth,
-      user: "มานะ",
-      stat: false,
+      order,
     };
   },
+
   computed: {
     sd() {
       return auth.data_sale;
@@ -41,16 +54,10 @@ export default {
   },
   methods: {
     approve() {
-      if (cus.name) {
+      if (order.kunnr) {
         if (order.list.length > 0) {
-          if (
-            confirm(
-              "กดบันทึกก่อน Approve ทุกครั้ง หาก Approve แล้วจะไม่สามารถแก้ไขข้อมูลได้ ต้องการ Approve ใช่หรือไม่?"
-            )
-          ) {
-            alert("Approve เรียบร้อยแล้ว :)");
-            order.status = true;
-            this.stat = true;
+          if (confirm("ยืนยันการขออนุมัติใบเสนอราคาหรือไม่")) {
+            this.appQT();
           }
         } else {
           alert("บันทึกอย่างน้อย 1 รายการ :)");
@@ -58,6 +65,22 @@ export default {
       } else {
         alert("ใส่ชื่อลูกค้าก่อนขออนุมัติ");
       }
+    },
+    async appQT() {
+      sys.loading = true;
+
+      const ordPayload = order.list.map((o) => {
+        return {
+          MATNR: o.rmd_mat,
+          VKORG: "1000",
+          KONDA: o.ptype,
+          KMEIN: o.unit,
+        };
+      });
+      console.log("payload", order.list);
+      const pval = await OrderService.priceValid(ordPayload);
+      console.log(pval);
+      sys.loading = await false;
     },
   },
 };

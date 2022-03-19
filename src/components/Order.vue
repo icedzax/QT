@@ -108,6 +108,7 @@
               type="text"
               v-model="items.amount"
               @keyup="edit(index, items.amount, items.price_unit, true)"
+              @keypress="isNumber"
               class="w-5/6 text-xs p-1 text-center border-none"
               :disabled="approveStat"
               @input="changeUpdate(items.id)"
@@ -446,6 +447,19 @@ export default {
     // }
   },
   methods: {
+    NumbersOnly(evt) {
+      evt = evt ? evt : window.event;
+      var charCode = evt.which ? evt.which : evt.keyCode;
+      if (
+        charCode > 31 &&
+        (charCode < 48 || charCode > 57) &&
+        charCode !== 46
+      ) {
+        evt.preventDefault();
+      } else {
+        return true;
+      }
+    },
     changeUpdate: debounce(async function (ids) {
       const payload = order.list.filter((data) => data.id == ids);
       // let send_ptype = payload[0].ptype.split(":");

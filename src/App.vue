@@ -107,14 +107,14 @@ export default {
             }
           });
         });
-        const ordPayload = order.list.map((o) => {
-          return {
-            MATNR: o.rmd_mat,
-            VKORG: "1000",
-            KONDA: o.ptype,
-            KMEIN: o.unit,
-          };
-        });
+        // const ordPayload = order.list.map((o) => {
+        //   return {
+        //     MATNR: o.rmd_mat,
+        //     VKORG: "1000",
+        //     KONDA: o.ptype,
+        //     KMEIN: o.unit,
+        //   };
+        // });
         // console.log(ordPayload);
 
         // const pval = await OrderService.priceValid(ordPayload);
