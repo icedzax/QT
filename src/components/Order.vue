@@ -107,10 +107,11 @@
             <input
               type="text"
               v-model="items.amount"
-              @keyup="edit(index, items.amount, items.price_unit, true)"
+              @keyup="
+                edit(index, items.amount, items.price_unit, true, items.id)
+              "
               class="w-5/6 text-xs p-1 text-center border-none"
               :disabled="approveStat"
-              @input="changeUpdate(items.id)"
             />
           </td>
           <td
@@ -118,10 +119,11 @@
           >
             <select
               v-model="items.unit"
-              @change="PriceType(items.unit, items.ptype, index, false)"
+              @change="
+                PriceType(items.unit, items.ptype, index, false, items.id)
+              "
               class="text-xs p-1 text-center w-5/6 border-none"
               :disabled="approveStat"
-              @input="changeUpdate(items.id)"
             >
               <option v-for="(i, index) in this.type_unit" :key="index">
                 {{ i }}
@@ -133,10 +135,11 @@
           >
             <select
               v-model="items.ptype"
-              @change="PriceType(items.unit, items.ptype, index, false)"
+              @change="
+                PriceType(items.unit, items.ptype, index, false, items.id)
+              "
               class="text-xs p-1 text-center w-5/6 border-none"
               :disabled="approveStat"
-              @input="changeUpdate(items.id)"
             >
               <option v-for="(i, index) in this.tprice" :key="index">
                 {{ i }}
@@ -149,10 +152,11 @@
             <input
               type="text"
               v-model="items.price_unit"
-              @keyup="edit(index, items.amount, items.price_unit, true)"
+              @keyup="
+                edit(index, items.amount, items.price_unit, true, items.id)
+              "
               class="w-5/6 text-xs p-1 text-center border-none"
               :disabled="approveStat"
-              @input="changeUpdate(items.id)"
             />
           </td>
           <td
@@ -446,12 +450,13 @@ export default {
     // }
   },
   methods: {
-    changeUpdate: debounce(async function (ids) {
+    async changeUpdate(ids) {
       const payload = order.list.filter((data) => data.id == ids);
       // let send_ptype = payload[0].ptype.split(":");
 
       let pt = payload[0].ptype.split(":");
       //payload[0].price_unit = await this.delcomma(payload[0].price_unit);
+
       const data_payload = {
         id: payload[0].id,
         rmd_mat: payload[0].rmd_mat,
@@ -460,14 +465,14 @@ export default {
         ptype: payload[0].ptype.length > 2 ? pt[0] : payload[0].ptype,
         amount: payload[0].amount,
         unit: payload[0].unit,
-        price_unit: await this.delcomma(payload[0].price_unit),
-        cal_price: await this.delcomma(payload[0].cal_price),
+        price_unit: payload[0].price_unit,
+        cal_price: payload[0].cal_price,
       };
 
       const updateitem = await OrderService.update(data_payload);
-    }, 1700),
+    },
 
-    async PriceType(unit, type, i, isInput) {
+    async PriceType(unit, type, i, isInput, ids = "") {
       // console.log("isInput", isInput, "mat", this.data.selection.rmd_mat);
       let typ = type.split(":");
 
@@ -488,23 +493,19 @@ export default {
         KMEIN: unit,
       };
       const price = await FgService.getPrice(payload);
+
       if (price.data[0]) {
         if (isInput) {
           this.inputField.price_unit = price.data[0].KBETR;
-          this.inputField.price_unit = this.addComma(
-            this.inputField.price_unit
-          );
+
           this.inputField.cal_price = parseFloat(
             this.inputField.amount * price.data[0].KBETR
-          ).toFixed(2);
-          this.inputField.cal_price = this.addComma(this.inputField.cal_price);
+          );
         } else {
           order.list[i].price_unit = await price.data[0].KBETR;
-          order.list[i].price_unit = this.addComma(order.list[i].price_unit);
           order.list[i].cal_price = parseFloat(
             order.list[i].amount * price.data[0].KBETR
-          ).toFixed(2);
-          order.list[i].cal_price = this.addComma(order.list[i].cal_price);
+          );
         }
       } else {
         if (isInput) {
@@ -514,9 +515,9 @@ export default {
           order.list[i].price_unit = 1;
           order.list[i].cal_price = 1;
         }
-
         console.log(false);
       }
+      this.changeUpdate(ids);
     },
     async selectItem(item) {
       this.data.selection = item;
@@ -540,11 +541,9 @@ export default {
       this.inputField.rmd_size = this.data.selection.rmd_size;
       this.inputField.amount = 1;
       if (price.data[0]) {
-        this.inputField.price_unit = this.addComma(price.data[0].KBETR);
-        let a = parseFloat(
-          this.inputField.amount * price.data[0].KBETR
-        ).toFixed(2);
-        this.inputField.cal_price = this.addComma(a);
+        this.inputField.price_unit = price.data[0].KBETR;
+        let a = parseFloat(this.inputField.amount * price.data[0].KBETR);
+        this.inputField.cal_price = a;
       } else {
         this.inputField.price_unit = 1;
         this.inputField.cal_price = 1;
@@ -595,8 +594,8 @@ export default {
           ptype: this.selectedType,
           amount: this.inputField.amount,
           unit: this.selectedUnittype,
-          price_unit: this.delcomma(this.inputField.price_unit) || 1,
-          cal_price: this.delcomma(this.inputField.cal_price) || 1,
+          price_unit: this.inputField.price_unit || 1,
+          cal_price: this.inputField.cal_price || 1,
           qt: auth.temp_qt,
         };
 
@@ -615,26 +614,25 @@ export default {
         alert("กรุณาเลือกสินค้า");
       }
     },
-    edit(index, unit, vat, inputE) {
-      if (vat.length > 3) {
-        vat = this.delcomma(vat);
-      }
+    edit(index, unit, vat, inputE, ids = "") {
+      // if (vat.length > 3) {
+      //   vat = this.delcomma(vat);
+      // }
 
       if (this.order.list.length > 0 && inputE) {
         this.order.list.filter((data, i) => {
           if (i == index) {
             if (vat.length > 3) {
-              data.price_unit = this.addComma(vat);
+              data.price_unit = vat;
             }
 
-            data.cal_price = parseFloat(unit * vat).toFixed(2);
-            data.cal_price = this.addComma(data.cal_price);
+            data.cal_price = parseFloat(unit * vat);
           }
         });
       } else {
-        this.inputField.cal_price = parseFloat(unit * vat).toFixed(2);
-        this.inputField.cal_price = this.addComma(this.inputField.cal_price);
+        this.inputField.cal_price = parseFloat(unit * vat);
       }
+      this.changeUpdate(ids);
     },
     addComma(a) {
       let x = a.split(".");
@@ -667,12 +665,12 @@ export default {
           }
           y.cal_price = y.cal_price.toString();
           y.price_unit = y.price_unit.toString();
-          if (y.cal_price.length > 3) {
-            y.cal_price = this.addComma(y.cal_price);
-          }
-          if (y.price_unit.length > 3) {
-            y.price_unit = this.addComma(y.price_unit);
-          }
+          // if (y.cal_price.length > 3) {
+          //   y.cal_price = this.addComma(y.cal_price);
+          // }
+          // if (y.price_unit.length > 3) {
+          //   y.price_unit = this.addComma(y.price_unit);
+          // }
         });
       });
     },

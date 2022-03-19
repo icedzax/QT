@@ -97,14 +97,14 @@ export default {
             if (t_type) {
               y.ptype = x;
             }
-            y.cal_price = y.cal_price.toString();
-            y.price_unit = y.price_unit.toString();
-            if (y.cal_price.length > 3) {
-              y.cal_price = this.addComma(y.cal_price);
-            }
-            if (y.price_unit.length > 3) {
-              y.price_unit = this.addComma(y.price_unit);
-            }
+            // y.cal_price = y.cal_price.toString();
+            // y.price_unit = y.price_unit.toString();
+            // if (y.cal_price.length > 3) {
+            //   y.cal_price = this.addComma(y.cal_price);
+            // }
+            // if (y.price_unit.length > 3) {
+            //   y.price_unit = this.addComma(y.price_unit);
+            // }
           });
         });
         const ordPayload = order.list.map((o) => {

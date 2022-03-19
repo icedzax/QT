@@ -130,9 +130,9 @@ export default {
             data.cal_price = this.delcomma(data.cal_price);
           }
           this.sumprice = this.sumprice + parseFloat(data.cal_price);
-          if (data.cal_price && data.cal_price.length > 3) {
-            data.cal_price = this.addComma(data.cal_price);
-          }
+          // if (data.cal_price && data.cal_price.length > 3) {
+          //   data.cal_price = this.addComma(data.cal_price);
+          // }
         });
       }
       return this.sumprice;
