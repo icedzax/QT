@@ -65,6 +65,7 @@ export default {
       auth.temp_qt = us.data[0].qt;
       order.kunnr = us.data[0].KUNNR;
       order.date = us.data[0].date;
+      order.status = us.data[0].status;
     }
 
     if (auth.temp_qt) {
