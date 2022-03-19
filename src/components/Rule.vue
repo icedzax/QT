@@ -8,7 +8,10 @@
       </div>
       <div class="text-right">
         น้ำหนักรวม +/- :
-        {{ sumweight }} Kg.
+        <v-num #="{ number }" :value="sumweight">
+          {{ number }}
+        </v-num>
+        Kg.
       </div>
 
       <div

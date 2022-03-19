@@ -300,7 +300,7 @@ import { auth } from "../state/user";
 import UserService from "../services/UserService.js";
 import FgService from "../services/FgService.js";
 import OrderService from "../services/OrderService.js";
-import VNum from "v3-num";
+
 export default {
   data() {
     return {
@@ -463,7 +463,7 @@ export default {
       const payload = order.list.filter((data) => data.id == ids);
       // let send_ptype = payload[0].ptype.split(":");
 
-      let pt = payload[0].ptype.split(":");
+      // let pt = ;
       //payload[0].price_unit = await this.delcomma(payload[0].price_unit);
 
       const data_payload = {
@@ -471,7 +471,7 @@ export default {
         rmd_mat: payload[0].rmd_mat,
         rmd_size: payload[0].rmd_size,
         rmd_weight: payload[0].rmd_weight,
-        ptype: payload[0].ptype.length > 2 ? pt[0] : payload[0].ptype,
+        ptype: payload[0].ptype.slice(0, 2),
         amount: payload[0].amount,
         unit: payload[0].unit,
         price_unit: payload[0].price_unit,
@@ -526,7 +526,9 @@ export default {
         }
         console.log(false);
       }
-      this.changeUpdate(ids);
+      if (!isInput) {
+        this.changeUpdate(ids);
+      }
     },
     async selectItem(item) {
       this.data.selection = item;
