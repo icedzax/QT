@@ -21,7 +21,12 @@
           <th
             class="font-light border border-slate-200 w-1/12 text-xs md:text-sm"
           >
-            จำนวนหน่วย
+            จำนวน
+          </th>
+          <th
+            class="font-light border border-slate-200 w-1/12 text-xs md:text-sm"
+          >
+            หน่วย
           </th>
           <th
             class="font-light border border-slate-200 w-2/12 text-xs md:text-sm"
@@ -112,8 +117,23 @@
             class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
           >
             <select
+              v-model="items.unit"
+              @change="PriceType(items.unit, items.ptype, index, false)"
+              class="text-xs p-1 text-center w-5/6 border-none"
+              :disabled="approveStat"
+              @input="changeUpdate(items.id)"
+            >
+              <option v-for="(i, index) in this.type_unit" :key="index">
+                {{ i }}
+              </option>
+            </select>
+          </td>
+          <td
+            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
+          >
+            <select
               v-model="items.ptype"
-              @change="PriceType(items.ptype, index, false)"
+              @change="PriceType(items.unit, items.ptype, index, false)"
               class="text-xs p-1 text-center w-5/6 border-none"
               :disabled="approveStat"
               @input="changeUpdate(items.id)"
@@ -213,8 +233,19 @@
           </td>
           <td class="py-1 w-1/12 text-center">
             <select
+              v-model="selectedUnittype"
+              @change="PriceType(selectedUnittype, selectedType, this.x, true)"
+              class="text-xs p-1 text-center w-5/6"
+            >
+              <option v-for="(i, index) in this.type_unit" :key="index">
+                {{ i }}
+              </option>
+            </select>
+          </td>
+          <td class="py-1 w-1/12 text-center">
+            <select
               v-model="selectedType"
-              @change="PriceType(selectedType, this.x, true)"
+              @change="PriceType(selectedUnittype, selectedType, this.x, true)"
               class="text-xs p-1 text-center w-5/6"
             >
               <option v-for="(i, index) in this.tprice" :key="index">
@@ -298,6 +329,7 @@ export default {
           "W3:ราคาปลีก",
         ],
       },
+      type_unit: ["PC", "KG"],
       tprice: [],
       inputField: {
         rmd_mat: null,
@@ -311,6 +343,7 @@ export default {
       chkrepeat: false,
 
       selectedType: null,
+      selectedUnittype: null,
     };
   },
   props: ["statusApp", "mat"],
@@ -325,6 +358,7 @@ export default {
       if (this.approveStat && order.list.length < 1) return;
     },
     List() {
+      console.log("List JA:", this.order.list);
       return this.order.list;
     },
     fgSearchList() {
@@ -396,6 +430,7 @@ export default {
       this.tprice = this.type.Wholesale;
       this.selectedType = this.type.Wholesale[0];
     }
+    this.selectedUnittype = "PC";
     this.tprice.map((x) => {
       order.list.map((y) => {
         const t_type = x.includes(y.ptype);
@@ -432,7 +467,7 @@ export default {
       const updateitem = await OrderService.update(data_payload);
     }, 800),
 
-    async PriceType(type, i, isInput) {
+    async PriceType(unit, type, i, isInput) {
       // console.log("isInput", isInput, "mat", this.data.selection.rmd_mat);
       let typ = type.split(":");
 
@@ -450,11 +485,9 @@ export default {
         VKORG: 1000,
         MATNR: new_matnr,
         KONDA: typ[0],
-        KMEIN: "PC",
+        KMEIN: unit,
       };
-      console.log(payload);
       const price = await FgService.getPrice(payload);
-
       if (price.data[0]) {
         if (isInput) {
           this.inputField.price_unit = price.data[0].KBETR;
@@ -474,6 +507,15 @@ export default {
           order.list[i].cal_price = this.addComma(order.list[i].cal_price);
         }
       } else {
+        if (isInput) {
+          this.inputField.price_unit = 1;
+          this.inputField.cal_price = 1;
+          console.log("งง=>", isInput);
+        } else {
+          order.list[i].price_unit = 1;
+          order.list[i].cal_price = 1;
+        }
+
         console.log(false);
       }
     },
@@ -544,7 +586,7 @@ export default {
           price_unit: this.inputField.price_unit || 1,
           cal_price: this.inputField.cal_price || 1,
           ptype: this.selectedType,
-          unit: "PC",
+          unit: this.selectedUnittype,
         });
 
         const stock_payload = {
@@ -553,7 +595,7 @@ export default {
           rmd_weight: this.inputField.rmd_weight,
           ptype: this.selectedType,
           amount: this.inputField.amount,
-          unit: "PC",
+          unit: this.selectedUnittype,
           price_unit: this.delcomma(this.inputField.price_unit) || 1,
           cal_price: this.delcomma(this.inputField.cal_price) || 1,
           qt: auth.temp_qt,
