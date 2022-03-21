@@ -90,7 +90,7 @@
               </div>
             </td>
             <td class="border border-slate-200 p-1">{{ i.CNAME }}</td>
-            <td class="border border-slate-200 p-1">{{}}</td>
+            <td class="border border-slate-200 p-1">{{ i.created_at }}</td>
             <td class="border border-slate-200 p-1">
               <div class="flex justify-center">
                 <svg
@@ -210,6 +210,7 @@ export default {
       } else if (data.status == "W") {
         data.status = "รออนุมัติ";
       }
+      data.created_at = data.created_at.substring(0, 16);
     });
   },
   methods: {
