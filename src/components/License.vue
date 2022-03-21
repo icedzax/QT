@@ -6,15 +6,8 @@
       <div class="row-start-1 col-span-1">ยืนยันการสั่งซื้อ (ลูกค้า)</div>
       <div class="row-start-1">ขอแสดงความนับถืออย่างสูง</div>
       <div class="">..........................................</div>
-      <div class="">
-        <!--    <button
-          v-if="!this.stat"
-          @click="approve"
-          class="ml-2 text-center rounded-full p-1 px-2 text-sm border-2 border-blue-400 text-black hover:text-blue-600 font-semibold shadow-lg ring-1 ring-blue-200 focus:outline-none"
-        >
-          ขออนุมัติ ✅
-        </button> -->
-
+      <div v-if="order.status == 'W'">รอการอนุมัติ</div>
+      <div class="" v-else>
         <button
           v-if="!sys.loading"
           @click="approve"
@@ -69,17 +62,22 @@ export default {
     async appQT() {
       sys.loading = true;
 
-      const ordPayload = order.list.map((o) => {
-        return {
-          MATNR: o.rmd_mat,
-          VKORG: "1000",
-          KONDA: o.ptype,
-          KMEIN: o.unit,
-        };
-      });
-      console.log("payload", order.list);
-      const pval = await OrderService.priceValid(ordPayload);
-      console.log(pval);
+      // const ordPayload = order.list.map((o) => {
+      //   return {
+      //     MATNR: o.rmd_mat,
+      //     VKORG: "1000",
+      //     KONDA: o.ptype.slice(0, 2),
+      //     KMEIN: o.unit,
+      //   };
+      // });
+      // console.log("payloadXX", ordPayload);
+      const ordPayload = {
+        qt: auth.temp_qt,
+      };
+      const valid = await OrderService.priceValid(ordPayload);
+      if (valid.data) {
+        order.status = "W";
+      }
       sys.loading = await false;
     },
   },
