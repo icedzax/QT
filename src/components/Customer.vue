@@ -1,10 +1,10 @@
 <template>
   <div class="container">
     <div
-      class="grid overflow-hidden grid-cols-5 grid-rows-1 gap-1 text-xs xl:text-sm p-1 xl:p-0"
+      class="grid overflow-hidden grid-cols-6 grid-rows-1 gap-1 text-xs xl:text-sm p-1 xl:p-0"
     >
       <div class="font-semibold">ลูกค้า</div>
-      <div class="col-span-3">
+      <div class="col-span-4">
         <vue3-simple-typeahead
           class="text-black text-xl"
           v-if="approveStat == 'TEMP' || !cus.data.KUNNR"
@@ -31,7 +31,7 @@
           class="flex justify-center border-2 border-yellow-500 cursor-pointer rounded-full hover:text-yellow-500 hover:ring-1 hover:ring-yellow-300"
           @click="chg_edit"
         >
-          <div class="text-xs px-1 pt-1 font-semibold">EDIT</div>
+          <div class="text-xs pt-1 font-semibold">EDIT</div>
           <div class="py-0.5">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -109,7 +109,7 @@
       <div>
         <p class="font-semibold">ที่อยู่</p>
       </div>
-      <div class="col-span-3 text-left">
+      <div class="col-span-4 text-left">
         <textarea
           name=""
           id="typeahead_id1"
@@ -161,46 +161,58 @@
       <!-- ชื่อผู้ติดต่อ --->
       <div class="font-semibold">ชื่อผู้ติดต่อ</div>
       <input
-        class="text-xs border-b border-gray-400 px-1 focus:outline-none col-span-4"
+        class="text-xs border-b border-gray-400 px-1 focus:outline-none col-span-5"
         v-model="cusdata.CONTACTNAME"
         :disabled="!this.statusE"
       />
 
       <!-- เบอร์ติดต่อ --->
-      <div class="font-semibold">เบอร์ติดต่อ</div>
-      <input
-        id="ip_text"
-        class="border-b border-gray-400 px-1 focus:outline-none"
-        v-model="cusdata.TELNU"
-        :disabled="!this.statusE"
-      />
+    </div>
 
+    <!-- ก้อนล่าง-->
+    <div
+      class="grid overflow-hidden grid-cols-6 grid-rows-1 gap-1 text-xs xl:text-sm p-1 xl:p-0"
+    >
+      <div class="font-semibold">เบอร์ติดต่อ</div>
+      <div class="col-span-2">
+        <input
+          id="ip_text"
+          class="text-xs border-b border-gray-400 px-1 focus:outline-none w-32 lg:w-40"
+          v-model="cusdata.TELNU"
+          :disabled="!this.statusE"
+        />
+      </div>
       <!-- มือถือ --->
       <div class="font-semibold text-center">มือถือ</div>
-      <input
-        id="ip_text2"
-        class="text-xs border-b border-gray-400 px-1 focus:outline-none col-span-2"
-        v-model="cusdata.MOBILE"
-        :disabled="!this.statusE"
-      />
-
+      <div class="col-span-2">
+        <input
+          id="ip_text2"
+          class="text-xs border-b border-gray-400 px-1 focus:outline-none col-span-2"
+          v-model="cusdata.MOBILE"
+          :disabled="!this.statusE"
+        />
+      </div>
       <!-- โทรสาร --->
       <div class="font-semibold">โทรสาร</div>
-      <input
-        id="ip_text"
-        class="text-xs border-b border-gray-400 px-1 focus:outline-none"
-        v-model="cusdata.FAXNU"
-        :disabled="!this.statusE"
-      />
+      <div class="col-span-2">
+        <input
+          id="ip_text"
+          class="text-xs border-b border-gray-400 px-1 focus:outline-none w-32 lg:w-40"
+          v-model="cusdata.FAXNU"
+          :disabled="!this.statusE"
+        />
+      </div>
 
       <!-- อีเมล --->
       <div class="font-semibold text-center">อีเมลล์</div>
-      <input
-        id="ip_text2"
-        class="text-xs col-span-2 border-b border-gray-400 px-1 focus:outline-none"
-        v-model="cusdata.EMAIL"
-        :disabled="!this.statusE"
-      />
+      <div class="col-span-2">
+        <input
+          id="ip_text2"
+          class="text-xs border-b border-gray-400 px-1 focus:outline-none"
+          v-model="cusdata.EMAIL"
+          :disabled="!this.statusE"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -332,11 +344,5 @@ export default {
 }
 .cls-2 {
   fill: url(#linear-gradient);
-}
-#ip_text {
-  font-size: 9px;
-}
-#ip_text2 {
-  font-size: 11px;
 }
 </style>
