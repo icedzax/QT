@@ -7,7 +7,7 @@
         <div class="text-base md:text-2xl text-center lg:text-left">
           ใบเสนอราคา (สำนักงานใหญ่)
         </div>
-        <div class="mx-2 h-10 w-10">
+        <div class="mx-2 h-10 w-10" @click="goto_pdf">
           <svg
             version="1"
             xmlns="http://www.w3.org/2000/svg"
@@ -38,13 +38,15 @@
           </svg>
         </div>
       </div>
-      <div
+      <!-- <div
         class="grid overflow-hidden grid-cols-3 grid-rows-2 gap-1 mx-16 lg:mx-0 text-left mt-1"
       >
-        <div class="row-start-1 row-span-1 col-start-1 col-span-1 p-1">
+        <div
+          class="row-start-1 row-span-1 col-start-1 col-span-1 p-1 text-xs mt-1"
+        >
           เลขที่ใบเสนอราคา
         </div>
-        <div class="row-start-1 row-span-1 col-start-2 col-span-2 p-1">
+        <div class="row-start-1 row-span-1 col-start-2 col-span-2 p-1 text-xs">
           {{ auth.temp_qt }}
           <button
             class="text-center rounded-full px-2 text-sm border-2 border-green-500 text-black hover:text-green-600 font-semibold shadow-lg ring-1 ring-green-200"
@@ -52,10 +54,27 @@
             สร้างใหม่
           </button>
         </div>
-        <div class="row-start-2 row-span-1 col-start-1 col-span-1 p-1">
+        <div class="row-start-2 row-span-1 col-start-1 col-span-1 p-1 text-xs">
           วันที่เสนอราคา
         </div>
-        <div class="row-start-2 row-span-1 col-start-2 col-span-1 p-1">
+        <div class="row-start-2 row-span-1 col-start-2 col-span-1 p-1 text-xs">
+          {{ order.date }}
+        </div>
+      </div> -->
+      <div class="flex justify-start">
+        <div class="w-32 text-left">เลขที่ใบเสนอราคา</div>
+        <div class="w-32 text-left">
+          {{ auth.temp_qt }}
+        </div>
+        <div
+          class="cursor-pointer rounded-full px-2 text-sm border-2 border-green-500 text-black hover:text-green-600 font-semibold shadow-lg ring-1 ring-green-200"
+        >
+          สร้างใหม่
+        </div>
+      </div>
+      <div class="flex justify-start">
+        <div class="w-32 text-left">วันที่เสนอราคา</div>
+        <div>
           {{ order.date }}
         </div>
       </div>
@@ -73,5 +92,12 @@ export default {
     };
   },
   created() {},
+  methods: {
+    goto_pdf() {
+      window.open(
+        "https://report.zubbsteel.com/tcpdf/pdf/ZQT.php?ref=" + auth.temp_qt
+      );
+    },
+  },
 };
 </script>
