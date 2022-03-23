@@ -81,6 +81,7 @@ export default {
       auth.data_sale = data_sale.data;
       if (data_cus.data[0]) {
         cus.data = data_cus.data[0];
+        console.log("look-kha=>", cus.data);
       }
 
       if ((auth.saleOrg = 1000)) {
