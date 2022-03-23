@@ -296,7 +296,7 @@
 import { fg } from "../state/fg";
 import { order } from "../state/order";
 import { auth } from "../state/user";
-
+import { debounce } from "lodash";
 import UserService from "../services/UserService.js";
 import FgService from "../services/FgService.js";
 import OrderService from "../services/OrderService.js";
@@ -459,7 +459,7 @@ export default {
       }
     },
 
-    async changeUpdate(ids) {
+    changeUpdate: debounce(async function (ids) {
       const payload = order.list.filter((data) => data.id == ids);
       // let send_ptype = payload[0].ptype.split(":");
 
@@ -477,9 +477,9 @@ export default {
         price_unit: payload[0].price_unit,
         cal_price: payload[0].cal_price,
       };
-
-      const updateitem = await OrderService.update(data_payload);
-    },
+      console.log("updated");
+      await OrderService.update(data_payload);
+    }, 800),
 
     async PriceType(unit, type, i, isInput, ids = "") {
       // console.log("isInput", isInput, "mat", this.data.selection.rmd_mat);
