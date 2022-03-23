@@ -139,6 +139,7 @@ export default {
     },
     approved() {
       const app = order.status;
+      console.log(app);
       return app;
     },
     chk_cus() {

@@ -692,7 +692,7 @@ export default {
 <style>
 #typeahead_id {
   font-size: 11px;
-  width: 80%;
+  width: 98%;
   padding-top: 2px;
   padding-bottom: 2px;
 }
