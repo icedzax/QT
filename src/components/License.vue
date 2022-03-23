@@ -6,7 +6,7 @@
       <div class="row-start-1 col-span-1">ยืนยันการสั่งซื้อ (ลูกค้า)</div>
       <div class="row-start-1">ขอแสดงความนับถืออย่างสูง</div>
       <div class="">..........................................</div>
-      <div v-if="order.status == 'W'">รอการอนุมัติ</div>
+      <div v-if="!order.status == 'W'">รอการอนุมัติ</div>
       <div class="" v-else>
         <button
           v-if="!sys.loading"
