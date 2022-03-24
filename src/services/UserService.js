@@ -10,6 +10,9 @@ export default {
   temp(empcode) {
     return Api().get("temp/" + empcode);
   },
+  setSalOff(payload) {
+    return Api().post("setSaleOffice", payload);
+  },
   sale(empcode) {
     return Api().get("sale/" + empcode);
   },

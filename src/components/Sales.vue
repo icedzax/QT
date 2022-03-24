@@ -8,9 +8,23 @@
       >
         ผู้เสนอราคา
       </div>
-      <div class="row-start-1 row-span-1 col-start-2 col-span-2">
-        {{ auth.data_sale.sale_name }}
+      <div class="row-start-1 row-span-1 col-start-2 col-span-2 flex">
+        <div>{{ auth.data_sale.sale_name }}</div>
+        <select
+          v-model="soffice"
+          @change="selectOption($event)"
+          class="mx-5 text-xs p-1 border-none rounded"
+        >
+          <option
+            v-for="sal in auth.data_sale.team"
+            :key="sal.sale_office"
+            :value="sal.sale_office"
+          >
+            {{ sal.sale_team }}
+          </option>
+        </select>
       </div>
+
       <div class="row-start-2 row-span-1 col-start-1 col-span-1 font-semibold">
         เบอร์ติดต่อ
       </div>
@@ -45,14 +59,37 @@
   </div>
 </template>
 <script>
+import UserService from "@/services/UserService";
 import { auth } from "../state/user";
 
 export default {
   data() {
     return {
       auth,
+
+      selected: 0,
     };
   },
-  async created() {},
+  props: {
+    soffice: {
+      type: Number,
+      default: 0,
+    },
+  },
+  methods: {
+    selectOption(event) {
+      const v_office = auth.data_sale.team
+        .filter((item) => item.sale_office == event.target.value)
+        .map((data) => {
+          return {
+            qt: auth.temp_qt,
+            sale_office: data.sale_office,
+            sale_team: data.sale_team,
+          };
+        });
+      console.log(v_office[0]);
+      UserService.setSalOff(v_office[0]);
+    },
+  },
 };
 </script>

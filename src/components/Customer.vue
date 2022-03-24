@@ -113,7 +113,7 @@
         <textarea
           name=""
           id="typeahead_id1"
-          class="text-xs"
+          class="text-xs rounded"
           rows="2.5"
           v-model="cusdata.ADDRS"
           :disabled="!this.statusE"

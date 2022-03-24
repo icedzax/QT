@@ -66,6 +66,8 @@ export default {
       order.kunnr = us.data[0].KUNNR;
       order.date = us.data[0].date;
       order.status = us.data[0].status;
+      order.sale_office = us.data[0].sale_office;
+      order.sale_team = us.data[0].sale_team;
     }
 
     if (auth.temp_qt) {
@@ -81,7 +83,7 @@ export default {
       auth.data_sale = data_sale.data;
       if (data_cus.data[0]) {
         cus.data = data_cus.data[0];
-        console.log("look-kha=>", cus.data);
+        // console.log("look-kha=>", cus.data);
       }
 
       if ((auth.saleOrg = 1000)) {

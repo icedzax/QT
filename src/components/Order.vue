@@ -422,13 +422,15 @@ export default {
 
       this.$router.replace({});
     }
-    if ((auth.saleOrg = 1000)) {
-      this.tprice = this.type.retail;
-      this.selectedType = this.type.retail[1];
-    } else if ((state.user.saleOrg = 2000)) {
-      this.tprice = this.type.Wholesale;
-      this.selectedType = this.type.Wholesale[0];
-    }
+    this.tprice = this.type.retail;
+    this.selectedType = this.type.retail[1];
+    // if ((auth.saleOrg = 1000)) {
+    //   this.tprice = this.type.retail;
+    //   this.selectedType = this.type.retail[1];
+    // } else if ((state.user.saleOrg = 2000)) {
+    //   this.tprice = this.type.Wholesale;
+    //   this.selectedType = this.type.Wholesale[0];
+    // }
     this.selectedUnittype = "PC";
     this.tprice.map((x) => {
       order.list.map((y) => {

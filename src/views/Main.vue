@@ -25,7 +25,7 @@
       <div
         class="row-start-1 row-span-5 col-start-1 col-span-2 md:col-span-1 h-auto"
       >
-        <Sale></Sale>
+        <Sale :soffice="order.sale_office"></Sale>
       </div>
       <div
         class="row-span-5 col-start-1 col-span-2 md:col-start-2 md:col-span-1 h-auto"
