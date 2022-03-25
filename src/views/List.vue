@@ -1,6 +1,49 @@
 <template>
   <div class="container">
     <span class="flex justify-center text-xl mt-2">รายการใบนำเสนอราคา</span>
+
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead
+          class="text-xs text-gray-700 uppercase bg-indigo-50 dark:bg-gray-700 dark:text-gray-400"
+        >
+          <tr>
+            <th scope="col" class="px-6 py-3">ลูกค้า</th>
+            <th scope="col" class="px-6 py-3">ใบเสนอราคาเลขที่</th>
+            <th scope="col" class="px-6 py-3">สร้างเมื่อ</th>
+            <th scope="col" class="px-6 py-3">สถานะ</th>
+            <th scope="col" class="px-6 py-3">
+              <span class="sr-only">Edit</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(i, index) in this.AllList"
+            :key="index"
+            class="border-b dark:bg-gray-800 dark:border-gray-700 odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700"
+          >
+            <th
+              scope="row"
+              class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+            >
+              {{ i.CNAME }}
+            </th>
+            <td class="px-6 py-4">{{ i.QT }}</td>
+            <td class="px-6 py-4">{{ i.created_at }}</td>
+            <td class="px-6 py-4">{{ i.status }}</td>
+            <td class="px-6 py-4 text-right">
+              <a
+                href="#"
+                class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                >Edit</a
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
     <div class="flex justify-center">
       <table class="w-3/5 border-collapse mt-2">
         <thead>

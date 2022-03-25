@@ -11,6 +11,7 @@
       <div class="row-start-1 row-span-1 col-start-2 col-span-2 flex">
         <div>{{ auth.data_sale.sale_name }}</div>
         <select
+          v-if="isTeamList"
           v-model="soffice"
           @change="selectOption($event)"
           class="mx-5 text-xs p-1 border-none rounded"
@@ -74,6 +75,15 @@ export default {
     soffice: {
       type: Number,
       default: 0,
+    },
+  },
+  computed: {
+    isTeamList() {
+      if (auth.data_sale.team) {
+        return auth.data_sale.team.length > 1 ? true : false;
+      } else {
+        return false;
+      }
     },
   },
   methods: {

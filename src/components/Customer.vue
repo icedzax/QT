@@ -289,6 +289,9 @@ export default {
         KUNNR: this.data.selection.KUNNR,
       });
       cus.data = data_cus.data[0];
+      if (data_cus.status == 200) {
+        order.kunnr = this.data.selection.KUNNR;
+      }
     },
     async update_data() {
       const send_update = await CusService.setCus({

@@ -28,4 +28,7 @@ export default {
   list(body) {
     return Api().post("qtList/", body);
   },
+  newQT(body) {
+    return Api().post("newQT/", body);
+  },
 };

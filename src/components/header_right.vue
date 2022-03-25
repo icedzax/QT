@@ -67,6 +67,7 @@
           {{ auth.temp_qt }}
         </div>
         <div
+          @click="newQT"
           class="cursor-pointer rounded-full px-2 text-sm border-2 border-green-500 text-black hover:text-green-600 font-semibold shadow-lg ring-1 ring-green-200"
         >
           สร้างใหม่
@@ -84,11 +85,14 @@
 <script>
 import { auth } from "../state/user";
 import { order } from "../state/order";
+import UserService from "@/services/UserService";
+import { sys } from "../state/system";
 export default {
   data() {
     return {
       auth,
       order,
+      sys,
     };
   },
   created() {},
@@ -97,6 +101,14 @@ export default {
       window.open(
         "https://report.zubbsteel.com/tcpdf/pdf/ZQT.php?ref=" + auth.temp_qt
       );
+    },
+    async newQT() {
+      if (confirm("ยืนยันสร้างใบเสนอราคาใหม่ ?")) {
+        sys.loading = true;
+        await UserService.newQT({ qt: auth.temp_qt, emp_code: auth.user_id });
+        sys.loading = await false;
+        await this.$router.go();
+      }
     },
   },
 };
