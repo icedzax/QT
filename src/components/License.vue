@@ -6,18 +6,22 @@
       <div class="row-start-1 col-span-1">ยืนยันการสั่งซื้อ (ลูกค้า)</div>
       <div class="row-start-1">ขอแสดงความนับถืออย่างสูง</div>
       <div class="">..........................................</div>
-      <div v-if="!order.status == 'W'">รอการอนุมัติ</div>
-      <div class="" v-else>
-        <button
-          v-if="!sys.loading"
-          @click="approve"
-          type="button"
-          class="py-2.5 px-5 mr-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-flex items-center"
-        >
-          ขออนุมัติ ✅
-        </button>
-        <loading-button v-else> </loading-button>
+      <div v-if="order.list.length > 0">
+        <div v-if="order.status == 'W'">รอการอนุมัติ</div>
+        <div v-if="order.status == 'A'">{{ auth.data_sale.sale_name }}</div>
+        <div class="" v-else>
+          <button
+            v-if="!sys.loading"
+            @click="approve"
+            type="button"
+            class="py-2.5 px-5 mr-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-flex items-center"
+          >
+            ขออนุมัติ ✅
+          </button>
+          <loading-button v-else> </loading-button>
+        </div>
       </div>
+      <div v-else></div>
       <div class="">(.........................................)</div>
       <div class="">({{ sd.sale_name }})</div>
     </div>
