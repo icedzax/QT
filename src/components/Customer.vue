@@ -131,7 +131,7 @@
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
               viewBox="0 0 64 64"
-              class="w-5"
+              class="w-4 md:w-5"
             >
               <defs>
                 <linearGradient
@@ -176,8 +176,7 @@
       <div class="font-semibold">เบอร์ติดต่อ</div>
       <div class="col-span-2">
         <input
-          id="ip_text"
-          class="text-xs border-b border-gray-400 px-1 focus:outline-none w-32 lg:w-40"
+          class="text-xs border-b border-gray-400 px-1 focus:outline-none w-full"
           v-model="cusdata.TELNU"
           :disabled="!this.statusE"
         />
@@ -186,8 +185,7 @@
       <div class="font-semibold text-center">มือถือ</div>
       <div class="col-span-2">
         <input
-          id="ip_text2"
-          class="text-xs border-b border-gray-400 px-1 focus:outline-none col-span-2"
+          class="text-xs border-b border-gray-400 px-1 focus:outline-none w-full"
           v-model="cusdata.MOBILE"
           :disabled="!this.statusE"
         />
@@ -196,8 +194,7 @@
       <div class="font-semibold">โทรสาร</div>
       <div class="col-span-2">
         <input
-          id="ip_text"
-          class="text-xs border-b border-gray-400 px-1 focus:outline-none w-32 lg:w-40"
+          class="text-xs border-b border-gray-400 px-1 focus:outline-none w-full"
           v-model="cusdata.FAXNU"
           :disabled="!this.statusE"
         />
@@ -207,8 +204,7 @@
       <div class="font-semibold text-center">อีเมลล์</div>
       <div class="col-span-2">
         <input
-          id="ip_text2"
-          class="text-xs border-b border-gray-400 px-1 focus:outline-none"
+          class="text-xs border-b border-gray-400 px-1 focus:outline-none w-full"
           v-model="cusdata.EMAIL"
           :disabled="!this.statusE"
         />

@@ -23,12 +23,12 @@
       class="box grid overflow-hidden grid-cols-2 grid-rows-2 gap-2 flex-wrap mt-1"
     >
       <div
-        class="row-start-1 row-span-5 col-start-1 col-span-2 md:col-span-1 h-auto"
+        class="row-start-1 row-span-5 col-start-1 col-span-2 lg:col-span-1 h-auto"
       >
         <Sale></Sale>
       </div>
       <div
-        class="row-span-5 col-start-1 col-span-2 md:col-start-2 md:col-span-1 h-auto"
+        class="row-span-5 col-start-1 col-span-2 lg:col-start-2 lg:col-span-1 h-auto"
       >
         <Customer :customername="chk_cus" :statusApp="approved"></Customer>
       </div>
