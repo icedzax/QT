@@ -214,6 +214,7 @@
         />
       </div>
     </div>
+    <!-- <p>{{this.list_qt}}</p> -->
   </div>
 </template>
 <script>
@@ -243,6 +244,7 @@ export default {
         selection: null,
       },
       statusE: false,
+      list_qt: this.$route.params.list_qt,
     };
   },
   created() {},
