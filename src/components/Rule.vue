@@ -33,11 +33,12 @@
             name=""
             id=""
             v-model="rules.condition"
+            :disabled="isEnable"
             class="w-4/5 h-6 text-xs mr-2 border-none"
             @input="changeUpdate(rules.condition, rules.item)"
           />
         </div>
-        <div class="w-2/5">
+        <div v-show="isEnable" class="w-2/5">
           <svg
             id="Layer_1"
             data-name="Layer 1"
@@ -57,7 +58,7 @@
           </svg>
         </div>
       </div>
-      <div class="col-span-2 flex justify-inline">
+      <div v-show="!isEnable" class="col-span-2 flex justify-inline">
         <div class="w-8 mr-2 py-0.5">
           <input
             type="text"
@@ -91,6 +92,7 @@
         </div>
       </div>
     </div>
+    {{}}
   </div>
 </template>
 <script>
@@ -117,6 +119,9 @@ export default {
     },
     ruleX() {
       return order.con;
+    },
+    isEnable() {
+      if (order.status == "TEMP" || order.status == "D") return;
     },
   },
   methods: {
