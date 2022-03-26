@@ -170,7 +170,7 @@ export default {
       });
     },
     goto_pdf(qt) {
-      alert("ไป PDF ของ QT เลขที่" + qt);
+      window.open("https://report.zubbsteel.com/tcpdf/pdf/ZQT.php?ref=" + qt);
     },
   },
 };
