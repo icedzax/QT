@@ -4,46 +4,51 @@
       <thead class="w-full">
         <tr class="w-full mb-4">
           <th
-            class="font-light border border-slate-200 w-1/12 text-xs md:text-sm"
+            class="font-light border border-slate-200 w-auto text-xs md:text-sm"
           >
             ลำดับ
           </th>
           <th
-            class="font-light border border-slate-200 w-4/12 text-xs md:text-sm"
+            class="font-light border border-slate-200 w-2/12 text-xs md:text-sm"
+          >
+            รหัสสินค้า
+          </th>
+          <th
+            class="font-light border border-slate-200 w-3/12 text-xs md:text-sm"
           >
             รายการสินค้า
           </th>
           <th
-            class="font-light border border-slate-200 w-1/12 text-xs md:text-sm"
+            class="font-light border border-slate-200 w-auto text-xs md:text-sm"
           >
             น้ำหนักหน่วย +/-
           </th>
           <th
-            class="font-light border border-slate-200 w-1/12 text-xs md:text-sm"
+            class="font-light border border-slate-200 w-auto text-xs md:text-sm"
           >
             จำนวน
           </th>
           <th
-            class="font-light border border-slate-200 w-1/12 text-xs md:text-sm"
+            class="font-light border border-slate-200 w-auto text-xs md:text-sm"
           >
             หน่วย
           </th>
           <th
-            class="font-light border border-slate-200 w-2/12 text-xs md:text-sm"
+            class="font-light border border-slate-200 w-auto text-xs md:text-sm"
           >
             ราคา
           </th>
           <th
-            class="font-light border border-slate-200 w-1/12 text-xs md:text-sm"
+            class="font-light border border-slate-200 w-auto text-xs md:text-sm"
           >
             ราคาต่อหน่วยก่อน VAT 7%
           </th>
           <th
-            class="font-light border border-slate-200 w-1/12 text-xs md:text-sm"
+            class="font-light border border-slate-200 w-auto text-xs md:text-sm"
           >
             จำนวนเงิน
           </th>
-          <th class="w-1/12">
+          <th class="w-auto">
             <svg
               v-if="approveStat"
               id="Layer_1"
@@ -80,12 +85,23 @@
             />
           </td>
           <td
-            class="py-1 w-4/12 text-center text-xs md:text-sm border border-slate-200"
+            class="py-1 w-2/12 text-center text-xs md:text-sm border border-slate-200"
+          >
+            <input
+              type="text"
+              v-model="items.rmd_mat"
+              class="w-5/6 text-xs p-1 text-center border-none"
+              :disabled="!approveStat"
+              @input="changeUpdate(items.id)"
+            />
+          </td>
+          <td
+            class="py-1 w-3/12 text-left text-xs md:text-sm border border-slate-200"
           >
             <input
               type="text"
               v-model="items.rmd_size"
-              class="w-5/6 text-xs p-1 text-center border-none"
+              class="w-full py-0.5 px-0.5 text-xs border-none"
               :disabled="!approveStat"
               @input="changeUpdate(items.id)"
             />
@@ -195,7 +211,7 @@
               disabled
             />
           </td>
-          <td class="py-1 w-4/12 text-center">
+          <td class="py-1 text-center" colspan="2">
             <vue3-simple-typeahead
               id="typeahead_id"
               :placeholder="options.placeholder"
@@ -277,7 +293,7 @@
               viewBox="0 0 48 48"
               enable-background="new 0 0 48 48"
               class="w-5 h-5"
-              v-if="(this.List.length == 0 || !approveStat) && !chkrepeat"
+              v-if="(this.List.length == 0 || approveStat) && !chkrepeat"
               @click="enter"
             >
               <circle fill="#4CAF50" cx="24" cy="24" r="21" />
