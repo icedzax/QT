@@ -27,7 +27,7 @@
       </div>
       <div class="w-full">
         <div
-          v-if="!this.statusE"
+          v-if="!this.statusE && approveStat"
           class="flex justify-center border-2 border-yellow-500 cursor-pointer rounded-full hover:text-yellow-500 hover:ring-1 hover:ring-yellow-300"
           @click="chg_edit"
         >
@@ -62,7 +62,7 @@
           </div>
         </div>
         <div
-          v-else
+          v-else-if="approveStat"
           class="flex justify-center border-2 border-violet-500 rounded-full cursor-pointer hover:bg-violet-100 hover:text-violet-600 hover:ring-1 hover:ring-violet-300"
           @click="update_data"
         >

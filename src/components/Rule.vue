@@ -33,7 +33,7 @@
             name=""
             id=""
             v-model="rules.condition"
-            :disabled="isEnable"
+            :disabled="!isEnable"
             class="w-4/5 h-6 text-xs mr-2 border-none"
             @input="changeUpdate(rules.condition, rules.item)"
           />
@@ -58,7 +58,7 @@
           </svg>
         </div>
       </div>
-      <div v-show="!isEnable" class="col-span-2 flex justify-inline">
+      <div v-show="isEnable" class="col-span-2 flex justify-inline">
         <div class="w-8 mr-2 py-0.5">
           <input
             type="text"
@@ -121,7 +121,7 @@ export default {
       return order.con;
     },
     isEnable() {
-      if (order.status == "TEMP" || order.status == "D") return;
+      if (order.status == "TEMP" || order.status == "D") return true;
     },
   },
   methods: {

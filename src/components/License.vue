@@ -8,7 +8,9 @@
       <div class="">..........................................</div>
       <div v-if="order.list.length > 0">
         <div v-if="order.status == 'W'">รอการอนุมัติ</div>
-        <div v-if="order.status == 'A'">{{ auth.data_sale.sale_name }}</div>
+        <div v-else-if="order.status == 'A'">
+          {{ auth.data_sale.sale_name }}
+        </div>
         <div class="" v-else>
           <button
             v-if="!sys.loading"
