@@ -105,8 +105,13 @@ export default {
     async newQT() {
       if (confirm("ยืนยันสร้างใบเสนอราคาใหม่ ?")) {
         sys.loading = true;
-        await UserService.newQT({ qt: auth.temp_qt, emp_code: auth.user_id });
+        const nqt = await UserService.newQT({
+          qt: auth.temp_qt,
+          emp_code: auth.user_id,
+        });
         sys.loading = await false;
+        console.log("NQT", nqt.data);
+        localStorage.setItem("tempqt", nqt.data);
         await this.$router.go();
       }
     },
