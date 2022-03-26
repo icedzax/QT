@@ -85,7 +85,8 @@
 <script>
 import { auth } from "../state/user";
 import { order } from "../state/order";
-import UserService from "@/services/UserService";
+import UserService from "../services/UserService";
+
 import { sys } from "../state/system";
 export default {
   data() {
@@ -103,6 +104,10 @@ export default {
       );
     },
     async newQT() {
+      console.log({
+        qt: auth.temp_qt,
+        emp_code: auth.user_id,
+      });
       if (confirm("ยืนยันสร้างใบเสนอราคาใหม่ ?")) {
         sys.loading = true;
         const nqt = await UserService.newQT({
@@ -110,8 +115,8 @@ export default {
           emp_code: auth.user_id,
         });
         sys.loading = await false;
-        console.log("NQT", nqt.data);
-        localStorage.setItem("tempqt", nqt.data);
+        await console.log("NQT", nqt.data);
+        await localStorage.setItem("tempqt", nqt.data);
         await this.$router.go();
       }
     },
