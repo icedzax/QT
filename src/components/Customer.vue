@@ -7,7 +7,7 @@
       <div class="col-span-4">
         <vue3-simple-typeahead
           class="text-black text-xl"
-          v-if="approveStat == 'TEMP' || !cus.data.KUNNR"
+          v-if="approveStat || !cus.data.KUNNR"
           id="typeahead_id"
           :placeholder="place_holder"
           :items="customers"
@@ -258,7 +258,7 @@ export default {
       return this.data.selection || cus.data;
     },
     approveStat() {
-      return this.statusApp;
+      if (order.status == "TEMP" || order.status == "D") return true;
     },
   },
   methods: {

@@ -348,7 +348,8 @@ export default {
   props: ["statusApp", "mat"],
   computed: {
     approveStat() {
-      return order.status != "TEMP" ? true : false;
+      if (order.status == "TEMP" || order.status == "D") return;
+      //return order.status != "TEMP" ? true : false;
     },
     // validateSave() {
     //   if (this.approveStat) return;
