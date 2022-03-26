@@ -45,7 +45,7 @@
           </th>
           <th class="w-1/12">
             <svg
-              v-if="!approveStat"
+              v-if="approveStat"
               id="Layer_1"
               data-name="Layer 1"
               xmlns="http://www.w3.org/2000/svg"
@@ -86,7 +86,7 @@
               type="text"
               v-model="items.rmd_size"
               class="w-5/6 text-xs p-1 text-center border-none"
-              :disabled="approveStat"
+              :disabled="!approveStat"
               @input="changeUpdate(items.id)"
             />
           </td>
@@ -97,7 +97,7 @@
               type="text"
               v-model="items.rmd_weight"
               class="w-5/6 text-xs p-1 text-center border-none focus:outline-none"
-              :disabled="approveStat"
+              :disabled="!approveStat"
               @input="changeUpdate(items.id)"
             />
           </td>
@@ -112,7 +112,7 @@
               "
               @keypress="NumbersOnly"
               class="w-5/6 text-xs p-1 text-center border-none"
-              :disabled="approveStat"
+              :disabled="!approveStat"
             />
           </td>
           <td
@@ -124,7 +124,7 @@
                 PriceType(items.unit, items.ptype, index, false, items.id)
               "
               class="text-xs p-1 text-center w-5/6 border-none"
-              :disabled="approveStat"
+              :disabled="!approveStat"
             >
               <option v-for="(i, index) in this.type_unit" :key="index">
                 {{ i }}
@@ -140,7 +140,7 @@
                 PriceType(items.unit, items.ptype, index, false, items.id)
               "
               class="text-xs p-1 text-center w-5/6 border-none"
-              :disabled="approveStat"
+              :disabled="!approveStat"
             >
               <option v-for="(i, index) in this.tprice" :key="index">
                 {{ i }}
@@ -155,7 +155,7 @@
                 edit(index, items.amount, items.price_unit, true, items.id)
               "
               class="w-5/6 p-1 text-sm text-center border-none"
-              :disabled="approveStat"
+              :disabled="!approveStat"
             />
           </td>
           <td class="py-1 w-1/12 text-center border border-slate-200">
@@ -165,7 +165,7 @@
           </td>
           <td class="py-1 w-1/12 text-center">
             <svg
-              v-if="!approveStat"
+              v-if="approveStat"
               id="Layer_1"
               data-name="Layer 1"
               xmlns="http://www.w3.org/2000/svg"
@@ -185,7 +185,7 @@
           </td>
         </tr>
       </tbody>
-      <tbody class="bg-grey-light w-full" v-if="!approveStat">
+      <tbody class="bg-grey-light w-full" v-if="approveStat">
         <tr class="full mb-4">
           <td class="py-1 w-1/12 text-center">
             <input
@@ -348,7 +348,8 @@ export default {
   props: ["statusApp", "mat"],
   computed: {
     approveStat() {
-      if (order.status == "TEMP" || order.status == "D") return;
+      console.log(order.status);
+      if (order.status == "TEMP" || order.status == "D") return true;
       //return order.status != "TEMP" ? true : false;
     },
     // validateSave() {
