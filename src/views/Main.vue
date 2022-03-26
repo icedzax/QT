@@ -79,14 +79,32 @@ import License from "../components/License.vue";
 
 import { order } from "../state/order";
 import { cus } from "../state/cus";
+import { auth } from "../state/user";
+
+import UserService from "../services/UserService.js";
+import FgService from "../services/FgService";
+import OrderService from "../services/OrderService.js";
+import CusService from "../services/CusService";
 
 export default {
   data() {
     return {
+      auth,
       order,
       sumweight: 0,
       sumprice: 0,
       cus,
+      tprice: [],
+      type: {
+        retail: ["R1:ราคาสดรับเอง", "R2:ราคาสดส่ง", "R3:ราคาเงินเชื่อ"],
+        Wholesale: [
+          "T1:100 ตัน",
+          "W0:ราคายกรถ",
+          "W1:ราคาคละไซด์",
+          "W2:ราคายกมัด",
+          "W3:ราคาปลีก",
+        ],
+      },
     };
   },
   props: {
@@ -105,7 +123,73 @@ export default {
     License,
     Header_r,
   },
-  async created() {},
+  async created() {
+    console.log("### ROUTE ###", this.$route.params.list_qt);
+    console.log("### LOCAL TMPQT ###", localStorage.getItem("tempqt"));
+
+    let initQT;
+    if (this.$route.params.list_qt === undefined) {
+      initQT = localStorage.getItem("tempqt");
+    } else {
+      initQT = this.$route.params.list_qt;
+    }
+    let us = await UserService.temp({ emp: auth.user_id });
+
+    if (initQT) {
+      us = await UserService.tempQT({
+        emp: auth.user_id,
+        qt: initQT,
+      });
+    }
+
+    console.log("### init ###", us.data[0]);
+    if (us.data[0]) {
+      auth.temp_qt = us.data[0].qt;
+      localStorage.setItem("tempqt", auth.temp_qt);
+      order.kunnr = us.data[0].KUNNR;
+      order.date = us.data[0].date;
+      order.status = us.data[0].status;
+      order.sale_office = us.data[0].sale_office;
+      order.sale_team = us.data[0].sale_team;
+    }
+
+    if (auth.temp_qt) {
+      const items = await FgService.items(auth.temp_qt);
+      const data_sale = await UserService.sale(auth.user_id);
+      const data_con = await OrderService.Con(auth.temp_qt);
+
+      const data_cus = await CusService.postCus({ KUNNR: order.kunnr });
+
+      if (data_con.data[0]) {
+        order.con = data_con.data;
+      }
+      auth.data_sale = data_sale.data;
+      if (data_cus.data[0]) {
+        cus.data = data_cus.data[0];
+        // console.log("look-kha=>", cus.data);
+      }
+
+      // if ((auth.saleOrg = 1000)) {
+      //   this.tprice = this.type.retail;
+      // } else if ((state.user.saleOrg = 2000)) {
+      //   this.tprice = this.type.Wholesale;
+      // }
+      this.tprice = this.type.retail;
+
+      if (items.data) {
+        order.list = items.data;
+
+        this.tprice.map((x) => {
+          order.list.map((y) => {
+            const t_type = x.includes(y.ptype);
+            if (t_type) {
+              y.ptype = x;
+            }
+          });
+        });
+      }
+    }
+  },
   computed: {
     oo() {
       return order.list;

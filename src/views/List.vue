@@ -136,6 +136,7 @@ export default {
     },
   },
   async created() {
+    console.log("### USER_ID ###", auth.user_id);
     const data_list = await UserService.list({ emp_code: auth.user_id });
     this.list_au = data_list.data;
     this.list_au.map((data) => {
@@ -151,8 +152,7 @@ export default {
   },
   methods: {
     goto_qt(qt) {
-      auth.temp_qt = qt;
-
+      localStorage.setItem("tempqt", qt);
       this.$router.push({
         name: "Home",
         params: { list_qt: qt },

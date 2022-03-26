@@ -7,8 +7,11 @@ export default {
   show(userId) {
     return Api().get("user/" + userId);
   },
-  temp(empcode) {
-    return Api().get("temp/" + empcode);
+  temp(payload) {
+    return Api().get("temp/" + payload.emp);
+  },
+  tempQT(payload) {
+    return Api().get("tempQT/" + payload.emp + "/" + payload.qt);
   },
   setSalOff(payload) {
     return Api().post("setSaleOffice", payload);
