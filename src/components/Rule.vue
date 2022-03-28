@@ -27,16 +27,34 @@
             disabled
           />
         </div>
-        <div class="w-3/5">
+        <div class="w-4/5">
           <input
             type="text"
             name=""
             id=""
             v-model="rules.condition"
             :disabled="!isEnable"
-            class="w-4/5 h-6 text-xs mr-2 border-none"
+            class="w-full h-6 text-xs mr-2 border-none"
             @input="changeUpdate(rules.condition, rules.item)"
           />
+        </div>
+        <div class="w-2/5 py-0.5 ml-4">
+          <select
+            name=""
+            id=""
+            class="w-4/5 text-xs p-1 text-center h-6"
+            v-model="rules.condition_t"
+            @change="clickChoice(rules.condition_t, false, index + 1)"
+          >
+            <option
+              v-for="(choice, index) in this.examchoice"
+              :key="index"
+              @click="c_option"
+              :disabled="index == 0"
+            >
+              {{ choice.choice_name }}
+            </option>
+          </select>
         </div>
         <div v-show="isEnable" class="w-2/5">
           <svg
@@ -67,12 +85,31 @@
             disabled
           />
         </div>
-        <div class="w-3/5 py-0.5">
+        <div class="w-4/5 py-0.5">
           <input
             type="text"
-            class="bg-yellow-50 w-4/5 h-6 text-xs mr-2"
+            class="bg-yellow-50 w-full h-6 text-xs mr-2"
             v-model="inputRules"
+            @input="changeInputR(inputRules)"
           />
+        </div>
+        <div class="w-2/5 py-0.5 ml-4">
+          <select
+            name=""
+            id=""
+            class="w-4/5 text-xs p-1 text-center h-6"
+            v-model="selectChoice"
+            @change="clickChoice(selectChoice, true)"
+          >
+            <option
+              v-for="(choice, index) in this.examchoice"
+              :key="index"
+              @click="c_option"
+              :disabled="index == 0"
+            >
+              {{ choice.choice_name }}
+            </option>
+          </select>
         </div>
         <div class="w-2/5 py-0.5">
           <svg
@@ -109,6 +146,15 @@ export default {
       fixsw: "",
       inputRules: "",
       ruleAll: [],
+      examchoice: [
+        { id: 0, choice_name: "เลือกเงื่อนไข" },
+        { id: 1, choice_name: "ตัวเลือกที่ 1" },
+        { id: 2, choice_name: "ตัวเลือกที่ 2" },
+        { id: 3, choice_name: "ตัวเลือกที่ 3" },
+      ],
+      selectChoice: "เลือกเงื่อนไข",
+      check_repeat: false,
+      RulesEmp: [],
     };
   },
   async create() {},
@@ -118,6 +164,24 @@ export default {
       return newsw;
     },
     ruleX() {
+      if (!this.check_repeat) {
+        order.con.forEach((data) => {
+          data.condition_t = data.condition;
+        });
+
+        this.examchoice.forEach((data) => {
+          this.RulesEmp.push(data.choice_name);
+        });
+
+        order.con.map((data) => {
+          const B = this.RulesEmp.includes(data.condition);
+
+          if (!B) {
+            data.condition_t = "เลือกเงื่อนไข";
+          }
+        });
+      }
+
       return order.con;
     },
     isEnable() {
@@ -125,22 +189,96 @@ export default {
     },
   },
   methods: {
-    changeUpdate: debounce(async function (con, ids) {
-      await OrderService.editCon({
-        con: con,
-        qt: auth.temp_qt,
-        item: ids,
+    async changeUpdate(con, ids) {
+      this.check_repeat = false;
+      order.con.filter((data, index) => {
+        if (ids !== index + 1) {
+          //จะไม่เช็กตัวเอง
+          if (con == data.condition) {
+            this.check_repeat = true;
+
+            return false;
+          }
+        }
       });
-    }, 800),
+
+      if (!this.check_repeat) {
+        await OrderService.editCon({
+          con: con,
+          qt: auth.temp_qt,
+          item: ids,
+        });
+      } else {
+        alert("ตรวจสอบเงื่อนไขว่าซ้ำกับด้านบนหรือไม่");
+        order.con.map((data, index) => {
+          if (ids == index + 1) {
+            data.condition = "";
+            data.condition_t = "เลือกเงื่อนไข";
+          }
+        });
+      }
+    },
+    changeInputR(a) {
+      this.checkRULES(a);
+    },
     async addRules() {
-      await OrderService.myRule({ qt: auth.temp_qt, con: this.inputRules });
-      const rules = await OrderService.Con(auth.temp_qt);
-      order.con = rules.data;
+      if (this.check_repeat) {
+        alert("ห้ามเลือกซ้ำกับเงื่อนไขก่อนหน้า");
+      } else {
+        await OrderService.myRule({ qt: auth.temp_qt, con: this.inputRules });
+
+        const rules = await OrderService.Con(auth.temp_qt);
+        order.con = rules.data;
+        this.inputRules = "";
+      }
     },
     async delRules(index) {
       await OrderService.delcon({ qt: auth.temp_qt, item: index });
       const rules = await OrderService.Con(auth.temp_qt);
       order.con = rules.data;
+    },
+    async clickChoice(a, type, index = "") {
+      if (type) {
+        this.inputRules = a;
+      }
+
+      this.checkRULES(a, type, index);
+    },
+    checkRULES(rules, type, index = "") {
+      this.check_repeat = false;
+      rules = rules.trim();
+      const a = order.con.filter((r) => r.condition == rules);
+      if (!type) {
+        if (a.length == 1) {
+          this.check_repeat = true;
+        } else {
+          order.con.filter(async (data) => {
+            if (data.item == index) {
+              data.condition = rules;
+              await OrderService.editCon({
+                con: rules,
+                qt: auth.temp_qt,
+                item: data.item,
+              });
+            }
+          });
+        }
+
+        if (this.check_repeat) {
+          alert("ซ้ำไม่ได้นะ");
+          order.con.filter((data) => {
+            if (data.item == index) {
+              data.condition_t = "เลือกเงื่อนไข";
+              data.condition = "";
+            }
+          });
+          console.log("หลังจิ้ม::", order.con);
+        }
+      } else {
+        if (a.length == 1) {
+          this.check_repeat = true;
+        }
+      }
     },
   },
 };
