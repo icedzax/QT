@@ -37,7 +37,7 @@
             <th scope="col" class="px-6 py-3">ลูกค้า</th>
             <th scope="col" class="px-6 py-3">ใบเสนอราคาเลขที่</th>
             <th scope="col" class="px-6 py-3">สร้างเมื่อ</th>
-            <th scope="col" class="px-6 py-3">สถานะ</th>
+            <th scope="col" class="px-6 py-3" colspan="2">สถานะ</th>
             <th scope="col" class="px-6 py-3">
               <span class="sr-only">Edit</span>
             </th>
@@ -132,11 +132,15 @@
               </div>
             </td>
             <td class="px-6 py-4">{{ i.created_at }}</td>
-            <td class="px-6 py-4">
+            <td class="px-6 py-4" colspan="2">
               <span :class="i.classi">
                 {{ i.status }}
               </span>
+              <span :class="i.classi" v-show="i.comfirm_cus !== ''">
+                {{ i.comfirm_cus }}
+              </span>
             </td>
+
             <td class="px-6 py-4 text-right">
               <a
                 href="#"
@@ -148,19 +152,11 @@
         </tbody>
       </table>
     </div>
-    <Vuetable
-      ref="vuetable"
-      api-url="https://vuetable.ratiw.net/api/users"
-      :fields="['name', 'nickname', 'email', 'gender']"
-      data-path=""
-      pagination-path=""
-    ></Vuetable>
   </div>
 </template>
 <script>
 import UserService from "@/services/UserService";
 import { auth } from "@/state/user";
-import Vuetable from "vuetable-2";
 export default {
   data() {
     return {
@@ -168,7 +164,7 @@ export default {
     };
   },
 
-  components: { Vuetable },
+  components: {},
   computed: {
     AllList() {
       return this.list_au;
@@ -179,11 +175,15 @@ export default {
     const data_list = await UserService.list({ emp_code: auth.user_id });
     this.list_au = data_list.data;
     this.list_au.map((data) => {
+      data.comfirm_cus = "";
       if (data.status == "TEMP" || data.status == "D") {
         data.status = "แบบร่าง";
         data.classi =
           "bg-gray-100 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300";
-      } else if (data.status == "A") {
+      } else if (data.status == "A" || data.status == "C") {
+        if (data.status == "C") {
+          data.comfirm_cus = "ลูกค้า";
+        }
         data.status = "อนุมัติแล้ว";
         data.classi =
           "bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900";
@@ -193,8 +193,8 @@ export default {
           "bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900";
       }
       data.created_at = data.created_at.substring(0, 16);
-      console.log("แต่ละคลาส=", data.classi);
     });
+    console.log(this.list_au);
   },
   methods: {
     goto_qt(qt) {
