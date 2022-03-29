@@ -38,7 +38,7 @@
             @input="changeUpdate(rules.condition, rules.item)"
           />
         </div>
-        <div class="w-2/5 py-0.5 ml-4">
+        <div class="w-2/5 py-0.5 ml-4" v-show="isEnable">
           <select
             name=""
             id=""

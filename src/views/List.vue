@@ -152,11 +152,52 @@
         </tbody>
       </table>
     </div>
+    <div hidden>
+      <table-lite
+        :is-loading="table.isLoading"
+        :columns="table.columns"
+        :rows="table.rows"
+        :total="table.totalRecordCount"
+        :sortable="table.sortable"
+        :messages="table.messages"
+        @do-search="doSearch"
+        @is-finished="table.isLoading = false"
+      ></table-lite>
+    </div>
   </div>
 </template>
 <script>
 import UserService from "@/services/UserService";
 import { auth } from "@/state/user";
+import { reactive } from "vue";
+import TableLite from "../components/TableLite.vue";
+
+const sampleData1 = (offst, limit) => {
+  offst = offst + 1;
+  let data = [];
+  console.log("ส่งมา=>", limit[1].CNAME);
+
+  for (let i = 0; i < limit.length; i++) {
+    data.push({
+      cus_name: limit[i].CNAME,
+      qt: limit[i].QT,
+      created: limit[i].created_at.substring(0, 16),
+      status: limit[i].status,
+    });
+  }
+  return data;
+};
+const sampleData2 = (offst, limit) => {
+  let data = [];
+  for (let i = limit; i > offst; i--) {
+    data.push({
+      cus_name: "TEST" + i,
+      qt: i,
+      email: "test" + i + "@example.com",
+    });
+  }
+  return data;
+};
 export default {
   data() {
     return {
@@ -164,7 +205,76 @@ export default {
     };
   },
 
-  components: {},
+  setup() {
+    // Table config
+    const table = reactive({
+      isLoading: false,
+      columns: [
+        {
+          label: "ลูกค้า",
+          field: "cus_name",
+          width: "10%",
+          sortable: true,
+          isKey: true,
+        },
+        {
+          label: "ใบเสนอราคาเลขที่",
+          field: "qt",
+          width: "10%",
+          sortable: true,
+        },
+        {
+          label: "สร้างเมื่อ",
+          field: "created",
+          width: "8%",
+          sortable: true,
+        },
+        {
+          label: "สถานะ",
+          field: "status",
+          width: "15%",
+          sortable: true,
+        },
+      ],
+      rows: [],
+      totalRecordCount: 0,
+      sortable: {
+        order: "id",
+        sort: "asc",
+      },
+    });
+    /**
+     * Search Event
+     */
+    const doSearch = async (offset, limit, order, sort) => {
+      table.isLoading = true;
+      const data_list = await UserService.list({ emp_code: auth.user_id });
+      let Nlist_au = data_list.data;
+      console.log("N list==>", data_list.data);
+      setTimeout(() => {
+        table.isReSearch = offset == undefined ? true : false;
+        if (offset >= 10 || limit >= 20) {
+          limit = 20;
+        }
+        if (sort == "asc") {
+          table.rows = sampleData1(offset, Nlist_au);
+        } else {
+          table.rows = sampleData2(offset, Nlist_au);
+        }
+        table.totalRecordCount = 20;
+        table.sortable.order = order;
+        table.sortable.sort = sort;
+      }, 600);
+    };
+
+    // First get data
+    doSearch(0, 10, "id", "asc");
+    return {
+      table,
+      doSearch,
+    };
+  },
+  components: { TableLite },
   computed: {
     AllList() {
       return this.list_au;
