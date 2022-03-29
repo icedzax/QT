@@ -12,7 +12,10 @@
     "v3-num": "^0.1.1",
     "vue": "^3.2.31",
     "vue-router": "^4.0.12",
-    "vue3-simple-typeahead": "^1.0.5"
+    "vue3-simple-typeahead": "^1.0.5",
+    "vue3-table-lite": "^1.1.8-2",
+    "vuetable-2": "^2.0.0-beta.4",
+    "vuetify": "^2.6.4"
   },
   "devDependencies": {
     "@headlessui/vue": "^1.4.3",
