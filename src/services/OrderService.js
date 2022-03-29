@@ -22,4 +22,7 @@ export default {
   Con(qt) {
     return Api().get("Con/" + qt);
   },
+  appC(body) {
+    return Api().post(`/cApp`, body);
+  },
 };
