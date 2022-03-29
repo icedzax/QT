@@ -219,6 +219,7 @@
               @selectItem="selectItem"
               @onInput="onInput"
               @onBlur="onBlur"
+              @input="lookupFG"
               :minInputLength="1"
               :itemProjection="
                 (fg) => {
@@ -396,9 +397,9 @@ export default {
   },
 
   async created() {
-    let result = await UserService.fgList();
+    // let result = await UserService.fgList();
 
-    fg.items = result.data;
+    // fg.items = result.data;
 
     if (this.mat) {
       const prepush = await this.pushMat[0];
@@ -430,9 +431,6 @@ export default {
         cal_price: pre_calprice,
         qt: auth.temp_qt,
       };
-      // console.log(order.list);
-
-      //หorder.list.push(stock_payload);
 
       await FgService.insert(stock_payload);
       const testii = await FgService.items(auth.temp_qt);
@@ -442,13 +440,7 @@ export default {
     }
     this.tprice = this.type.retail;
     this.selectedType = this.type.retail[1];
-    // if ((auth.saleOrg = 1000)) {
-    //   this.tprice = this.type.retail;
-    //   this.selectedType = this.type.retail[1];
-    // } else if ((state.user.saleOrg = 2000)) {
-    //   this.tprice = this.type.Wholesale;
-    //   this.selectedType = this.type.Wholesale[0];
-    // }
+
     this.selectedUnittype = "PC";
     this.tprice.map((x) => {
       order.list.map((y) => {
@@ -459,12 +451,13 @@ export default {
       });
     });
   },
-  mounted() {
-    // if (this.mat) {
-    //   console.log(this.pushMat);
-    // }
-  },
+  mounted() {},
   methods: {
+    lookupFG: debounce(async function () {
+      const result = await FgService.search({ input: this.data.input });
+
+      this.fg.items = result.data;
+    }, 500),
     NumbersOnly(evt) {
       evt = evt ? evt : window.event;
       var charCode = evt.which ? evt.which : evt.keyCode;
@@ -481,10 +474,6 @@ export default {
 
     changeUpdate: debounce(async function (ids) {
       const payload = order.list.filter((data) => data.id == ids);
-      // let send_ptype = payload[0].ptype.split(":");
-
-      // let pt = ;
-      //payload[0].price_unit = await this.delcomma(payload[0].price_unit);
 
       const data_payload = {
         id: payload[0].id,
@@ -502,7 +491,6 @@ export default {
     }, 800),
 
     async PriceType(unit, type, i, isInput, ids = "") {
-      // console.log("isInput", isInput, "mat", this.data.selection.rmd_mat);
       let typ = type.split(":");
 
       let new_matnr = "";

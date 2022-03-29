@@ -10,4 +10,7 @@ export default {
   items(qt) {
     return Api().get("items/" + qt);
   },
+  search(payload) {
+    return Api().post("fgs", payload);
+  },
 };
