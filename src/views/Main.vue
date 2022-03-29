@@ -147,7 +147,7 @@ export default {
       auth.temp_qt = us.data[0].qt;
       localStorage.setItem("tempqt", auth.temp_qt);
       order.kunnr = us.data[0].KUNNR;
-      order.date = us.data[0].date;
+      order.date = us.data[0].qt_date;
       order.status = us.data[0].status;
       order.sale_office = us.data[0].sale_office;
       order.sale_team = us.data[0].sale_team;

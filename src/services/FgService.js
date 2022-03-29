@@ -13,4 +13,7 @@ export default {
   search(payload) {
     return Api().post("fgs", payload);
   },
+  get(payload) {
+    return Api().get("fg/" + payload);
+  },
 };
