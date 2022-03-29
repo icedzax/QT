@@ -68,7 +68,7 @@
         </div>
         <div
           @click="newQT"
-          class="cursor-pointer rounded-full px-2 text-sm border-2 border-green-500 text-black hover:text-green-600 font-semibold shadow-lg ring-1 ring-green-200"
+          class="cursor-pointer rounded-md px-2 text-sm border-2 border-green-500 text-black hover:text-green-600 font-semibold shadow-lg ring-1 ring-green-200"
         >
           สร้างใหม่
         </div>

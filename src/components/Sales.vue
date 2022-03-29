@@ -14,7 +14,7 @@
           v-if="isTeamList"
           v-model="soffice"
           @change="selectOption($event)"
-          class="mx-5 text-xs p-1 border-none rounded"
+          class="mx-5 text-xs p-1 border-none rounded pr-10"
         >
           <option
             v-for="sal in auth.data_sale.team"
