@@ -124,8 +124,8 @@ export default {
     Header_r,
   },
   async created() {
-    console.log("### ROUTE ###", this.$route.params.list_qt);
-    console.log("### LOCAL TMPQT ###", localStorage.getItem("tempqt"));
+    // console.log("### ROUTE ###", this.$route.params.list_qt);
+    // console.log("### LOCAL TMPQT ###", localStorage.getItem("tempqt"));
 
     let initQT;
     if (this.$route.params.list_qt === undefined) {
