@@ -76,6 +76,7 @@
       <tbody class="bg-grey-light w-full">
         <tr v-for="(items, index) in List" :key="index" class="full mb-4">
           <td
+            @click="toggle(items.id)"
             class="py-1 w-20 text-center text-xs md:text-sm border border-slate-200"
           >
             <input
@@ -140,6 +141,7 @@
               "
               class="text-xs p-1 mr-16 w-full border-none"
               :disabled="!approveStat"
+              :value="getT(items.ptype)"
             >
               <option v-for="(i, index) in this.tprice" :key="index">
                 {{ i }}
@@ -199,12 +201,10 @@
               />
             </svg>
           </td>
-          <!-- <th>
-            <td></td>
-            <td colspan="4">{{ items.REMARK }}</td>
-          </th> -->
+          <!--  <InputItemText :data="items" /> -->
         </tr>
       </tbody>
+
       <tbody class="bg-grey-light w-full" v-if="approveStat">
         <tr class="full">
           <td
@@ -334,8 +334,10 @@ import { debounce, groupBy } from "lodash";
 
 import FgService from "../services/FgService.js";
 import OrderService from "../services/OrderService.js";
+import InputItemText from "./InputItemText.vue";
 
 export default {
+  components: { InputItemText },
   data() {
     return {
       auth,
@@ -424,7 +426,7 @@ export default {
       const payload = {
         VKORG: 1000,
         MATNR: this.mat,
-        KONDA: "R1",
+        KONDA: "W1",
         KMEIN: "PC",
       };
       const price = await FgService.getPrice(payload);
@@ -441,7 +443,11 @@ export default {
         rmd_mat: prepush.data[0].rmd_mat,
         rmd_size: prepush.data[0].rmd_size,
         rmd_weight: prepush.data[0].NTGEW,
+<<<<<<< HEAD
         ptype: "W1",
+=======
+        ptype: "T1",
+>>>>>>> 209b0aa8211c7700d68ed9053ce491780dab5b17
         amount: pre_amount,
         unit: "PC",
         price_unit: pre_priceunit,
@@ -455,21 +461,37 @@ export default {
 
       this.$router.replace({});
     }
-    this.tprice = this.type.retail;
-    this.selectedType = this.type.retail[1];
+    this.tprice = this.type.Wholesale;
+    this.selectedType = this.type.Wholesale[0];
 
     this.selectedUnittype = "PC";
-    this.tprice.map((x) => {
-      order.list.map((y) => {
-        const t_type = x.includes(y.ptype);
-        if (t_type) {
-          y.ptype = x;
-        }
-      });
-    });
+    // this.tprice.map((x) => {
+    //   order.list.map((y) => {
+    //     const t_type = x.includes(y.ptype);
+
+    //     if (t_type) {
+    //       y.ptype = x;
+    //     }
+    //   });
+    // });
   },
   mounted() {},
   methods: {
+    getT(p) {
+      this.tprice.map((x) => {
+        if (x.slice(0, 2) == p) {
+          return x;
+        }
+      });
+    },
+    toggle(id) {
+      this.order.list.map((x) => {
+        if (x.id == id) {
+          x.show = !x.show;
+        }
+        console.log(x);
+      });
+    },
     lookupFG: debounce(async function () {
       const result = await FgService.search({ input: this.data.input });
 
@@ -517,8 +539,9 @@ export default {
       ) {
         new_matnr = order.list[i].rmd_mat;
       } else {
-        // console.log(i);
-        new_matnr = this.data.selection.rmd_mat;
+        if (this.data.selection) {
+          new_matnr = this.data.selection.rmd_mat;
+        }
       }
       const payload = {
         VKORG: 1000,
@@ -650,7 +673,7 @@ export default {
         const new_order = await FgService.items(auth.temp_qt);
 
         order.list = new_order.data;
-        this.manage_type();
+        // this.manage_type();
         if (this.order.list.length !== 0) {
           this.table_showlist = "Y";
         }
