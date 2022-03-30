@@ -4,7 +4,7 @@
       <thead class="w-full">
         <tr class="w-full mb-4">
           <th
-            class="font-light border border-slate-200 w-auto text-xs md:text-sm"
+            class="font-light border border-slate-200 w-20 text-xs md:text-sm"
           >
             ลำดับ
           </th>
@@ -76,7 +76,7 @@
       <tbody class="bg-grey-light w-full">
         <tr v-for="(items, index) in List" :key="index" class="full mb-4">
           <td
-            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
+            class="py-1 w-20 text-center text-xs md:text-sm border border-slate-200"
           >
             <input
               type="text"
@@ -97,7 +97,7 @@
             />
           </td>
           <td
-            class="py-1 w-3/12 text-left text-xs md:text-sm border border-slate-200"
+            class="py-1 w-2/12 text-left text-xs md:text-sm border border-slate-200"
           >
             <input
               type="text"
@@ -113,7 +113,7 @@
             <input
               type="text"
               v-model="items.rmd_weight"
-              class="w-5/6 text-xs p-1 text-center border-none focus:outline-none"
+              class="w-4/6 text-xs p-1 text-center border-none focus:outline-none"
               :disabled="!approveStat"
               @input="changeUpdate(items.id)"
             />
@@ -147,7 +147,7 @@
             </select>
           </td>
           <td
-            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
+            class="py-1 w-2/12 text-center text-xs md:text-sm border border-slate-200"
           >
             <select
               v-model="items.unit"
