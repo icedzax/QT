@@ -34,7 +34,7 @@
             ราคา
           </th>
           <th
-            class="font-light border border-slate-200 w-auto text-xs md:text-sm"
+            class="font-light border border-slate-200 w-fit text-xs md:text-sm"
           >
             หน่วย
           </th>
@@ -57,7 +57,7 @@
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 128 128"
               @click="deleteAll"
-              class="w-5 h-5"
+              class="mx-1 w-5 h-5"
             >
               <title>x</title>
               <path
@@ -147,7 +147,7 @@
             </select>
           </td>
           <td
-            class="py-1 w-2/12 text-center text-xs md:text-sm border border-slate-200"
+            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
           >
             <select
               v-model="items.unit"
@@ -188,7 +188,7 @@
               viewBox="0 0 512 512"
               fill="red"
               @click="deletes(index, items.id)"
-              class="w-5 h-5"
+              class="mx-1 w-5 h-5"
             >
               <title>Remove</title>
               <path
@@ -299,7 +299,7 @@
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 48 48"
               enable-background="new 0 0 48 48"
-              class="w-5 h-5"
+              class="mx-1 w-5 h-5"
               v-if="(this.List.length == 0 || approveStat) && !chkrepeat"
               @click="enter"
             >
