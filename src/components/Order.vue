@@ -441,7 +441,7 @@ export default {
         rmd_mat: prepush.data[0].rmd_mat,
         rmd_size: prepush.data[0].rmd_size,
         rmd_weight: prepush.data[0].NTGEW,
-        ptype: "R1",
+        ptype: "W1",
         amount: pre_amount,
         unit: "PC",
         price_unit: pre_priceunit,
