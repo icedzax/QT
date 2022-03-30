@@ -38,7 +38,7 @@
             @input="changeUpdate(rules.condition, rules.item)"
           />
         </div>
-        <div class="w-2/5 py-0.5 ml-4" v-show="isEnable">
+        <div class="w-3/5 py-0.5 ml-4" v-show="isEnable">
           <select
             name=""
             id=""
@@ -47,16 +47,16 @@
             @change="clickChoice(rules.condition_t, false, index + 1)"
           >
             <option
-              v-for="(choice, index) in this.examchoice"
+              v-for="(choice, index) in this.condition"
               :key="index"
               @click="c_option"
               :disabled="index == 0"
             >
-              {{ choice.choice_name }}
+              {{ choice }}
             </option>
           </select>
         </div>
-        <div v-show="isEnable" class="w-2/5">
+        <div v-show="isEnable" class="w-1/5">
           <svg
             id="Layer_1"
             data-name="Layer 1"
@@ -93,7 +93,7 @@
             @input="changeInputR(inputRules)"
           />
         </div>
-        <div class="w-2/5 py-0.5 ml-4">
+        <div class="w-3/5 py-0.5 ml-4">
           <select
             name=""
             id=""
@@ -102,16 +102,16 @@
             @change="clickChoice(selectChoice, true)"
           >
             <option
-              v-for="(choice, index) in this.examchoice"
+              v-for="(choice, index) in this.condition"
               :key="index"
               @click="c_option"
               :disabled="index == 0"
             >
-              {{ choice.choice_name }}
+              {{ choice }}
             </option>
           </select>
         </div>
-        <div class="w-2/5 py-0.5">
+        <div class="w-1/5 py-0.5">
           <svg
             version="1"
             xmlns="http://www.w3.org/2000/svg"
@@ -152,6 +152,19 @@ export default {
         { id: 2, choice_name: "ตัวเลือกที่ 2" },
         { id: 3, choice_name: "ตัวเลือกที่ 3" },
       ],
+      condition: [
+        "เลือกเงื่อนไข",
+        "Y000 0 Day Credit",
+        "Y001 1 Day Credit",
+        "Y003 3 Day Credit",
+        "Y007 7 Days Credit",
+        "Y00C Cash",
+        "Y010 10 Days Credit",
+        "Y015 15 Days Credit",
+        "Y030 30 Days Credit",
+        "Y045 45 Days Credit",
+        "Y060 60 Days Credit",
+      ],
       selectChoice: "เลือกเงื่อนไข",
       check_repeat: false,
       RulesEmp: [],
@@ -169,8 +182,8 @@ export default {
           data.condition_t = data.condition;
         });
 
-        this.examchoice.forEach((data) => {
-          this.RulesEmp.push(data.choice_name);
+        this.condition.forEach((data) => {
+          this.RulesEmp.push(data);
         });
 
         order.con.map((data) => {
@@ -222,14 +235,19 @@ export default {
       this.checkRULES(a);
     },
     async addRules() {
-      if (this.check_repeat) {
-        alert("ห้ามเลือกซ้ำกับเงื่อนไขก่อนหน้า");
-      } else {
-        await OrderService.myRule({ qt: auth.temp_qt, con: this.inputRules });
+      this.inputRules = this.inputRules.trim();
+      if (this.inputRules !== "") {
+        if (this.check_repeat) {
+          alert("ห้ามเลือกซ้ำกับเงื่อนไขก่อนหน้า");
+        } else {
+          await OrderService.myRule({ qt: auth.temp_qt, con: this.inputRules });
 
-        const rules = await OrderService.Con(auth.temp_qt);
-        order.con = rules.data;
-        this.inputRules = "";
+          const rules = await OrderService.Con(auth.temp_qt);
+          order.con = rules.data;
+          this.inputRules = "";
+        }
+      } else {
+        alert("เลือกหรือกรอกเงื่อนไขก่อน");
       }
     },
     async delRules(index) {

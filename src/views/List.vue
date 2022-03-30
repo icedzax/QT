@@ -173,27 +173,52 @@ import { reactive } from "vue";
 import TableLite from "../components/TableLite.vue";
 
 const sampleData1 = (offst, limit) => {
-  offst = offst + 1;
   let data = [];
-  console.log("ส่งมา=>", limit[1].CNAME);
-
+  limit.forEach((element) => {
+    element.status_cus = "";
+    if (element.status == "D") {
+      element.status = "แบบร่าง";
+    } else if (element.status == "W") {
+      element.status = "รออนุมัติ";
+    } else if (element.status == "A") {
+      element.status = "อนุมัติแล้ว";
+    } else {
+      element.status = "อนุมัติแล้ว";
+      element.status_cus = "ลูกค้า";
+    }
+  });
   for (let i = 0; i < limit.length; i++) {
     data.push({
       cus_name: limit[i].CNAME,
       qt: limit[i].QT,
       created: limit[i].created_at.substring(0, 16),
-      status: limit[i].status,
+      status: limit[i].status + limit[i].status_cus,
     });
   }
   return data;
 };
 const sampleData2 = (offst, limit) => {
+  limit.forEach((element) => {
+    element.status_cus = "";
+    if (element.status == "D") {
+      element.status = "แบบร่าง";
+    } else if (element.status == "W") {
+      element.status = "รออนุมัติ";
+    } else if (element.status == "A") {
+      element.status = "อนุมัติแล้ว";
+    } else {
+      element.status = "อนุมัติแล้ว";
+      element.status_cus = "ลูกค้า";
+    }
+  });
   let data = [];
-  for (let i = limit; i > offst; i--) {
+  for (let i = limit.length - 1; i >= 0; i--) {
+    console.log(i);
     data.push({
-      cus_name: "TEST" + i,
-      qt: i,
-      email: "test" + i + "@example.com",
+      cus_name: limit[i].CNAME,
+      qt: limit[i].QT,
+      created: limit[i].created_at.substring(0, 16),
+      status: limit[i].status,
     });
   }
   return data;
