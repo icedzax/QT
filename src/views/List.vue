@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <span class="flex justify-center text-xl mt-2">รายการใบนำเสนอราคา</span>
-    <div class="p-4">
+    <!-- <div class="p-4">
       <label for="table-search" class="sr-only">Search</label>
       <div class="relative mt-1">
         <div
@@ -151,8 +151,33 @@
           </tr>
         </tbody>
       </table>
-    </div>
-    <div hidden>
+    </div> -->
+    <div>
+      <label for="table-search" class="sr-only">Search</label>
+      <div class="relative mt-1 mb-2">
+        <div
+          class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+        >
+          <svg
+            class="w-5 h-5 text-gray-500 dark:text-gray-400"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+        </div>
+        <input
+          type="text"
+          id="table-search"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="ค้นหาลูกค้า ..."
+        />
+      </div>
       <table-lite
         :is-loading="table.isLoading"
         :columns="table.columns"
@@ -176,15 +201,22 @@ const sampleData1 = (offst, limit) => {
   let data = [];
   limit.forEach((element) => {
     element.status_cus = "";
-    if (element.status == "D") {
+    element.classi = "";
+    if (element.status == "D" || element.status == "TEMP") {
       element.status = "แบบร่าง";
+      element.classi =
+        "bg-gray-100 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300";
     } else if (element.status == "W") {
       element.status = "รออนุมัติ";
-    } else if (element.status == "A") {
+      element.classi =
+        "bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900";
+    } else if (element.status == "A" || element.status == "C") {
+      element.classi =
+        "bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900";
+      if (element.status == "C") {
+        element.status_cus = "ลูกค้า";
+      }
       element.status = "อนุมัติแล้ว";
-    } else {
-      element.status = "อนุมัติแล้ว";
-      element.status_cus = "ลูกค้า";
     }
   });
   for (let i = 0; i < limit.length; i++) {
@@ -192,7 +224,10 @@ const sampleData1 = (offst, limit) => {
       cus_name: limit[i].CNAME,
       qt: limit[i].QT,
       created: limit[i].created_at.substring(0, 16),
-      status: limit[i].status + limit[i].status_cus,
+      status: limit[i].status,
+      classi: limit[i].classi,
+      status_cus: limit[i].status_cus,
+      other: "Edit",
     });
   }
   return data;
@@ -200,15 +235,22 @@ const sampleData1 = (offst, limit) => {
 const sampleData2 = (offst, limit) => {
   limit.forEach((element) => {
     element.status_cus = "";
-    if (element.status == "D") {
+    element.classi = "";
+    if (element.status == "D" || element.status == "TEMP") {
       element.status = "แบบร่าง";
+      element.classi =
+        "bg-gray-100 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300";
     } else if (element.status == "W") {
       element.status = "รออนุมัติ";
-    } else if (element.status == "A") {
+      element.classi =
+        "bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900";
+    } else if (element.status == "A" || element.status == "C") {
+      element.classi =
+        "bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900";
+      if (element.status == "C") {
+        element.status_cus = "ลูกค้า";
+      }
       element.status = "อนุมัติแล้ว";
-    } else {
-      element.status = "อนุมัติแล้ว";
-      element.status_cus = "ลูกค้า";
     }
   });
   let data = [];
@@ -219,6 +261,9 @@ const sampleData2 = (offst, limit) => {
       qt: limit[i].QT,
       created: limit[i].created_at.substring(0, 16),
       status: limit[i].status,
+      status_cus: limit[i].status_cus,
+      classi: limit[i].classi,
+      other: "Edit",
     });
   }
   return data;
@@ -238,14 +283,14 @@ export default {
         {
           label: "ลูกค้า",
           field: "cus_name",
-          width: "10%",
+          width: "20%",
           sortable: true,
           isKey: true,
         },
         {
           label: "ใบเสนอราคาเลขที่",
           field: "qt",
-          width: "10%",
+          width: "15%",
           sortable: true,
         },
         {
@@ -259,6 +304,10 @@ export default {
           field: "status",
           width: "15%",
           sortable: true,
+        },
+        {
+          field: "other",
+          width: "1%",
         },
       ],
       rows: [],
@@ -275,12 +324,9 @@ export default {
       table.isLoading = true;
       const data_list = await UserService.list({ emp_code: auth.user_id });
       let Nlist_au = data_list.data;
-      console.log("N list==>", data_list.data);
       setTimeout(() => {
         table.isReSearch = offset == undefined ? true : false;
-        if (offset >= 10 || limit >= 20) {
-          limit = 20;
-        }
+
         if (sort == "asc") {
           table.rows = sampleData1(offset, Nlist_au);
         } else {
@@ -289,7 +335,7 @@ export default {
         table.totalRecordCount = 20;
         table.sortable.order = order;
         table.sortable.sort = sort;
-      }, 600);
+      }, 200);
     };
 
     // First get data
