@@ -426,7 +426,7 @@ export default {
       const payload = {
         VKORG: 1000,
         MATNR: this.mat,
-        KONDA: "W1",
+        KONDA: "T1",
         KMEIN: "PC",
       };
       const price = await FgService.getPrice(payload);
@@ -443,11 +443,7 @@ export default {
         rmd_mat: prepush.data[0].rmd_mat,
         rmd_size: prepush.data[0].rmd_size,
         rmd_weight: prepush.data[0].NTGEW,
-<<<<<<< HEAD
-        ptype: "W1",
-=======
         ptype: "T1",
->>>>>>> 209b0aa8211c7700d68ed9053ce491780dab5b17
         amount: pre_amount,
         unit: "PC",
         price_unit: pre_priceunit,
