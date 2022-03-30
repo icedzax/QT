@@ -14,7 +14,8 @@
             รหัสสินค้า
           </th>
           <th
-            class="font-light border border-slate-200 w-3/12 text-xs md:text-sm"
+            :class="approveStat ? 'w-3/12' : 'w-4/12'"
+            class="font-light border border-slate-200 text-xs md:text-sm"
           >
             รายการสินค้า
           </th>
@@ -29,18 +30,18 @@
             จำนวน
           </th>
           <th
-            class="font-light border border-slate-200 w-auto text-xs md:text-sm"
+            class="font-light border border-slate-200 w-1/12 text-xs md:text-sm"
           >
             ราคา
           </th>
           <th
-            class="font-light border border-slate-200 w-auto text-xs md:text-sm"
+            class="font-light border border-slate-200 w-fit text-xs md:text-sm"
           >
             หน่วย
           </th>
 
           <th
-            class="font-light border border-slate-200 w-auto text-xs md:text-sm"
+            class="font-light border border-slate-200 w-fit text-xs md:text-sm"
           >
             ราคาต่อหน่วยก่อน VAT 7%
           </th>
@@ -49,15 +50,14 @@
           >
             จำนวนเงิน
           </th>
-          <th class="w-auto">
+          <th v-if="approveStat" class="w-auto">
             <svg
-              v-if="approveStat"
               id="Layer_1"
               data-name="Layer 1"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 128 128"
               @click="deleteAll"
-              class="w-5 h-5"
+              class="mx-1 w-5 h-5"
             >
               <title>x</title>
               <path
@@ -132,13 +132,13 @@
               :disabled="!approveStat"
             />
           </td>
-          <td class="py-1 text-xs md:text-sm border border-slate-200">
+          <td class="py-1 w-fit text-xs md:text-sm border border-slate-200">
             <select
               v-model="items.ptype"
               @change="
                 PriceType(items.unit, items.ptype, index, false, items.id)
               "
-              class="text-xs p-1 w-full border-none"
+              class="text-xs p-1 mr-16 w-full border-none"
               :disabled="!approveStat"
             >
               <option v-for="(i, index) in this.tprice" :key="index">
@@ -147,7 +147,7 @@
             </select>
           </td>
           <td
-            class="py-1 w-2/12 text-center text-xs md:text-sm border border-slate-200"
+            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
           >
             <select
               v-model="items.unit"
@@ -163,7 +163,7 @@
             </select>
           </td>
 
-          <td class="py-1 w-1/12 text-center border border-slate-200">
+          <td class="py-1 text-center w-1/12 border border-slate-200">
             <input
               type="text"
               v-model="items.price_unit"
@@ -188,7 +188,7 @@
               viewBox="0 0 512 512"
               fill="red"
               @click="deletes(index, items.id)"
-              class="w-5 h-5"
+              class="mx-1 w-5 h-5"
             >
               <title>Remove</title>
               <path
@@ -199,21 +199,31 @@
               />
             </svg>
           </td>
+          <!-- <th>
+            <td></td>
+            <td colspan="4">{{ items.REMARK }}</td>
+          </th> -->
         </tr>
       </tbody>
       <tbody class="bg-grey-light w-full" v-if="approveStat">
-        <tr class="full mb-4">
-          <td class="py-1 w-1/12 text-center">
+        <tr class="full">
+          <td
+            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
+          >
             <input
               type="text"
-              class="w-5/6 text-xs p-1 text-center border-gray-100 bg-gray-50"
+              class="tdi w-5/6 text-xs p-1 text-center border-none"
               :value="this.order.list.length + 1"
               disabled
             />
           </td>
-          <td class="py-1 text-center" colspan="2">
+          <td
+            class="py-1 w-2/12 text-center text-xs md:text-sm border border-slate-200"
+            colspan="2"
+          >
             <vue3-simple-typeahead
               id="typeahead_id"
+              class="tdi"
               :placeholder="options.placeholder"
               :items="fg.items"
               @selectItem="selectItem"
@@ -229,39 +239,45 @@
             >
             </vue3-simple-typeahead>
           </td>
-          <td class="py-1 w-1/12 text-center">
+          <td
+            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
+          >
             <input
               type="text"
-              class="w-5/6 text-xs p-1 text-center"
+              class="tdi w-5/6 text-xs p-1 text-center border-none focus:outline-none"
               v-model="inputField.rmd_weight"
             />
           </td>
-          <td class="py-1 w-1/12 text-center text-xs md:text-sm">
+          <td
+            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
+          >
             <input
               type="text"
-              class="w-5/6 text-xs p-1 text-center"
+              class="tdi w-5/6 text-xs p-1 text-center border-none"
               v-model="inputField.amount"
               @keyup="
                 edit(index, inputField.amount, inputField.price_unit, false)
               "
             />
           </td>
-          <td class="py-1 w-1/12 text-center">
+          <td class="py-1 text-xs md:text-sm border border-slate-200">
             <select
               v-model="selectedType"
               @change="PriceType(selectedUnittype, selectedType, this.x, true)"
-              class="text-xs p-1 w-full"
+              class="tdi text-xs p-1 w-full border-none"
             >
               <option v-for="(i, index) in this.tprice" :key="index">
                 {{ i }}
               </option>
             </select>
           </td>
-          <td class="py-1 w-1/12 text-center">
+          <td
+            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
+          >
             <select
               v-model="selectedUnittype"
               @change="PriceType(selectedUnittype, selectedType, this.x, true)"
-              class="text-xs p-1 text-center w-5/6"
+              class="tdi text-xs p-1 text-center w-5/6 border-none"
             >
               <option v-for="(i, index) in this.type_unit" :key="index">
                 {{ i }}
@@ -269,17 +285,17 @@
             </select>
           </td>
 
-          <td class="py-1 w-1/12 text-center text-xs md:text-sm">
+          <td class="py-1 w-1/12 text-center border border-slate-200">
             <input
               type="text"
-              class="w-5/6 text-xs p-1 text-center"
+              class="tdi w-5/6 p-1 text-sm text-center border-none"
               v-model="inputField.price_unit"
               @keyup="
                 edit(index, inputField.amount, inputField.price_unit, false)
               "
             />
           </td>
-          <td class="py-1 w-1/12 text-center text-xs md:text-sm">
+          <td class="py-1 w-1/12 text-center border border-slate-200">
             <v-num
               #="{ number }"
               :value="inputField.cal_price"
@@ -294,7 +310,7 @@
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 48 48"
               enable-background="new 0 0 48 48"
-              class="w-5 h-5"
+              class="mx-1 w-5 h-5"
               v-if="(this.List.length == 0 || approveStat) && !chkrepeat"
               @click="enter"
             >
@@ -377,7 +393,7 @@ export default {
       if (this.approveStat && order.list.length < 1) return;
     },
     List() {
-      console.log("List JA:", this.order.list);
+      // console.log("List JA:", this.order.list);
       return this.order.list;
     },
     fgSearchList() {
@@ -711,10 +727,14 @@ export default {
 </script>
 <style>
 #typeahead_id {
-  font-size: 11px;
-  width: 98%;
-  padding-top: 2px;
-  padding-bottom: 2px;
+  width: 95%;
+  font-size: 0.75rem;
+  line-height: 0.96rem;
+  padding: 0.25rem;
+  text-align: center;
+  border-style: none;
+}
+.tdi {
 }
 div.simple-typeahead-list {
   height: 130px;
