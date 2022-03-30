@@ -14,7 +14,8 @@
             รหัสสินค้า
           </th>
           <th
-            class="font-light border border-slate-200 w-3/12 text-xs md:text-sm"
+            :class="approveStat ? 'w-3/12' : 'w-4/12'"
+            class="font-light border border-slate-200 text-xs md:text-sm"
           >
             รายการสินค้า
           </th>
@@ -28,8 +29,8 @@
           >
             จำนวน
           </th>
-          <th 
-            class="font-light border border-slate-200 w-1/12  text-xs md:text-sm"
+          <th
+            class="font-light border border-slate-200 w-1/12 text-xs md:text-sm"
           >
             ราคา
           </th>
@@ -40,7 +41,7 @@
           </th>
 
           <th
-            class="font-light border border-slate-200 w-auto text-xs md:text-sm"
+            class="font-light border border-slate-200 w-fit text-xs md:text-sm"
           >
             ราคาต่อหน่วยก่อน VAT 7%
           </th>
@@ -49,9 +50,8 @@
           >
             จำนวนเงิน
           </th>
-          <th class="w-auto">
+          <th v-if="approveStat" class="w-auto">
             <svg
-              v-if="approveStat"
               id="Layer_1"
               data-name="Layer 1"
               xmlns="http://www.w3.org/2000/svg"
@@ -163,14 +163,14 @@
             </select>
           </td>
 
-          <td class="py-1  text-center border border-slate-200">
+          <td class="py-1 text-center w-1/12 border border-slate-200">
             <input
               type="text"
               v-model="items.price_unit"
               @keyup="
                 edit(index, items.amount, items.price_unit, true, items.id)
               "
-              class="w-5/6 p-1  text-sm text-center border-none"
+              class="w-5/6 p-1 text-sm text-center border-none"
               :disabled="!approveStat"
             />
           </td>
@@ -199,15 +199,17 @@
               />
             </svg>
           </td>
-          <th>
+          <!-- <th>
             <td></td>
             <td colspan="4">{{ items.REMARK }}</td>
-          </th>
+          </th> -->
         </tr>
       </tbody>
-      <tbody class="bg-grey-light w-full " v-if="approveStat">
+      <tbody class="bg-grey-light w-full" v-if="approveStat">
         <tr class="full">
-          <td class=" py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200">
+          <td
+            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
+          >
             <input
               type="text"
               class="tdi w-5/6 text-xs p-1 text-center border-none"
@@ -215,7 +217,10 @@
               disabled
             />
           </td>
-          <td class="py-1 w-2/12 text-center text-xs md:text-sm border border-slate-200" colspan="2">
+          <td
+            class="py-1 w-2/12 text-center text-xs md:text-sm border border-slate-200"
+            colspan="2"
+          >
             <vue3-simple-typeahead
               id="typeahead_id"
               class="tdi"
@@ -234,14 +239,18 @@
             >
             </vue3-simple-typeahead>
           </td>
-          <td class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200">
+          <td
+            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
+          >
             <input
               type="text"
               class="tdi w-5/6 text-xs p-1 text-center border-none focus:outline-none"
               v-model="inputField.rmd_weight"
             />
           </td>
-          <td class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200">
+          <td
+            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
+          >
             <input
               type="text"
               class="tdi w-5/6 text-xs p-1 text-center border-none"
@@ -262,7 +271,9 @@
               </option>
             </select>
           </td>
-          <td class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200">
+          <td
+            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
+          >
             <select
               v-model="selectedUnittype"
               @change="PriceType(selectedUnittype, selectedType, this.x, true)"
@@ -382,7 +393,7 @@ export default {
       if (this.approveStat && order.list.length < 1) return;
     },
     List() {
-      console.log("List JA:", this.order.list);
+      // console.log("List JA:", this.order.list);
       return this.order.list;
     },
     fgSearchList() {
@@ -714,7 +725,7 @@ export default {
   },
 };
 </script>
-<style >
+<style>
 #typeahead_id {
   width: 95%;
   font-size: 0.75rem;
@@ -723,8 +734,7 @@ export default {
   text-align: center;
   border-style: none;
 }
-.tdi{
- 
+.tdi {
 }
 div.simple-typeahead-list {
   height: 130px;
