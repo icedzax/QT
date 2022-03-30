@@ -31,13 +31,14 @@
           <th
             class="font-light border border-slate-200 w-auto text-xs md:text-sm"
           >
-            หน่วย
+            ราคา
           </th>
           <th
             class="font-light border border-slate-200 w-auto text-xs md:text-sm"
           >
-            ราคา
+            หน่วย
           </th>
+
           <th
             class="font-light border border-slate-200 w-auto text-xs md:text-sm"
           >
@@ -101,7 +102,7 @@
             <input
               type="text"
               v-model="items.rmd_size"
-              class="w-full py-0.5 px-0.5 text-xs border-none"
+              class="w-full py-0.5 text-xs border-none text-center"
               :disabled="!approveStat"
               @input="changeUpdate(items.id)"
             />
@@ -131,8 +132,22 @@
               :disabled="!approveStat"
             />
           </td>
+          <td class="py-1 text-xs md:text-sm border border-slate-200">
+            <select
+              v-model="items.ptype"
+              @change="
+                PriceType(items.unit, items.ptype, index, false, items.id)
+              "
+              class="text-xs p-1 w-full border-none"
+              :disabled="!approveStat"
+            >
+              <option v-for="(i, index) in this.tprice" :key="index">
+                {{ i }}
+              </option>
+            </select>
+          </td>
           <td
-            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
+            class="py-1 w-2/12 text-center text-xs md:text-sm border border-slate-200"
           >
             <select
               v-model="items.unit"
@@ -147,22 +162,7 @@
               </option>
             </select>
           </td>
-          <td
-            class="py-1 w-2/12 text-center text-xs md:text-sm border border-slate-200"
-          >
-            <select
-              v-model="items.ptype"
-              @change="
-                PriceType(items.unit, items.ptype, index, false, items.id)
-              "
-              class="text-xs p-1 text-center w-5/6 border-none"
-              :disabled="!approveStat"
-            >
-              <option v-for="(i, index) in this.tprice" :key="index">
-                {{ i }}
-              </option>
-            </select>
-          </td>
+
           <td class="py-1 w-1/12 text-center border border-slate-200">
             <input
               type="text"
@@ -206,7 +206,7 @@
           <td class="py-1 w-1/12 text-center">
             <input
               type="text"
-              class="w-5/6 text-xs p-1 text-center"
+              class="w-5/6 text-xs p-1 text-center border-gray-100 bg-gray-50"
               :value="this.order.list.length + 1"
               disabled
             />
@@ -248,6 +248,17 @@
           </td>
           <td class="py-1 w-1/12 text-center">
             <select
+              v-model="selectedType"
+              @change="PriceType(selectedUnittype, selectedType, this.x, true)"
+              class="text-xs p-1 w-full"
+            >
+              <option v-for="(i, index) in this.tprice" :key="index">
+                {{ i }}
+              </option>
+            </select>
+          </td>
+          <td class="py-1 w-1/12 text-center">
+            <select
               v-model="selectedUnittype"
               @change="PriceType(selectedUnittype, selectedType, this.x, true)"
               class="text-xs p-1 text-center w-5/6"
@@ -257,17 +268,7 @@
               </option>
             </select>
           </td>
-          <td class="py-1 w-1/12 text-center">
-            <select
-              v-model="selectedType"
-              @change="PriceType(selectedUnittype, selectedType, this.x, true)"
-              class="text-xs p-1 text-center w-5/6"
-            >
-              <option v-for="(i, index) in this.tprice" :key="index">
-                {{ i }}
-              </option>
-            </select>
-          </td>
+
           <td class="py-1 w-1/12 text-center text-xs md:text-sm">
             <input
               type="text"
@@ -313,8 +314,8 @@
 import { fg } from "../state/fg";
 import { order } from "../state/order";
 import { auth } from "../state/user";
-import { debounce } from "lodash";
-import UserService from "../services/UserService.js";
+import { debounce, groupBy } from "lodash";
+
 import FgService from "../services/FgService.js";
 import OrderService from "../services/OrderService.js";
 
@@ -336,13 +337,13 @@ export default {
         selection: null,
       },
       type: {
-        retail: ["R1:ราคาสดรับเอง", "R2:ราคาสดส่ง", "R3:ราคาเงินเชื่อ"],
+        retail: ["R1:สดรับเอง", "R2:สดส่ง", "R3:เงินเชื่อ"],
         Wholesale: [
           "T1:100 ตัน",
-          "W0:ราคายกรถ",
-          "W1:ราคาคละไซด์",
-          "W2:ราคายกมัด",
-          "W3:ราคาปลีก",
+          "W0:ยกรถ",
+          "W1:คละไซด์",
+          "W2:ยกมัด",
+          "W3:ปลีก",
         ],
       },
       type_unit: ["PC", "KG"],
@@ -389,7 +390,7 @@ export default {
     },
 
     pushMat() {
-      console.log("pushMat");
+      // console.log("pushMat");
       return this.fg.items.filter((f) => {
         return f.rmd_mat == this.mat;
       });
@@ -402,8 +403,8 @@ export default {
     // fg.items = result.data;
 
     if (this.mat) {
-      const prepush = await this.pushMat[0];
-      // console.log(prepush);
+      const prepush = await FgService.get(this.mat);
+      console.log("prepush", prepush);
       const payload = {
         VKORG: 1000,
         MATNR: this.mat,
@@ -421,9 +422,9 @@ export default {
         pre_calprice = pre_amount * pre_priceunit;
       }
       const stock_payload = {
-        rmd_mat: prepush.rmd_mat,
-        rmd_size: prepush.rmd_size,
-        rmd_weight: prepush.rmd_stdweight,
+        rmd_mat: prepush.data[0].rmd_mat,
+        rmd_size: prepush.data[0].rmd_size,
+        rmd_weight: prepush.data[0].NTGEW,
         ptype: "R1",
         amount: pre_amount,
         unit: "PC",
@@ -431,7 +432,7 @@ export default {
         cal_price: pre_calprice,
         qt: auth.temp_qt,
       };
-
+      console.log(stock_payload);
       await FgService.insert(stock_payload);
       const testii = await FgService.items(auth.temp_qt);
       order.list = await testii.data;
@@ -550,7 +551,7 @@ export default {
         VKORG: 1000,
         MATNR: this.data.selection.rmd_mat,
         KONDA: typ[0],
-        KMEIN: this.data.selection.MEINS,
+        KMEIN: this.data.selection.MEINS || "PC",
       };
       console.log(payload);
       const price = await FgService.getPrice(payload);
@@ -567,6 +568,17 @@ export default {
         this.inputField.price_unit = 1;
         this.inputField.cal_price = 1;
       }
+      const getType = await OrderService.pmat({
+        MATNR: item.rmd_mat,
+        VKORG: 1000,
+      });
+      console.log(
+        "### PM ###",
+        groupBy(getType.data, function (n) {
+          return n.KONDA;
+        })
+      );
+      this.selectedType;
     },
     onInput(event) {
       this.data.selection = null;

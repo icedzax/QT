@@ -22,7 +22,12 @@ export default {
   Con(qt) {
     return Api().get("Con/" + qt);
   },
+
+  pmat(payload) {
+    return Api().post("unitMat/", payload);
+  },
   appC(body) {
     return Api().post(`/cApp`, body);
+
   },
 };

@@ -28,7 +28,7 @@
       <div class="w-full">
         <div
           v-if="!this.statusE && approveStat"
-          class="flex justify-center border-2 border-yellow-500 cursor-pointer rounded-full hover:text-yellow-500 hover:ring-1 hover:ring-yellow-300"
+          class="flex justify-center border-2 border-yellow-500 cursor-pointer rounded-md hover:text-yellow-500 hover:ring-1 hover:ring-yellow-300"
           @click="chg_edit"
         >
           <div class="text-xs pt-1 font-semibold">EDIT</div>
@@ -63,7 +63,7 @@
         </div>
         <div
           v-else-if="approveStat"
-          class="flex justify-center border-2 border-violet-500 rounded-full cursor-pointer hover:bg-violet-100 hover:text-violet-600 hover:ring-1 hover:ring-violet-300"
+          class="flex justify-center border-2 border-violet-500 rounded-md cursor-pointer hover:bg-violet-100 hover:text-violet-600 hover:ring-1 hover:ring-violet-300"
           @click="update_data"
         >
           <div class="text-xs font-semibold pr-1 pt-1">SAVE</div>
@@ -113,7 +113,7 @@
         <textarea
           name=""
           id="typeahead_id1"
-          class="text-xs rounded"
+          class="text-xs"
           rows="2.5"
           v-model="cusdata.ADDRS"
           :disabled="!this.statusE"
@@ -122,7 +122,7 @@
       <div>
         <div
           v-if="this.statusE"
-          class="flex justify-center border-2 border-pink-500 rounded-full px-2 cursor-pointer hover:text-pink-500 hover:bg-pink-100 hover:ring-1 hover:ring-pink-300"
+          class="flex justify-center border-2 border-pink-500 rounded-md px-2 cursor-pointer hover:text-pink-500 hover:bg-pink-100 hover:ring-1 hover:ring-pink-300"
           @click="cancel_edit"
         >
           <div class="font-semibold text-xs pt-1">CANCEL</div>
@@ -161,7 +161,7 @@
       <!-- ชื่อผู้ติดต่อ --->
       <div class="font-semibold">ชื่อผู้ติดต่อ</div>
       <input
-        class="text-xs border-b border-gray-400 px-1 focus:outline-none col-span-5"
+        class="text-xs border-b border-gray-200 px-1 focus:outline-none col-span-5"
         v-model="cusdata.CONTACTNAME"
         :disabled="!this.statusE"
       />
@@ -177,7 +177,7 @@
       <div class="col-span-2">
         <input
           id="ip_text"
-          class="text-xs border-b border-gray-400 px-1 focus:outline-none w-32 lg:w-40"
+          class="text-xs border-b border-gray-200 px-1 focus:outline-none w-32 lg:w-40"
           v-model="cusdata.TELNU"
           :disabled="!this.statusE"
         />
@@ -187,7 +187,7 @@
       <div class="col-span-2">
         <input
           id="ip_text2"
-          class="text-xs border-b border-gray-400 px-1 focus:outline-none col-span-2"
+          class="text-xs border-b border-gray-200 px-1 focus:outline-none col-span-2"
           v-model="cusdata.MOBILE"
           :disabled="!this.statusE"
         />
@@ -197,7 +197,7 @@
       <div class="col-span-2">
         <input
           id="ip_text"
-          class="text-xs border-b border-gray-400 px-1 focus:outline-none w-32 lg:w-40"
+          class="text-xs border-b border-gray-200 px-1 focus:outline-none w-32 lg:w-40"
           v-model="cusdata.FAXNU"
           :disabled="!this.statusE"
         />
@@ -208,7 +208,7 @@
       <div class="col-span-2">
         <input
           id="ip_text2"
-          class="text-xs border-b border-gray-400 px-1 focus:outline-none"
+          class="text-xs border-b border-gray-200 px-1 focus:outline-none"
           v-model="cusdata.EMAIL"
           :disabled="!this.statusE"
         />
