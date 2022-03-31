@@ -329,11 +329,8 @@
               viewBox="0 0 48 48"
               enable-background="new 0 0 48 48"
               class="mx-1 w-5 h-5"
-              v-if="
-                !sys.loading &&
-                (this.List.length == 0 || approveStat) &&
-                !chkrepeat
-              "
+              v-show="!sys.loading"
+              v-if="(this.List.length == 0 || approveStat) && !chkrepeat"
               @click="enter"
             >
               <circle fill="#4CAF50" cx="24" cy="24" r="21" />
@@ -342,6 +339,7 @@
                 <rect x="14" y="21" width="20" height="6" />
               </g>
             </svg>
+            <LoadingSpinner class="mx-1 w-5 h-5" v-show="sys.loading" />
           </td>
         </tr>
       </tbody>
@@ -357,9 +355,10 @@ import { sys } from "../state/system";
 import FgService from "../services/FgService.js";
 import OrderService from "../services/OrderService.js";
 import InputItemText from "./InputItemText.vue";
+import LoadingSpinner from "./LoadingSpinner.vue";
 
 export default {
-  components: { InputItemText },
+  components: { InputItemText, LoadingSpinner },
   data() {
     return {
       sys,
