@@ -3,9 +3,7 @@
     <table class="table-fix w-full">
       <thead class="w-full">
         <tr class="w-full mb-4">
-          <th
-            class="font-light border border-slate-200 w-20 text-xs md:text-sm"
-          >
+          <th class="no font-light border border-slate-200 text-xs md:text-sm">
             ลำดับ
           </th>
           <th
@@ -74,81 +72,88 @@
       </thead>
       <!-- Remove the nasty inline CSS fixed height on production and replace it with a CSS class — this is just for demonstration purposes! -->
       <tbody class="bg-grey-light w-full">
-        <tr v-for="(items, index) in List" :key="index" class="full mb-4">
-          <td
-            @click="toggle(items.id)"
-            class="py-1 w-20 text-center text-xs md:text-sm border border-slate-200"
-          >
-            <input
-              type="text"
-              :value="index + 1"
-              class="w-5/6 text-xs p-1 text-center border-none"
-              disabled
-            />
-          </td>
-          <td
-            class="py-1 w-2/12 text-center text-xs md:text-sm border border-slate-200"
-          >
-            <input
-              type="text"
-              v-model="items.rmd_mat"
-              class="w-5/6 text-xs p-1 text-center border-none"
-              :disabled="!approveStat"
-              @input="changeUpdate(items.id)"
-            />
-          </td>
-          <td
-            class="py-1 w-2/12 text-left text-xs md:text-sm border border-slate-200"
-          >
-            <input
-              type="text"
-              v-model="items.rmd_size"
-              class="w-full py-0.5 text-xs border-none text-center"
-              :disabled="!approveStat"
-              @input="changeUpdate(items.id)"
-            />
-          </td>
-          <td
-            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
-          >
-            <input
-              type="text"
-              v-model="items.rmd_weight"
-              class="w-4/6 text-xs p-1 text-center border-none focus:outline-none"
-              :disabled="!approveStat"
-              @input="changeUpdate(items.id)"
-            />
-          </td>
-          <td
-            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
-          >
-            <input
-              type="text"
-              v-model="items.amount"
-              @keyup="
-                edit(index, items.amount, items.price_unit, true, items.id)
-              "
-              @keypress="NumbersOnly"
-              class="w-5/6 text-xs p-1 text-center border-none"
-              :disabled="!approveStat"
-            />
-          </td>
-          <td class="py-1 w-fit text-xs md:text-sm border border-slate-200">
-            <select
-              class="border-none text-xs"
-              v-model="items.ptype"
-              @change="changePrice($event, items.id)"
+        <template v-for="(items, index) in List" :key="index" class="">
+          <tr class="w-full">
+            <td
+              @click="toggle(items.id)"
+              class="w-min text-center text-xs md:text-sm border border-slate-200"
             >
-              <option
-                v-for="sItem in type.Wholesale"
-                :key="sItem.t"
-                :value="sItem.t"
-              >
-                {{ sItem.text }}
-              </option>
-            </select>
+              <div class="flex items-center">
+                <input
+                  type="text"
+                  :value="index + 1"
+                  class="w-5/6 text-xs text-center border-none"
+                  disabled
+                />
 
-            <!-- <select
+                <div class="w-min mx-1">
+                  <Toggle :arrow="!items.show ? 'down' : 'up'" />
+                </div>
+              </div>
+            </td>
+            <td
+              class="py-1 w-2/12 text-center text-xs md:text-sm border border-slate-200"
+            >
+              <input
+                type="text"
+                v-model="items.rmd_mat"
+                class="w-5/6 text-xs p-1 text-center border-none"
+                :disabled="!approveStat"
+                @input="changeUpdate(items.id)"
+              />
+            </td>
+            <td
+              class="py-1 w-2/12 text-left text-xs md:text-sm border border-slate-200"
+            >
+              <input
+                type="text"
+                v-model="items.rmd_size"
+                class="w-full py-0.5 text-xs border-none text-center"
+                :disabled="!approveStat"
+                @input="changeUpdate(items.id)"
+              />
+            </td>
+            <td
+              class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
+            >
+              <input
+                type="text"
+                v-model="items.rmd_weight"
+                class="w-4/6 text-xs p-1 text-center border-none focus:outline-none"
+                :disabled="!approveStat"
+                @input="changeUpdate(items.id)"
+              />
+            </td>
+            <td
+              class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
+            >
+              <input
+                type="text"
+                v-model="items.amount"
+                @keyup="
+                  edit(index, items.amount, items.price_unit, true, items.id)
+                "
+                @keypress="NumbersOnly"
+                class="w-5/6 text-xs p-1 text-center border-none"
+                :disabled="!approveStat"
+              />
+            </td>
+            <td class="py-1 w-fit text-xs md:text-sm border border-slate-200">
+              <select
+                class="border-none text-xs"
+                v-model="items.ptype"
+                @change="changePrice($event, items.id)"
+              >
+                <option
+                  v-for="sItem in type.Wholesale"
+                  :key="sItem.t"
+                  :value="sItem.t"
+                >
+                  {{ sItem.text }}
+                </option>
+              </select>
+
+              <!-- <select
               v-model="items.ptype"
               @change="
                 PriceType(items.unit, items.ptype, index, false, items.id)
@@ -164,62 +169,73 @@
                 {{ i.text }}
               </option>
             </select> -->
-          </td>
-          <td
-            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
-          >
-            <select
-              v-model="items.unit"
-              @change="
-                PriceType(items.unit, items.ptype, index, false, items.id)
-              "
-              class="text-xs p-1 text-center w-5/6 border-none"
-              :disabled="!approveStat"
+            </td>
+            <td
+              class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
             >
-              <option v-for="(i, index) in this.type_unit" :key="index">
-                {{ i }}
-              </option>
-            </select>
-          </td>
+              <select
+                v-model="items.unit"
+                @change="
+                  PriceType(items.unit, items.ptype, index, false, items.id)
+                "
+                class="text-xs p-1 text-center w-5/6 border-none"
+                :disabled="!approveStat"
+              >
+                <option v-for="(i, index) in this.type_unit" :key="index">
+                  {{ i }}
+                </option>
+              </select>
+            </td>
 
-          <td class="py-1 text-center w-1/12 border border-slate-200">
-            <input
-              type="text"
-              v-model="items.price_unit"
-              @keyup="
-                edit(index, items.amount, items.price_unit, true, items.id)
-              "
-              class="w-5/6 p-1 text-sm text-center border-none"
-              :disabled="!approveStat"
-            />
-          </td>
-          <td class="py-1 w-1/12 text-center border border-slate-200">
-            <v-num #="{ number }" :value="items.cal_price">
-              {{ number }}
-            </v-num>
-          </td>
-          <td class="py-1 w-1/12 text-center">
-            <svg
-              v-if="approveStat"
-              id="Layer_1"
-              data-name="Layer 1"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 512 512"
-              fill="red"
-              @click="deletes(index, items.id)"
-              class="mx-1 w-5 h-5"
-            >
-              <title>Remove</title>
-              <path
-                d="M472.22,164.65A235.29,235.29,0,0,0,347.35,39.78a235.37,235.37,0,0,0-182.7,0A235.29,235.29,0,0,0,39.78,164.65a235.37,235.37,0,0,0,0,182.7A235.29,235.29,0,0,0,164.65,472.22a235.37,235.37,0,0,0,182.7,0A235.29,235.29,0,0,0,472.22,347.35a235.37,235.37,0,0,0,0-182.7Zm-39.3,166.08A192.7,192.7,0,1,1,448,256,191.39,191.39,0,0,1,432.92,330.73Z"
+            <td class="py-1 text-center w-1/12 border border-slate-200">
+              <input
+                type="text"
+                v-model="items.price_unit"
+                @keyup="
+                  edit(index, items.amount, items.price_unit, true, items.id)
+                "
+                class="w-5/6 p-1 text-sm text-center border-none"
+                :disabled="!approveStat"
               />
-              <path
-                d="M341.33,234.67H170.67a21.33,21.33,0,1,0,0,42.66H341.33a21.33,21.33,0,1,0,0-42.66Z"
+            </td>
+            <td class="py-1 w-1/12 text-center border border-slate-200">
+              <v-num #="{ number }" :value="items.cal_price">
+                {{ number }}
+              </v-num>
+            </td>
+            <td class="py-1 w-1/12 text-center">
+              <svg
+                v-if="approveStat"
+                id="Layer_1"
+                data-name="Layer 1"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 512 512"
+                fill="red"
+                @click="deletes(index, items.id)"
+                class="mx-1 w-5 h-5"
+              >
+                <title>Remove</title>
+                <path
+                  d="M472.22,164.65A235.29,235.29,0,0,0,347.35,39.78a235.37,235.37,0,0,0-182.7,0A235.29,235.29,0,0,0,39.78,164.65a235.37,235.37,0,0,0,0,182.7A235.29,235.29,0,0,0,164.65,472.22a235.37,235.37,0,0,0,182.7,0A235.29,235.29,0,0,0,472.22,347.35a235.37,235.37,0,0,0,0-182.7Zm-39.3,166.08A192.7,192.7,0,1,1,448,256,191.39,191.39,0,0,1,432.92,330.73Z"
+                />
+                <path
+                  d="M341.33,234.67H170.67a21.33,21.33,0,1,0,0,42.66H341.33a21.33,21.33,0,1,0,0-42.66Z"
+                />
+              </svg>
+            </td>
+            <!--  <InputItemText :data="items" /> -->
+          </tr>
+          <tr v-if="items.show" class="w-full">
+            <td :colspan="9" class="border text-xs">
+              <input
+                type="text"
+                class="w-full text-xs p-1 text-left border-none"
+                v-model="items.REMARK"
+                @input="changeUpdate(items.id)"
               />
-            </svg>
-          </td>
-          <!--  <InputItemText :data="items" /> -->
-        </tr>
+            </td>
+          </tr>
+        </template>
       </tbody>
 
       <tbody class="bg-grey-light w-full" v-if="approveStat">
@@ -356,9 +372,10 @@ import FgService from "../services/FgService.js";
 import OrderService from "../services/OrderService.js";
 import InputItemText from "./InputItemText.vue";
 import LoadingSpinner from "./LoadingSpinner.vue";
+import Toggle from "./Toggle.vue";
 
 export default {
-  components: { InputItemText, LoadingSpinner },
+  components: { InputItemText, LoadingSpinner, Toggle },
   data() {
     return {
       sys,
@@ -417,7 +434,11 @@ export default {
       if (this.approveStat && order.list.length < 1) return;
     },
     List() {
-      // console.log("List JA:", this.order.list);
+      this.order.list.map((item) => {
+        if (item.REMARK) {
+          item.show = true;
+        }
+      });
       return this.order.list;
     },
     fgSearchList() {
@@ -488,21 +509,15 @@ export default {
   },
   mounted() {},
   methods: {
-    // getT(p) {
-    //   this.tprice.map((x) => {
-    //     if (x.slice(0, 2) == p) {
-    //       return x;
-    //     }
-    //   });
-    // },
     toggle(id) {
       this.order.list.map((x) => {
         if (x.id == id) {
           x.show = !x.show;
         }
-        console.log(x);
+        // console.log(x);
       });
     },
+
     lookupFG: debounce(async function () {
       const result = await FgService.search({ input: this.data.input });
 
@@ -535,6 +550,7 @@ export default {
         unit: payload[0].unit,
         price_unit: payload[0].price_unit,
         cal_price: payload[0].cal_price,
+        remark: payload[0].REMARK,
       };
       console.log("PA", data_payload);
       console.log("updated");
@@ -780,8 +796,7 @@ export default {
   text-align: center;
   border-style: none;
 }
-.tdi {
-}
+
 div.simple-typeahead-list {
   height: 130px;
   font-size: 12px;
