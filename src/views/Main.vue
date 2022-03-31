@@ -151,6 +151,19 @@ export default {
       order.status = us.data[0].status;
       order.sale_office = us.data[0].sale_office;
       order.sale_team = us.data[0].sale_team;
+      order.cust = {
+        KUNNR: us.data[0].KUNNR,
+        LAND1: us.data[0].LAND1,
+        CNAME: us.data[0].CNAME,
+        TELNU: us.data[0].TELNU,
+        TELFX: us.data[0].TELFX,
+        FAXNU: us.data[0].FAXNU,
+        TAXNO: us.data[0].TAXNO,
+        EMAIL: us.data[0].EMAIL,
+        ADDRS: us.data[0].ADDRS,
+        MOBILE: us.data[0].MOBILE,
+        CONTACTNAME: us.data[0].CONTACTNAME,
+      };
     }
 
     if (auth.temp_qt) {
