@@ -37,7 +37,7 @@
     <div
       class="box grid overflow-hidden grid-cols-1 grid-rows-1 gap-1 flex-wrap mt-1"
     >
-      <div class="h-auto row-start-1 row-span-5 col-start-1 col-span-2 pb-36">
+      <div class="h-auto row-start-1 row-span-5 col-start-1 col-span-2 pb-3">
         <Orders :mat="this.mat_param"></Orders>
       </div>
     </div>

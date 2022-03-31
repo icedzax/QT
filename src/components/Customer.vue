@@ -23,7 +23,7 @@
           "
         >
         </vue3-simple-typeahead>
-        <p class="font-bold" v-else>{{ place_holder }}</p>
+        <p class="font-bold text-black" v-else>{{ place_holder }}</p>
       </div>
       <div class="w-full">
         <div
@@ -251,7 +251,7 @@ export default {
   computed: {
     place_holder() {
       return cus.data.KUNNR
-        ? `${cus.data.KUNNR} ${cus.data.CNAME}`
+        ? `${cus.data.KUNNR} ${cus.data.CNAME || ""}`
         : "รหัส / ชื่อลูกค้า";
     },
     cusdata() {
@@ -294,6 +294,8 @@ export default {
       if (data_cus.status == 200) {
         order.kunnr = this.data.selection.KUNNR;
       }
+      console.log(order.kunnr);
+      // cus.temp = this.$refs["typeahead"].$data.input;
     },
     async update_data() {
       const send_update = await CusService.setCus({
@@ -327,6 +329,12 @@ export default {
       this.data.selection = null;
       this.data.input = event.input;
       this.listFiltered = event.items;
+      cus.temp = this.data.input;
+      if (cus.temp == "") {
+        order.kunnr = null;
+      }
+      console.log(order.kunnr);
+      // console.log(cus.temp);
     },
     onBlur(event) {
       this.data.input = event.input;

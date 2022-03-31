@@ -21,7 +21,7 @@
           {{ cus.data.CNAME }}
         </span>
       </div>
-      <div v-if="order.list.length > 0">
+      <div v-if="order.kunnr && order.list.length >= 1">
         <div v-if="order.status == 'W'">รอการอนุมัติ</div>
         <div
           v-else-if="order.status == 'A' || order.status == 'C'"
