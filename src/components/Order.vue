@@ -135,6 +135,20 @@
           </td>
           <td class="py-1 w-fit text-xs md:text-sm border border-slate-200">
             <select
+              class="border-none text-xs"
+              v-model="items.ptype"
+              @change="changePrice($event, items.id)"
+            >
+              <option
+                v-for="sItem in type.Wholesale"
+                :key="sItem.t"
+                :value="sItem.t"
+              >
+                {{ sItem.text }}
+              </option>
+            </select>
+
+            <!-- <select
               v-model="items.ptype"
               @change="
                 PriceType(items.unit, items.ptype, index, false, items.id)
@@ -142,10 +156,14 @@
               class="text-xs p-1 mr-16 w-full border-none"
               :disabled="!approveStat"
             >
-              <option v-for="i in type.Wholesale" :key="i.t">
+              <option
+                v-for="i in type.Wholesale"
+                :key="i.t"
+                :value="items.ptype.slice(0, 2)"
+              >
                 {{ i.text }}
               </option>
-            </select>
+            </select> -->
           </td>
           <td
             class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
@@ -263,7 +281,7 @@
             <select
               v-model="selectedType"
               @change="PriceType(selectedUnittype, selectedType, this.x, true)"
-              class="tdi text-xs p-1 w-full border-none"
+              class="border-none text-xs"
             >
               <option v-for="i in type.Wholesale" :key="i.t" :value="'T1'">
                 {{ i.text }}
@@ -519,7 +537,6 @@ export default {
     }, 800),
 
     async PriceType(unit, type, i, isInput, ids = "") {
-      console.log("TTT", type);
       let typ = type;
       let new_matnr = "";
       if (
@@ -663,7 +680,7 @@ export default {
         const new_order = await FgService.items(auth.temp_qt);
 
         order.list = new_order.data;
-        this.manage_type();
+        // this.manage_type();
         if (this.order.list.length !== 0) {
           this.table_showlist = "Y";
         }
@@ -716,6 +733,10 @@ export default {
       } else {
         return a;
       }
+    },
+    changePrice(e, i) {
+      console.log(e.target.value, i);
+      this.changeUpdate(i);
     },
     manage_type() {
       this.tprice.map((x) => {
