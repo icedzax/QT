@@ -239,6 +239,7 @@
             colspan="2"
           >
             <vue3-simple-typeahead
+              ref="typeahead"
               id="typeahead_id"
               class="tdi"
               :placeholder="options.placeholder"
@@ -283,7 +284,7 @@
               @change="PriceType(selectedUnittype, selectedType, this.x, true)"
               class="border-none text-xs"
             >
-              <option v-for="i in type.Wholesale" :key="i.t" :value="'T1'">
+              <option v-for="i in type.Wholesale" :key="i.t" :value="i.t">
                 {{ i.text }}
               </option>
             </select>
@@ -328,7 +329,11 @@
               viewBox="0 0 48 48"
               enable-background="new 0 0 48 48"
               class="mx-1 w-5 h-5"
-              v-if="(this.List.length == 0 || approveStat) && !chkrepeat"
+              v-if="
+                !sys.loading &&
+                (this.List.length == 0 || approveStat) &&
+                !chkrepeat
+              "
               @click="enter"
             >
               <circle fill="#4CAF50" cx="24" cy="24" r="21" />
@@ -347,8 +352,8 @@
 import { fg } from "../state/fg";
 import { order } from "../state/order";
 import { auth } from "../state/user";
-import { debounce, groupBy } from "lodash";
-
+import { debounce } from "lodash";
+import { sys } from "../state/system";
 import FgService from "../services/FgService.js";
 import OrderService from "../services/OrderService.js";
 import InputItemText from "./InputItemText.vue";
@@ -357,6 +362,7 @@ export default {
   components: { InputItemText },
   data() {
     return {
+      sys,
       auth,
       x: "input",
       num: "",
@@ -519,7 +525,7 @@ export default {
 
     changeUpdate: debounce(async function (ids) {
       const payload = order.list.filter((data) => data.id == ids);
-      console.log("XXXX", payload);
+      // console.log("XXXX", payload);
       const data_payload = {
         id: payload[0].id,
         rmd_mat: payload[0].rmd_mat,
@@ -537,6 +543,7 @@ export default {
     }, 800),
 
     async PriceType(unit, type, i, isInput, ids = "") {
+      console.log("PriceType", unit, type, i, isInput, ids);
       let typ = type;
       let new_matnr = "";
       if (
@@ -549,12 +556,14 @@ export default {
           new_matnr = this.data.selection.rmd_mat;
         }
       }
+
       const payload = {
         VKORG: 1000,
         MATNR: new_matnr,
         KONDA: typ,
         KMEIN: unit,
       };
+      sys.loading = true;
       const price = await FgService.getPrice(payload);
 
       if (price.data[0]) {
@@ -580,6 +589,7 @@ export default {
         }
         console.log(false);
       }
+      sys.loading = false;
       if (!isInput) {
         // order.list[ids].ptype = typ;
         this.changeUpdate(ids);
@@ -599,8 +609,13 @@ export default {
         KONDA: typ[0],
         KMEIN: this.data.selection.MEINS || "PC",
       };
+
+      sys.loading = true;
+      console.log("loading", sys.loading);
       console.log(payload);
       const price = await FgService.getPrice(payload);
+      sys.loading = false;
+      console.log("loading", sys.loading);
 
       this.inputField.rmd_mat = item.rmd_mat;
       this.inputField.rmd_weight = this.data.selection.rmd_stdweight;
@@ -614,17 +629,17 @@ export default {
         this.inputField.price_unit = 1;
         this.inputField.cal_price = 1;
       }
-      const getType = await OrderService.pmat({
-        MATNR: item.rmd_mat,
-        VKORG: 1000,
-      });
-      console.log(
-        "### PM ###",
-        groupBy(getType.data, function (n) {
-          return n.KONDA;
-        })
-      );
-      this.selectedType;
+      // const getType = await OrderService.pmat({
+      //   MATNR: item.rmd_mat,
+      //   VKORG: 1000,
+      // });
+      // console.log(
+      //   "### PM ###",
+      //   groupBy(getType.data, function (n) {
+      //     return n.KONDA;
+      //   })
+      // );
+      // this.selectedType;
     },
     onInput(event) {
       this.data.selection = null;
@@ -688,6 +703,10 @@ export default {
         this.data.input = {};
         this.inputField = {};
         this.inputField.cal_price = 0;
+
+        this.$refs["typeahead"].$data.input = await "";
+        delete this.data.input;
+        delete this.data.selection;
       } else {
         alert("กรุณาเลือกสินค้า");
       }
