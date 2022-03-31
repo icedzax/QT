@@ -268,7 +268,7 @@
               :minInputLength="1"
               :itemProjection="
                 (fg) => {
-                  return fg.rmd_size + ' - ' + fg.rmd_mat;
+                  return fg.search;
                 }
               "
             >
