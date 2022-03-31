@@ -228,6 +228,7 @@
           <tr v-if="items.show" class="w-full">
             <td :colspan="9" class="border text-xs">
               <input
+                placeholder="หมายเหตุ : .."
                 type="text"
                 class="w-full text-xs p-1 text-left border-none"
                 v-model="items.REMARK"
