@@ -1,5 +1,5 @@
 <template>
-  <div class="container h-auto">
+  <div class="mx-4 h-auto">
     <div
       class="grid overflow-hidden grid-cols-2 lg:grid-cols-3 grid-rows-1 gap-0.5"
     >

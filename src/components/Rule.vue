@@ -1,5 +1,5 @@
 <template>
-  <div class="container py-1">
+  <div class="mx-4 py-1">
     <div
       class="grid overflow-hidden grid-cols-2 grid-rows-1 gap-0.5 text-xs lg:text-sm"
     >
@@ -42,8 +42,8 @@
         </select>
       </div>
     </div>
-    <div class="w-4/5 rounded border p-1 mt-1">
-      <div class="text-sm">หมายเหตุ</div>
+    <div class="w-4/5 rounded border p-1 mt-1 items-center">
+      <div class="text-sm underline">หมายเหตุ</div>
       <div class="col-start-2">
         <div v-for="(con, index) in conlist" :key="index" class="col flex">
           <div class="border-b border-gray-200 w-full">
@@ -65,7 +65,7 @@
               viewBox="0 0 512 512"
               fill="red"
               @click="delRules(con.item)"
-              class="w-5 h-5 font-bold text-red-600 text-xl"
+              class="w-5 h-5 mt-1 font-bold text-red-600 text-xl"
             >
               <title>Remove</title>
               <path
@@ -92,7 +92,7 @@
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 48 48"
               enable-background="new 0 0 48 48"
-              class="w-5 h-5 text-green-600 text-xl"
+              class="w-5 h-5 mt-1.5 text-green-600 text-xl"
               @click="addRules()"
             >
               <circle fill="#4CAF50" cx="24" cy="24" r="21" />

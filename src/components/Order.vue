@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-    <table class="table-fix w-full">
+  <div class="mx-2">
+    <table class="table-fix w-full text-xs">
       <thead class="w-full">
         <tr class="w-full mb-4">
           <th class="no font-light border border-slate-200 text-xs md:text-sm">

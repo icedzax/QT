@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="mx-4">
     <div
       class="grid overflow-hidden grid-cols-3 xl:grid-cols-2 grid-rows-1 gap-0.5 text-xs lg:text-sm text-right"
     >
