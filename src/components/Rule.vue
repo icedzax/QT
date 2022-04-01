@@ -13,54 +13,49 @@
         </v-num>
         Kg.
       </div>
-      <div class="grid overflow-hidden grid-cols-2 grid-rows-2 gap-0 mt-2">
-        <div class="">เงื่อนไขชำระเงิน</div>
-        <div class="col-start-2">
-          <select
-            class="text-xs p-1 px-5 text-left h-6 rounded border border-gray-300"
-            v-model="pterm"
-            @change="termChange($event)"
-          >
-            <option v-for="term in terms" :key="term.y" :value="term.y">
-              {{ term.text }}
-            </option>
-          </select>
-        </div>
-        <div class="">วิธีการจัดส่ง</div>
-        <div class="col-start-2 mt-0.5">
-          <select
-            class="text-xs p-1 px-5 text-left h-6 rounded border border-gray-300"
-            v-model="pship"
-            @change="shipChange($event)"
-          >
-            <option v-for="ship in ships" :key="ship.y" :value="ship.y">
-              {{ ship.text }}
-            </option>
-          </select>
-        </div>
+    </div>
+    <div class="grid overflow-hidden grid-cols-2 grid-rows-2 gap-0 mt-2">
+      <div class="">เงื่อนไขชำระเงิน</div>
+      <div class="col-start-2">
+        <select
+          class="text-xs p-1 px-5 text-left h-6 rounded border border-gray-300"
+          v-model="pterm"
+          @change="termChange($event)"
+        >
+          <option v-for="term in terms" :key="term.y" :value="term.y">
+            {{ term.text }}
+          </option>
+        </select>
+      </div>
+      <div class="">วิธีการจัดส่ง</div>
+      <div class="col-start-2 mt-0.5">
+        <select
+          class="text-xs p-1 px-5 text-left h-6 rounded border border-gray-300"
+          v-model="pship"
+          @change="shipChange($event)"
+        >
+          <option v-for="ship in ships" :key="ship.y" :value="ship.y">
+            {{ ship.text }}
+          </option>
+        </select>
       </div>
     </div>
-    <div>
+    <div class="w-4/5 rounded border p-1 mt-1">
       <div class="text-sm">หมายเหตุ</div>
       <div class="col-start-2">
-        <div
-          v-for="(con, index) in conlist"
-          :key="index"
-          class="col-span-2 flex"
-        >
-          <div class="w-4/5">
+        <div v-for="(con, index) in conlist" :key="index" class="col flex">
+          <div class="border-b border-gray-200 w-full">
             <input
               type="text"
               name=""
-              id=""
               v-model="con.condition"
               :disabled="!isEnable"
-              class="h-6 text-xs border-none"
+              class="w-full rounded h-6 text-xs border-none"
               @input="changeUpdate(con.condition, con.item)"
             />
           </div>
 
-          <div v-show="isEnable" class="w-1/5">
+          <div v-show="isEnable">
             <svg
               id="Layer_1"
               data-name="Layer 1"
@@ -80,8 +75,8 @@
             </svg>
           </div>
         </div>
-        <div v-show="isEnable" class="col-span-2 flex justify-inline">
-          <div class="w-4/5 py-0.5">
+        <div v-show="isEnable" class="col flex">
+          <div class="w-full mt-1 py-0.5">
             <input
               type="text"
               class="bg-yellow-50 w-full h-6 text-xs mr-2 rounded"
@@ -89,7 +84,7 @@
             />
           </div>
 
-          <div class="mx-1 w-1/5 py-0.5">
+          <div class="py-0.5">
             <svg
               version="1"
               xmlns="http://www.w3.org/2000/svg"
@@ -219,7 +214,10 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
+input {
+  @apply ml-0;
+}
 .head {
   text-decoration-style: double;
 }
