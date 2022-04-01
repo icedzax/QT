@@ -5,10 +5,7 @@
     >
       <div class="row-start-1 col-span-1">ยืนยันการสั่งซื้อ (ลูกค้า)</div>
       <div class="row-start-1">ขอแสดงความนับถืออย่างสูง</div>
-      <div class="" v-if="order.status !== 'C'">
-        <span> .......................................... </span>
-      </div>
-      <div class="" v-else-if="order.status == 'A'">
+      <div class="" v-if="order.status === 'A'">
         <button
           @click="appC"
           class="py-2.5 px-5 mr-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-flex items-center"
@@ -16,18 +13,20 @@
           ลูกค้ายืนยันแล้ว ✅
         </button>
       </div>
-      <div class="" v-else>
-        <span>
-          {{ cus.data.CNAME }}
-        </span>
+      <div class="" v-else-if="order.status === 'C'">
+        <span> {{ cus.data.CNAME }} ✅ </span>
       </div>
+      <div class="" v-else>
+        <span> .......................................... </span>
+      </div>
+
       <div v-if="order.kunnr && order.list.length >= 1">
         <div v-if="order.status == 'W'">รอการอนุมัติ</div>
         <div
           v-else-if="order.status == 'A' || order.status == 'C'"
           class="h-full"
         >
-          {{ auth.data_sale.sale_name }}
+          {{ auth.data_sale.sale_name }} ✅
         </div>
         <div class="" v-else>
           <button
@@ -42,8 +41,9 @@
         </div>
       </div>
       <div v-else></div>
-      <div class="">(.........................................)</div>
-      <div class="">({{ sd.sale_name }})</div>
+      <div class=""></div>
+      <!-- <div class="">(.........................................)</div> -->
+      <!-- <div class="">({{ sd.sale_name }})</div> -->
     </div>
   </div>
 </template>
@@ -108,7 +108,6 @@ export default {
     },
     appC() {
       OrderService.appC({ qt: auth.temp_qt });
-      alert("ปิดใบเสนอราคาแล้ว:)");
       order.status = "C";
     },
   },
