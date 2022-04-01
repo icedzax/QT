@@ -111,6 +111,7 @@
                     class="vtl-tbody-td"
                     :class="col.columnClasses"
                     :style="col.columnStyles"
+                    :id="col.field"
                   >
                     <div v-if="col.display" v-html="col.display(row)"></div>
                     <div v-else class="">
@@ -118,7 +119,7 @@
                         <slot :name="col.field" :value="row"></slot>
                       </div>
                       <div
-                        v-else-if="col.field == 'qt'"
+                        v-else-if="col.field == 'QT'"
                         class="flex justify-start"
                       >
                         <span
@@ -194,7 +195,7 @@
                         </svg>
                       </div>
                       <div
-                        v-else-if="col.field == 'status'"
+                        v-else-if="col.field == 'status_show'"
                         class="text-green-500"
                       >
                         <span :class="row.classi"> {{ row[col.field] }}</span>
@@ -205,7 +206,10 @@
                           {{ row.status_cus }}</span
                         >
                       </div>
-                      <div v-else-if="col.field == 'other'">
+                      <div
+                        v-else-if="col.field == 'other'"
+                        class="fles justify-center"
+                      >
                         <a
                           href="#"
                           class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
@@ -232,7 +236,7 @@
                   messages.pagingInfo,
                   setting.offset,
                   setting.limit,
-                  total
+                  auth.list.length
                 )
               }}
             </div>
@@ -371,6 +375,7 @@ export default defineComponent({
       auth,
     };
   },
+  async created() {},
   methods: {
     goto_qt(qt) {
       localStorage.setItem("tempqt", qt);
@@ -491,6 +496,7 @@ export default defineComponent({
       ],
     },
   },
+
   setup(props, { emit, slots }) {
     let localTable = ref(null);
 
@@ -534,12 +540,13 @@ export default defineComponent({
       // 每頁顯示筆數 (Display count per page)
       pageSize: defaultPageSize.value,
       // 最大頁數 (Maximum number of pages)
+
       maxPage: computed(() => {
-        if (props.total <= 0) {
+        if (auth.list.length <= 0) {
           return 0;
         }
-        let maxPage = Math.floor(props.total / setting.pageSize);
-        let mod = props.total % setting.pageSize;
+        let maxPage = Math.floor(auth.list.length / setting.pageSize);
+        let mod = auth.list.length % setting.pageSize;
         if (mod > 0) {
           maxPage++;
         }
@@ -547,16 +554,38 @@ export default defineComponent({
       }),
       // 該頁數起始值 (The starting value of the page number)
       offset: computed(() => {
+        // console.log("pageSize:", setting.page);
         return (setting.page - 1) * setting.pageSize + 1;
       }),
       // 該頁數最大值 (Maximum number of pages0
       limit: computed(() => {
+        props.rows.forEach((data) => {
+          if (data.status == "C" || data.status == "A") {
+            if (data.status == "C") {
+              data.status_cus = "ลูกค้า";
+            }
+            data.status_show = "อนุมัติแล้ว";
+            data.classi =
+              "bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900";
+          } else if (data.status == "W") {
+            data.status_show = "รออนุมัติ";
+            data.classi =
+              "bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900";
+          } else {
+            data.status_show = "แบบร่าง";
+            data.classi =
+              "bg-gray-100 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300";
+          }
+          data.created_at = data.created_at.substring(0, 16);
+          data.other = "Edit";
+        });
         let limit = setting.page * setting.pageSize;
-        return props.total >= limit ? limit : props.total;
+        return auth.list.length >= limit ? limit : auth.list.length;
       }),
       // 換頁陣列 (Paging array)
       paging: computed(() => {
         let startPage = setting.page - 2 <= 0 ? 1 : setting.page - 2;
+
         if (setting.maxPage - setting.page <= 2) {
           startPage = setting.maxPage - 4;
         }
@@ -567,6 +596,7 @@ export default defineComponent({
             pages.push(i);
           }
         }
+
         return pages;
       }),
       // 組件內用排序 (Sortable for local)
@@ -583,7 +613,9 @@ export default defineComponent({
       if (setting.sort === "desc") {
         sort_order = -1;
       }
+
       let rows = props.rows;
+
       rows.sort((a, b) => {
         if (a[property] < b[property]) {
           return -1 * sort_order;
@@ -694,6 +726,7 @@ export default defineComponent({
       }
       let offset = (setting.page - 1) * setting.pageSize;
       let limit = setting.pageSize;
+
       setting.order = order;
       setting.sort = sort;
       emit("do-search", offset, limit, order, sort);
@@ -721,6 +754,7 @@ export default defineComponent({
       let sort = setting.sort;
       let offset = (page - 1) * setting.pageSize;
       let limit = setting.pageSize;
+
       if (!props.isReSearch || page > 1 || page == prevPage) {
         // 非重新查詢發生的頁碼變動才執行呼叫查詢 (Call query will only be executed if the page number is changed without re-query)
         emit("do-search", offset, limit, order, sort);
@@ -813,6 +847,7 @@ export default defineComponent({
 
     // Call 「is-finished」 Method
     const callIsFinished = () => {
+      // console.log("change;;");
       if (localTable.value) {
         let localElement =
           localTable.value.getElementsByClassName("is-rows-el");
@@ -1033,6 +1068,9 @@ tr {
   color: #007bff;
   background-color: #fff;
   border: 1px solid #dee2e6;
+}
+.vtl-tbody-td#other {
+  text-align: center;
 }
 
 .sr-only {

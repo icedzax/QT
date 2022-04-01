@@ -176,6 +176,8 @@
           id="table-search"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder="ค้นหาลูกค้า ..."
+          v-model="searchCus"
+          @input="searchcus_input(searchCus)"
         />
       </div>
       <table-lite
@@ -199,15 +201,12 @@ import TableLite from "../components/TableLite.vue";
 
 const sampleData1 = (offst, limit) => {
   let data = [];
-  limit.forEach((element) => {
+  auth.list.forEach((element) => {
     element.status_cus = "";
-    element.classi = "";
     if (element.status == "D" || element.status == "TEMP") {
-      element.status = "แบบร่าง";
       element.classi =
         "bg-gray-100 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300";
     } else if (element.status == "W") {
-      element.status = "รออนุมัติ";
       element.classi =
         "bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900";
     } else if (element.status == "A" || element.status == "C") {
@@ -216,32 +215,32 @@ const sampleData1 = (offst, limit) => {
       if (element.status == "C") {
         element.status_cus = "ลูกค้า";
       }
-      element.status = "อนุมัติแล้ว";
     }
   });
-  for (let i = 0; i < limit.length; i++) {
-    data.push({
-      cus_name: limit[i].CNAME,
-      qt: limit[i].QT,
-      created: limit[i].created_at.substring(0, 16),
-      status: limit[i].status,
-      classi: limit[i].classi,
-      status_cus: limit[i].status_cus,
-      other: "Edit",
-    });
+
+  for (let i = offst; i < limit; i++) {
+    if (i < auth.list.length) {
+      data.push({
+        CNAME: auth.list[i].CNAME,
+        QT: auth.list[i].QT,
+        created_at: auth.list[i].created_at.substring(0, 16),
+        status: auth.list[i].status,
+        classi: auth.list[i].classi,
+        status_cus: auth.list[i].status_cus,
+        other: "Edit",
+      });
+    }
   }
   return data;
 };
 const sampleData2 = (offst, limit) => {
-  limit.forEach((element) => {
+  auth.list.forEach((element) => {
     element.status_cus = "";
-    element.classi = "";
+
     if (element.status == "D" || element.status == "TEMP") {
-      element.status = "แบบร่าง";
       element.classi =
         "bg-gray-100 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300";
     } else if (element.status == "W") {
-      element.status = "รออนุมัติ";
       element.classi =
         "bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900";
     } else if (element.status == "A" || element.status == "C") {
@@ -250,21 +249,21 @@ const sampleData2 = (offst, limit) => {
       if (element.status == "C") {
         element.status_cus = "ลูกค้า";
       }
-      element.status = "อนุมัติแล้ว";
     }
   });
   let data = [];
-  for (let i = limit.length - 1; i >= 0; i--) {
-    console.log(i);
-    data.push({
-      cus_name: limit[i].CNAME,
-      qt: limit[i].QT,
-      created: limit[i].created_at.substring(0, 16),
-      status: limit[i].status,
-      status_cus: limit[i].status_cus,
-      classi: limit[i].classi,
-      other: "Edit",
-    });
+  for (let i = limit - 1; i >= offst; i--) {
+    if (i < auth.list.length) {
+      data.push({
+        CNAME: auth.list[i].CNAME,
+        QT: auth.list[i].QT,
+        created_at: auth.list[i].created_at.substring(0, 16),
+        status: auth.list[i].status,
+        status_cus: auth.list[i].status_cus,
+        classi: auth.list[i].classi,
+        other: "Edit",
+      });
+    }
   }
   return data;
 };
@@ -272,6 +271,7 @@ export default {
   data() {
     return {
       list_au: [],
+      searchCus: "",
     };
   },
 
@@ -282,32 +282,32 @@ export default {
       columns: [
         {
           label: "ลูกค้า",
-          field: "cus_name",
+          field: "CNAME",
           width: "20%",
           sortable: true,
           isKey: true,
         },
         {
           label: "ใบเสนอราคาเลขที่",
-          field: "qt",
-          width: "15%",
-          sortable: true,
-        },
-        {
-          label: "สร้างเมื่อ",
-          field: "created",
+          field: "QT",
           width: "8%",
           sortable: true,
         },
         {
+          label: "สร้างเมื่อ",
+          field: "created_at",
+          width: "6%",
+          sortable: true,
+        },
+        {
           label: "สถานะ",
-          field: "status",
-          width: "15%",
+          field: "status_show",
+          width: "5%",
           sortable: true,
         },
         {
           field: "other",
-          width: "1%",
+          width: "3%",
         },
       ],
       rows: [],
@@ -322,20 +322,20 @@ export default {
      */
     const doSearch = async (offset, limit, order, sort) => {
       table.isLoading = true;
-      const data_list = await UserService.list({ emp_code: auth.user_id });
-      let Nlist_au = data_list.data;
       setTimeout(() => {
         table.isReSearch = offset == undefined ? true : false;
-
+        if (offset >= 10 || limit >= 20) {
+          limit = auth.list.length;
+        }
         if (sort == "asc") {
-          table.rows = sampleData1(offset, Nlist_au);
+          table.rows = sampleData1(offset, limit);
         } else {
-          table.rows = sampleData2(offset, Nlist_au);
+          table.rows = sampleData2(offset, limit);
         }
         table.totalRecordCount = 20;
         table.sortable.order = order;
         table.sortable.sort = sort;
-      }, 200);
+      }, 300);
     };
 
     // First get data
@@ -355,27 +355,28 @@ export default {
     console.log("### USER_ID ###", auth.user_id);
     const data_list = await UserService.list({ emp_code: auth.user_id });
     this.list_au = data_list.data;
-    this.list_au.map((data) => {
-      data.comfirm_cus = "";
-      if (data.status == "TEMP" || data.status == "D") {
-        data.status = "แบบร่าง";
-        data.classi =
-          "bg-gray-100 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300";
-      } else if (data.status == "A" || data.status == "C") {
-        if (data.status == "C") {
-          data.comfirm_cus = "ลูกค้า";
-        }
-        data.status = "อนุมัติแล้ว";
-        data.classi =
-          "bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900";
-      } else if (data.status == "W") {
-        data.status = "รออนุมัติ";
-        data.classi =
-          "bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900";
-      }
-      data.created_at = data.created_at.substring(0, 16);
-    });
-    console.log(this.list_au);
+    auth.list = this.list_au;
+
+    // this.list_au.map((data) => {
+    //   data.comfirm_cus = "";
+    //   if (data.status == "TEMP" || data.status == "D") {
+    //     data.status = "แบบร่าง";
+    //     data.classi =
+    //       "bg-gray-100 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300";
+    //   } else if (data.status == "A" || data.status == "C") {
+    //     if (data.status == "C") {
+    //       data.comfirm_cus = "ลูกค้า";
+    //     }
+    //     data.status = "อนุมัติแล้ว";
+    //     data.classi =
+    //       "bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900";
+    //   } else if (data.status == "W") {
+    //     data.status = "รออนุมัติ";
+    //     data.classi =
+    //       "bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900";
+    //   }
+    //   data.created_at = data.created_at.substring(0, 16);
+    // });
   },
   methods: {
     goto_qt(qt) {
@@ -387,6 +388,34 @@ export default {
     },
     goto_pdf(qt) {
       window.open("https://report.zubbsteel.com/tcpdf/pdf/ZQT.php?ref=" + qt);
+    },
+    async searchcus_input(input) {
+      input = input.trim();
+      if (input == "") {
+        const data_list = await UserService.list({ emp_code: auth.user_id });
+        this.list_au = data_list.data;
+        this.table.rows = this.list_au;
+        auth.list = this.table.rows;
+        this.doSearch(0, 10, "id", "asc");
+      } else {
+        const R = [];
+        for (let i = 0; i < this.list_au.length; i++) {
+          if (this.list_au[i].CNAME !== null) {
+            R.push(this.list_au[i].CNAME.toUpperCase());
+          }
+        }
+
+        const result = R.filter((word) => word.includes(input.toUpperCase())); //ข้อมูลที่ฟิลเตอร์เจอจริงๆ
+
+        const A = Object.values(this.list_au); //ดาต้าจริงก้อนใหญ่
+
+        const res = result.map((item) => {
+          return A.find((i) => i.CNAME.toUpperCase() == item);
+        });
+
+        this.table.rows = res;
+        auth.list = res;
+      }
     },
   },
 };
