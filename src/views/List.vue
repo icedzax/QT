@@ -176,6 +176,8 @@
           id="table-search"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder="ค้นหาลูกค้า ..."
+          v-model="searchCus"
+          @input="searchcus_input(searchCus)"
         />
       </div>
       <table-lite
@@ -219,9 +221,9 @@ const sampleData1 = (offst, limit) => {
   for (let i = offst; i < limit; i++) {
     if (i < auth.list.length) {
       data.push({
-        cus_name: auth.list[i].CNAME,
-        qt: auth.list[i].QT,
-        created: auth.list[i].created_at.substring(0, 16),
+        CNAME: auth.list[i].CNAME,
+        QT: auth.list[i].QT,
+        created_at: auth.list[i].created_at.substring(0, 16),
         status: auth.list[i].status,
         classi: auth.list[i].classi,
         status_cus: auth.list[i].status_cus,
@@ -253,9 +255,9 @@ const sampleData2 = (offst, limit) => {
   for (let i = limit - 1; i >= offst; i--) {
     if (i < auth.list.length) {
       data.push({
-        cus_name: auth.list[i].CNAME,
-        qt: auth.list[i].QT,
-        created: auth.list[i].created_at.substring(0, 16),
+        CNAME: auth.list[i].CNAME,
+        QT: auth.list[i].QT,
+        created_at: auth.list[i].created_at.substring(0, 16),
         status: auth.list[i].status,
         status_cus: auth.list[i].status_cus,
         classi: auth.list[i].classi,
@@ -269,6 +271,7 @@ export default {
   data() {
     return {
       list_au: [],
+      searchCus: "",
     };
   },
 
@@ -279,32 +282,32 @@ export default {
       columns: [
         {
           label: "ลูกค้า",
-          field: "cus_name",
+          field: "CNAME",
           width: "20%",
           sortable: true,
           isKey: true,
         },
         {
           label: "ใบเสนอราคาเลขที่",
-          field: "qt",
-          width: "15%",
-          sortable: true,
-        },
-        {
-          label: "สร้างเมื่อ",
-          field: "created",
+          field: "QT",
           width: "8%",
           sortable: true,
         },
         {
+          label: "สร้างเมื่อ",
+          field: "created_at",
+          width: "6%",
+          sortable: true,
+        },
+        {
           label: "สถานะ",
-          field: "status",
-          width: "15%",
+          field: "status_show",
+          width: "5%",
           sortable: true,
         },
         {
           field: "other",
-          width: "1%",
+          width: "3%",
         },
       ],
       rows: [],
@@ -319,8 +322,6 @@ export default {
      */
     const doSearch = async (offset, limit, order, sort) => {
       table.isLoading = true;
-      const data_list = await UserService.list({ emp_code: auth.user_id });
-
       setTimeout(() => {
         table.isReSearch = offset == undefined ? true : false;
         if (offset >= 10 || limit >= 20) {
@@ -334,7 +335,7 @@ export default {
         table.totalRecordCount = 20;
         table.sortable.order = order;
         table.sortable.sort = sort;
-      }, 200);
+      }, 300);
     };
 
     // First get data
@@ -355,6 +356,7 @@ export default {
     const data_list = await UserService.list({ emp_code: auth.user_id });
     this.list_au = data_list.data;
     auth.list = this.list_au;
+
     // this.list_au.map((data) => {
     //   data.comfirm_cus = "";
     //   if (data.status == "TEMP" || data.status == "D") {
@@ -386,6 +388,34 @@ export default {
     },
     goto_pdf(qt) {
       window.open("https://report.zubbsteel.com/tcpdf/pdf/ZQT.php?ref=" + qt);
+    },
+    async searchcus_input(input) {
+      input = input.trim();
+      if (input == "") {
+        const data_list = await UserService.list({ emp_code: auth.user_id });
+        this.list_au = data_list.data;
+        this.table.rows = this.list_au;
+        auth.list = this.table.rows;
+        this.doSearch(0, 10, "id", "asc");
+      } else {
+        const R = [];
+        for (let i = 0; i < this.list_au.length; i++) {
+          if (this.list_au[i].CNAME !== null) {
+            R.push(this.list_au[i].CNAME.toUpperCase());
+          }
+        }
+
+        const result = R.filter((word) => word.includes(input.toUpperCase())); //ข้อมูลที่ฟิลเตอร์เจอจริงๆ
+
+        const A = Object.values(this.list_au); //ดาต้าจริงก้อนใหญ่
+
+        const res = result.map((item) => {
+          return A.find((i) => i.CNAME.toUpperCase() == item);
+        });
+
+        this.table.rows = res;
+        auth.list = res;
+      }
     },
   },
 };

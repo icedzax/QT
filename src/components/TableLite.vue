@@ -111,6 +111,7 @@
                     class="vtl-tbody-td"
                     :class="col.columnClasses"
                     :style="col.columnStyles"
+                    :id="col.field"
                   >
                     <div v-if="col.display" v-html="col.display(row)"></div>
                     <div v-else class="">
@@ -118,7 +119,7 @@
                         <slot :name="col.field" :value="row"></slot>
                       </div>
                       <div
-                        v-else-if="col.field == 'qt'"
+                        v-else-if="col.field == 'QT'"
                         class="flex justify-start"
                       >
                         <span
@@ -194,7 +195,7 @@
                         </svg>
                       </div>
                       <div
-                        v-else-if="col.field == 'status'"
+                        v-else-if="col.field == 'status_show'"
                         class="text-green-500"
                       >
                         <span :class="row.classi"> {{ row[col.field] }}</span>
@@ -205,7 +206,10 @@
                           {{ row.status_cus }}</span
                         >
                       </div>
-                      <div v-else-if="col.field == 'other'">
+                      <div
+                        v-else-if="col.field == 'other'"
+                        class="fles justify-center"
+                      >
                         <a
                           href="#"
                           class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
@@ -557,12 +561,23 @@ export default defineComponent({
       limit: computed(() => {
         props.rows.forEach((data) => {
           if (data.status == "C" || data.status == "A") {
-            data.status = "อนุมัติแล้ว";
+            if (data.status == "C") {
+              data.status_cus = "ลูกค้า";
+            }
+            data.status_show = "อนุมัติแล้ว";
+            data.classi =
+              "bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900";
           } else if (data.status == "W") {
-            data.status = "รออนุมัติ";
+            data.status_show = "รออนุมัติ";
+            data.classi =
+              "bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900";
           } else {
-            data.status = "แบบร่าง";
+            data.status_show = "แบบร่าง";
+            data.classi =
+              "bg-gray-100 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300";
           }
+          data.created_at = data.created_at.substring(0, 16);
+          data.other = "Edit";
         });
         let limit = setting.page * setting.pageSize;
         return auth.list.length >= limit ? limit : auth.list.length;
@@ -1053,6 +1068,9 @@ tr {
   color: #007bff;
   background-color: #fff;
   border: 1px solid #dee2e6;
+}
+.vtl-tbody-td#other {
+  text-align: center;
 }
 
 .sr-only {
