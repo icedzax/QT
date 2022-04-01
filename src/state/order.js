@@ -7,6 +7,8 @@ const order = reactive({
   kunnr: null,
   date: null,
   cust: {},
+  term: null,
+  ship: null,
 });
 
 export { order };

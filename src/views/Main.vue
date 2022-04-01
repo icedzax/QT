@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="mx-5 md:container">
     <div
       class="box grid overflow-hidden grid-cols-2 xl:grid-cols-3 grid-rows-2 gap-2 flex-wrap mt-1"
     >
@@ -37,7 +37,7 @@
     <div
       class="box grid overflow-hidden grid-cols-1 grid-rows-1 gap-1 flex-wrap mt-1"
     >
-      <div class="h-auto row-start-1 row-span-5 col-start-1 col-span-2 pb-3">
+      <div class="h-auto row-start-1 row-span-5 col-start-1 col-span-2 pb-36">
         <Orders :mat="this.mat_param"></Orders>
       </div>
     </div>
@@ -48,7 +48,7 @@
       <div
         class="row-start-1 row-span-5 col-start-1 col-span-2 xl:col-span-2 h-auto"
       >
-        <Rule :sw="sumw"></Rule>
+        <Rule :sw="sumw" :pship="order.ship" :pterm="order.term"></Rule>
       </div>
       <div class="row-span-5 col-start-1 col-span-2 xl:col-start-3 h-auto">
         <Total :sp="sump"></Total>
@@ -151,6 +151,8 @@ export default {
       order.status = us.data[0].status;
       order.sale_office = us.data[0].sale_office;
       order.sale_team = us.data[0].sale_team;
+      order.term = us.data[0].term;
+      order.ship = us.data[0].ship;
       order.cust = {
         KUNNR: us.data[0].KUNNR,
         LAND1: us.data[0].LAND1,

@@ -28,6 +28,11 @@ export default {
   },
   appC(body) {
     return Api().post(`/cApp`, body);
-
+  },
+  term(payload) {
+    return Api().post(`/updateHead`, payload);
+  },
+  ship(payload) {
+    return Api().post(`/updateHead`, payload);
   },
 };
