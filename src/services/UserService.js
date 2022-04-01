@@ -34,4 +34,7 @@ export default {
   newQT(body) {
     return Api().post("newQT/", body);
   },
+  del(body) {
+    return Api().post("delQT/", body);
+  },
 };
