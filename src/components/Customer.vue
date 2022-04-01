@@ -1,7 +1,7 @@
 <template>
   <div class="mx-4">
     <div
-      class="grid overflow-hidden grid-cols-6 grid-rows-1 gap-1 text-xs xl:text-sm p-1 xl:p-0"
+      class="grid overflow-y-visible grid-cols-6 grid-rows-1 gap-1 text-xs xl:text-sm p-1 xl:p-0"
     >
       <div class="font-semibold">ลูกค้า</div>
       <div class="col-span-4">
@@ -174,20 +174,20 @@
       class="grid overflow-hidden grid-cols-6 grid-rows-1 gap-1 text-xs xl:text-sm p-1 xl:p-0"
     >
       <div class="font-semibold">เบอร์ติดต่อ</div>
-      <div class="col-span-2">
+      <div class="col-span-2 w-full">
         <input
           id="ip_text"
-          class="text-xs border-b border-gray-200 px-1 focus:outline-none w-32 lg:w-40"
+          class="text-xs w-full border-b border-gray-200 px-1 focus:outline-none"
           v-model="cusdata.TELNU"
           :disabled="!this.statusE"
         />
       </div>
       <!-- มือถือ --->
       <div class="font-semibold text-center">มือถือ</div>
-      <div class="col-span-2">
+      <div class="col-span-2 w-full">
         <input
           id="ip_text2"
-          class="text-xs border-b border-gray-200 px-1 focus:outline-none col-span-2"
+          class="text-xs w-full border-b border-gray-200 px-1 focus:outline-none col-span-2"
           v-model="cusdata.MOBILE"
           :disabled="!this.statusE"
         />
@@ -197,7 +197,7 @@
       <div class="col-span-2">
         <input
           id="ip_text"
-          class="text-xs border-b border-gray-200 px-1 focus:outline-none w-32 lg:w-40"
+          class="text-xs border-b border-gray-200 px-1 focus:outline-none w-full"
           v-model="cusdata.FAXNU"
           :disabled="!this.statusE"
         />
@@ -205,10 +205,10 @@
 
       <!-- อีเมล --->
       <div class="font-semibold text-center">อีเมลล์</div>
-      <div class="col-span-2">
+      <div class="col-span-2 w-full">
         <input
           id="ip_text2"
-          class="text-xs border-b border-gray-200 px-1 focus:outline-none"
+          class="text-xs w-full border-b border-gray-200 px-1 focus:outline-none"
           v-model="cusdata.EMAIL"
           :disabled="!this.statusE"
         />
