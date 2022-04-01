@@ -644,7 +644,7 @@ export default {
       console.log("loading", sys.loading);
 
       this.inputField.rmd_mat = item.rmd_mat;
-      this.inputField.rmd_weight = this.data.selection.rmd_stdweight;
+      this.inputField.rmd_weight = this.data.selection.NTGEW;
       this.inputField.rmd_size = this.data.selection.rmd_size;
       this.inputField.amount = 1;
       if (price.data[0]) {
