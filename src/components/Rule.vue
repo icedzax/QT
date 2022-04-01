@@ -14,9 +14,11 @@
         Kg.
       </div>
     </div>
-    <div class="grid overflow-hidden grid-cols-2 grid-rows-2 gap-0 mt-2">
-      <div class="">เงื่อนไขชำระเงิน</div>
-      <div class="col-start-2">
+    <div
+      class="grid overflow-hidden items-center grid-cols-5 grid-rows-2 gap-0 mt-2"
+    >
+      <div class="text-xs">เงื่อนไขชำระเงิน</div>
+      <div class="col-start-2 col-span-4">
         <select
           class="text-xs p-1 px-5 text-left h-6 rounded border border-gray-300"
           v-model="pterm"
@@ -27,7 +29,7 @@
           </option>
         </select>
       </div>
-      <div class="">วิธีการจัดส่ง</div>
+      <div class="text-xs">วิธีการจัดส่ง</div>
       <div class="col-start-2 mt-0.5">
         <select
           class="text-xs p-1 px-5 text-left h-6 rounded border border-gray-300"
