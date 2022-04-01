@@ -133,8 +133,9 @@ export default {
     } else {
       initQT = this.$route.params.list_qt;
     }
+    // localStorage.setItem("tempqt", null);
     let us = await UserService.temp({ emp: auth.user_id });
-
+    console.log("auth.user_id", auth.user_id);
     if (initQT) {
       us = await UserService.tempQT({
         emp: auth.user_id,

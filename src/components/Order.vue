@@ -463,8 +463,15 @@ export default {
     // let result = await UserService.fgList();
 
     // fg.items = result.data;
-
+    let pickQT = "";
     if (this.mat) {
+      const lqt = await OrderService.getLastQT(auth.user_id);
+      console.log("lqt", lqt.data);
+      if (lqt.data[0]) {
+        pickQT = await lqt.data[0].qt;
+      } else {
+        pickQT = await auth.temp_qt;
+      }
       const prepush = await FgService.get(this.mat);
       console.log("prepush", prepush);
       const payload = {
@@ -492,11 +499,11 @@ export default {
         unit: "PC",
         price_unit: pre_priceunit,
         cal_price: pre_calprice,
-        qt: auth.temp_qt,
+        qt: pickQT,
       };
       console.log(stock_payload);
       await FgService.insert(stock_payload);
-      const testii = await FgService.items(auth.temp_qt);
+      const testii = await FgService.items(pickQT);
       order.list = await testii.data;
 
       this.$router.replace({});

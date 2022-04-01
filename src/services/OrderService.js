@@ -35,4 +35,7 @@ export default {
   ship(payload) {
     return Api().post(`/updateHead`, payload);
   },
+  getLastQT(payload) {
+    return Api().get(`/getLastQT/${payload}`);
+  },
 };
