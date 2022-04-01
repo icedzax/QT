@@ -102,7 +102,7 @@ export default {
       };
       const valid = await OrderService.priceValid(ordPayload);
       if (valid.data) {
-        order.status = "W";
+        order.status = valid.data[0];
       }
       sys.loading = await false;
     },

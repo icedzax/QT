@@ -4,7 +4,7 @@
       class="row-start-1 row-span-1 col-start-3 col-span-1 text-center text-xs md:text-sm"
     >
       <div class="flex">
-        <div class="text-base md:text-2xl text-center lg:text-left">
+        <div class="text-base md:text-xl text-center lg:text-left">
           ใบเสนอราคา (สำนักงานใหญ่)
         </div>
         <div class="mx-2 h-10 w-10" @click="goto_pdf">

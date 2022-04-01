@@ -23,6 +23,7 @@
           class="text-xs p-1 px-5 text-left h-6 rounded border border-gray-300"
           v-model="pterm"
           @change="termChange($event)"
+          :disabled="!isEnable"
         >
           <option v-for="term in terms" :key="term.y" :value="term.y">
             {{ term.text }}
@@ -35,6 +36,7 @@
           class="text-xs p-1 px-5 text-left h-6 rounded border border-gray-300"
           v-model="pship"
           @change="shipChange($event)"
+          :disabled="!isEnable"
         >
           <option v-for="ship in ships" :key="ship.y" :value="ship.y">
             {{ ship.text }}

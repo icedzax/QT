@@ -140,9 +140,12 @@
             </td>
             <td class="py-1 w-fit text-xs md:text-sm border border-slate-200">
               <select
+                :disabled="!approveStat"
                 class="border-none text-xs"
                 v-model="items.ptype"
-                @change="changePrice($event, items.id)"
+                @change="
+                  PriceType(items.unit, items.ptype, index, false, items.id)
+                "
               >
                 <option
                   v-for="sItem in type.Wholesale"
@@ -624,7 +627,7 @@ export default {
         "simple-typeahead-list"
       )[0].style.visibility = "hidden";
 
-      let typ = this.selectedType.substring(0, 2);
+      let typ = this.selectedType.split(":");
       console.log(item.rmd_mat);
       const payload = {
         VKORG: 1000,
@@ -778,6 +781,7 @@ export default {
     },
     changePrice(e, i) {
       console.log(e.target.value, i);
+
       this.changeUpdate(i);
     },
     manage_type() {
