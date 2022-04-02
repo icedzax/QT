@@ -413,18 +413,34 @@ export default defineComponent({
       window.open("https://report.zubbsteel.com/tcpdf/pdf/ZQT.php?ref=" + qt);
     },
     async goto_delete(qt_send, index) {
-      console.log("ลบ QT ::", qt_send, "--", index);
-      const delete_message = UserService.del({ qt: qt_send });
-      // if (confirm("ต้องการยกเลิกใบเสนอราคา " + qt_send + " ใช่หรือไม่")) {
-      //   alert("ลบใบนำเสนอราคาแล้ว :)");
-      // }
-      this.rows.splice(index, 1);
-      auth.list.splice(index, 1);
+      let indexfor_all = index;
 
-      // refresh data
-      // auth.list = this.rows;
-      // console.log("หน้าตอนนี้", this.page);
-      // auth.list = this.rows;
+      if (this.setting.page == 1) {
+        indexfor_all = index;
+      } else {
+        if (index == 0) {
+          indexfor_all = (this.setting.page - 1) * 10;
+        } else {
+          indexfor_all = (this.setting.page - 1) * 10 + index;
+        }
+      }
+
+      if (confirm("ต้องการยกเลิกใบเสนอราคา " + qt_send + " ใช่หรือไม่")) {
+        const delete_message = UserService.del({ qt: qt_send });
+        alert("ลบใบนำเสนอราคาแล้ว :)");
+        this.rows.splice(index, 1);
+        auth.list.splice(indexfor_all, 1);
+
+        let del_index = this.setting.page * 10 - 1;
+        // console.log(del_index);
+        if (del_index < auth.list.length) {
+          this.rows.push(auth.list[del_index]);
+        }
+        if (this.rows.length == 0) {
+          this.setting.page = this.setting.page - 1;
+          // console.log("ข้อมูลหมดแล้ว");
+        }
+      }
     },
   },
   name: "my-table",
@@ -537,6 +553,7 @@ export default defineComponent({
   },
 
   setup(props, { emit, slots }) {
+    // console.log("**setup load**");
     let localTable = ref(null);
 
     // 檢查下拉選單中是否包含預設一頁顯示筆數 (Validate dropdown's values have page-size value or not)
@@ -793,7 +810,8 @@ export default defineComponent({
       let sort = setting.sort;
       let offset = (page - 1) * setting.pageSize;
       let limit = setting.pageSize;
-
+      // console.log("LIST:", props.rows);
+      // console.log("AUTH:", auth.list);
       if (!props.isReSearch || page > 1 || page == prevPage) {
         // 非重新查詢發生的頁碼變動才執行呼叫查詢 (Call query will only be executed if the page number is changed without re-query)
         emit("do-search", offset, limit, order, sort);
