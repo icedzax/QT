@@ -18,7 +18,7 @@
       class="grid overflow-hidden items-center grid-cols-5 grid-rows-2 gap-0 mt-2"
     >
       <div class="text-xs">เงื่อนไขชำระเงิน</div>
-      <div class="col-start-2 col-span-4">
+      <div class="w-fit col-start-2 col-span-2">
         <select
           class="text-xs p-1 px-5 text-left h-6 rounded border border-gray-300"
           v-model="pterm"
@@ -30,8 +30,30 @@
           </option>
         </select>
       </div>
+      <div class="text-xs col-span-2">
+        <div class="flex items-center">
+          <span class="mr-1">ยืนราคา</span>
+          <input
+            v-model="pValidity"
+            type="number"
+            min="0"
+            max="15"
+            @change="
+              () => {
+                if (pValidity > 15 || pValidity < 0) {
+                  this.pValidity = null;
+                }
+              }
+            "
+            class="w-12 h-6 text-center text-xs px-1 rounded"
+          />
+          <span class="ml-1"
+            >วัน <span v-if="pValidity">({{ addDays }})</span></span
+          >
+        </div>
+      </div>
       <div class="text-xs">วิธีการจัดส่ง</div>
-      <div class="col-start-2 mt-0.5">
+      <div class="col-start-2 mt-0.5 w-fit">
         <select
           class="text-xs p-1 px-5 text-left h-6 rounded border border-gray-300"
           v-model="pship"
@@ -113,6 +135,7 @@
 import { order } from "../state/order";
 import { auth } from "../state/user";
 import { debounce } from "lodash";
+import moment from "moment";
 
 import OrderService from "../services/OrderService.js";
 
@@ -121,6 +144,7 @@ export default {
   data() {
     return {
       order,
+      pValidity: null,
       selectedTerm: "",
       selectedShip: "",
       fixsw: "",
@@ -158,6 +182,12 @@ export default {
     this.selectedShip = this.pship;
   },
   computed: {
+    addDays() {
+      let result = new Date(order.date);
+      result.setDate(result.getDate() + this.pValidity);
+
+      return moment(result).format("MMM D");
+    },
     cTerm() {
       return order.term;
     },
