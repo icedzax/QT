@@ -30,7 +30,7 @@
           <th
             class="font-light border border-slate-200 w-1/12 text-xs md:text-sm"
           >
-            ราคา
+            ราคาเส้นต่อมัด
           </th>
           <th
             class="font-light border border-slate-200 w-fit text-xs md:text-sm"
@@ -116,12 +116,32 @@
             <td
               class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
             >
+              <div class="flex justify-inline text-xs border-b border-gray-300">
+                <input
+                  class="w-1/2 text-center text-green-500 p-1 focus:outline-none cursor-pointer"
+                  v-model="items.min"
+                  @click="
+                    changeNG(items.min, true, items.unit, items.id, index)
+                  "
+                  readonly="readonly"
+                />
+                <input
+                  class="w-1/2 text-center text-red-500 p-1 focus:outline-none cursor-pointer"
+                  v-model="items.max"
+                  @click="
+                    changeNG(items.max, true, items.unit, items.id, index)
+                  "
+                  readonly="readonly"
+                />
+              </div>
               <input
                 type="text"
                 v-model="items.rmd_weight"
                 class="w-4/6 text-xs p-1 text-center border-none focus:outline-none"
                 :disabled="!approveStat"
-                @input="changeUpdate(items.id)"
+                @input="
+                  changeNG(items.rmd_weight, true, items.unit, items.id, index)
+                "
               />
             </td>
             <td
@@ -131,7 +151,14 @@
                 type="text"
                 v-model="items.amount"
                 @keyup="
-                  edit(index, items.amount, items.price_unit, true, items.id)
+                  edit(
+                    index,
+                    items.amount,
+                    items.price_unit,
+                    true,
+                    items.unit,
+                    items.id
+                  )
                 "
                 @keypress="NumbersOnly"
                 class="w-5/6 text-xs p-1 text-center border-none"
@@ -195,7 +222,14 @@
                 type="text"
                 v-model="items.price_unit"
                 @keyup="
-                  edit(index, items.amount, items.price_unit, true, items.id)
+                  edit(
+                    index,
+                    items.amount,
+                    items.price_unit,
+                    true,
+                    items.unit,
+                    items.id
+                  )
                 "
                 class="w-5/6 p-1 text-sm text-center border-none"
                 :disabled="!approveStat"
@@ -216,6 +250,7 @@
                 fill="red"
                 @click="deletes(index, items.id)"
                 class="mx-1 w-5 h-5"
+                v-show="!items.loading"
               >
                 <title>Remove</title>
                 <path
@@ -225,6 +260,7 @@
                   d="M341.33,234.67H170.67a21.33,21.33,0,1,0,0,42.66H341.33a21.33,21.33,0,1,0,0-42.66Z"
                 />
               </svg>
+              <LoadingSpinner class="mx-1 w-5 h-5" v-show="items.loading" />
             </td>
             <!--  <InputItemText :data="items" /> -->
           </tr>
@@ -280,10 +316,35 @@
           <td
             class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
           >
+            <div class="flex justify-inline border-b border-gray-300">
+              <input
+                class="w-1/2 text-center text-xs p-1 focus:outline-none cursor-pointer text-green-500"
+                v-model="inputField.min"
+                readonly="readonly"
+                @click="
+                  changeNG(inputField.min, false, inputField.selectedUnittype)
+                "
+              />
+              <input
+                class="w-1/2 text-center text-xs p-1 focus:outline-none cursor-pointer text-red-500"
+                v-model="inputField.max"
+                readonly="readonly"
+                @click="
+                  changeNG(inputField.max, false, inputField.selectedUnittype)
+                "
+              />
+            </div>
             <input
               type="text"
               class="tdi w-5/6 text-xs p-1 text-center border-none focus:outline-none"
               v-model="inputField.rmd_weight"
+              @input="
+                changeNG(
+                  inputField.rmd_weight,
+                  false,
+                  inputField.selectedUnittype
+                )
+              "
             />
           </td>
           <td
@@ -294,7 +355,13 @@
               class="tdi w-5/6 text-xs p-1 text-center border-none"
               v-model="inputField.amount"
               @keyup="
-                edit(index, inputField.amount, inputField.price_unit, false)
+                edit(
+                  index,
+                  inputField.amount,
+                  inputField.price_unit,
+                  false,
+                  inputField.selectedUnittype
+                )
               "
             />
           </td>
@@ -329,7 +396,13 @@
               class="tdi w-5/6 p-1 text-sm text-center border-none"
               v-model="inputField.price_unit"
               @keyup="
-                edit(index, inputField.amount, inputField.price_unit, false)
+                edit(
+                  index,
+                  inputField.amount,
+                  inputField.price_unit,
+                  false,
+                  inputField.selectedUnittype
+                )
               "
             />
           </td>
@@ -416,6 +489,8 @@ export default {
         cal_price: 0,
         amount: 1,
         price_unit: 1,
+        min: null,
+        max: null,
       },
 
       chkrepeat: false,
@@ -439,10 +514,16 @@ export default {
     },
     List() {
       this.order.list.map((item) => {
+        item.loading = false;
         if (item.REMARK) {
           item.show = true;
         }
+
+        if (item.min == null) {
+          item.min = 0;
+        }
       });
+      console.log("DATA ORDER::", this.order.list);
       return this.order.list;
     },
     fgSearchList() {
@@ -550,7 +631,7 @@ export default {
 
     changeUpdate: debounce(async function (ids) {
       const payload = order.list.filter((data) => data.id == ids);
-      // console.log("XXXX", payload);
+
       const data_payload = {
         id: payload[0].id,
         rmd_mat: payload[0].rmd_mat,
@@ -570,6 +651,14 @@ export default {
 
     async PriceType(unit, type, i, isInput, ids = "") {
       console.log("PriceType", unit, type, i, isInput, ids);
+      if (isInput) {
+        if (unit == "KG") {
+          this.inputField.selectedUnittype = "KG";
+        } else {
+          this.inputField.selectedUnittype = "PC";
+        }
+      }
+
       let typ = type;
       let new_matnr = "";
       if (
@@ -589,17 +678,29 @@ export default {
         KONDA: typ,
         KMEIN: unit,
       };
-      sys.loading = true;
+      if (isInput) {
+        sys.loading = true;
+      } else {
+        order.list[i].loading = true;
+      }
       const price = await FgService.getPrice(payload);
-
+      console.log("price==", price);
+      console.log("UNIT:", unit);
       if (price.data[0]) {
         if (isInput) {
+          console.log("มีราคามาบน");
           this.inputField.price_unit = price.data[0].KBETR;
-
-          this.inputField.cal_price = parseFloat(
-            this.inputField.amount * price.data[0].KBETR
-          );
+          if (unit == "KG") {
+            this.inputField.cal_price = parseFloat(
+              this.inputField.amount * this.inputField.rmd_weight
+            ).toFixed(2);
+          } else {
+            this.inputField.cal_price = parseFloat(
+              this.inputField.amount * price.data[0].KBETR
+            ).toFixed(2);
+          }
         } else {
+          console.log("มีราคามาล่าง");
           order.list[i].price_unit = await price.data[0].KBETR;
           order.list[i].cal_price = parseFloat(
             order.list[i].amount * price.data[0].KBETR
@@ -607,15 +708,37 @@ export default {
         }
       } else {
         if (isInput) {
+          console.log("ไม่มีราคามาบน");
           this.inputField.price_unit = 1;
-          this.inputField.cal_price = 1;
+          if (unit == "KG") {
+            this.inputField.cal_price = parseFloat(
+              this.inputField.amount * this.inputField.rmd_weight
+            ).toFixed(2);
+          } else {
+            this.inputField.cal_price = parseFloat(
+              this.inputField.amount * this.inputField.price_unit
+            ).toFixed(2);
+          }
         } else {
+          console.log("ไม่มีราคามาล่าง");
           order.list[i].price_unit = 1;
-          order.list[i].cal_price = 1;
+          if (unit == "KG") {
+            order.list[i].cal_price = parseFloat(
+              order.list[i].amount * order.list[i].rmd_weight
+            ).toFixed(2);
+          } else {
+            order.list[i].cal_price = parseFloat(
+              order.list[i].amount * order.list[i].price_unit
+            ).toFixed(2);
+          }
         }
         console.log(false);
       }
-      sys.loading = false;
+      if (isInput) {
+        sys.loading = false;
+      } else {
+        order.list[i].loading = false;
+      }
       if (!isInput) {
         // order.list[ids].ptype = typ;
         this.changeUpdate(ids);
@@ -638,15 +761,42 @@ export default {
 
       sys.loading = true;
       console.log("loading", sys.loading);
-      console.log(payload);
+
       const price = await FgService.getPrice(payload);
       sys.loading = false;
       console.log("loading", sys.loading);
-
       this.inputField.rmd_mat = item.rmd_mat;
-      this.inputField.rmd_weight = this.data.selection.NTGEW;
+      this.inputField.rmd_weight = parseFloat(
+        this.data.selection.NTGEW
+      ).toFixed(2);
       this.inputField.rmd_size = this.data.selection.rmd_size;
       this.inputField.amount = 1;
+      //min
+      if (this.data.selection.minweight !== null) {
+        if (this.data.selection.minweight == ".000") {
+          this.data.selection.minweight = 0;
+        } else {
+          this.data.selection.minweight = parseFloat(
+            this.data.selection.minweight
+          ).toFixed(2);
+        }
+      } else {
+        this.data.selection.minweight = 0;
+      }
+      //max
+      if (
+        this.data.selection.maxweight == ".000" ||
+        this.data.selection.maxweight == null
+      ) {
+        this.data.selection.maxweight = parseFloat(
+          this.data.selection.stdweight
+        ).toFixed(2);
+      }
+
+      //fixed
+      this.inputField.min = this.data.selection.minweight;
+      this.inputField.max = this.data.selection.maxweight;
+
       if (price.data[0]) {
         this.inputField.price_unit = price.data[0].KBETR;
         let a = parseFloat(this.inputField.amount * price.data[0].KBETR);
@@ -704,7 +854,7 @@ export default {
           ptype: this.selectedType,
           unit: this.selectedUnittype,
         });
-
+        console.log("min", this.inputField.min);
         const stock_payload = {
           rmd_mat: this.inputField.rmd_mat,
           rmd_size: this.inputField.rmd_size,
@@ -715,6 +865,8 @@ export default {
           price_unit: this.inputField.price_unit || 1,
           cal_price: this.inputField.cal_price || 1,
           qt: auth.temp_qt,
+          min: this.inputField.min,
+          max: this.inputField.max,
         };
 
         await FgService.insert(stock_payload);
@@ -737,10 +889,8 @@ export default {
         alert("กรุณาเลือกสินค้า");
       }
     },
-    edit(index, unit, vat, inputE, ids = "") {
-      // if (vat.length > 3) {
-      //   vat = this.delcomma(vat);
-      // }
+    edit(index, unit, vat, inputE, unittype, ids = "") {
+      console.log("EDIT::", index, unit, vat, unittype, ids);
 
       if (this.order.list.length > 0 && inputE) {
         this.order.list.filter((data, i) => {
@@ -749,13 +899,52 @@ export default {
               data.price_unit = vat;
             }
 
-            data.cal_price = parseFloat(unit * vat);
+            if (unittype == "KG") {
+              if (vat == "0") {
+                data.cal_price = parseFloat(unit * data.amount).toFixed(2);
+              } else {
+                data.cal_price = parseFloat(unit * data.rmd_weight).toFixed(2);
+              }
+              console.log("ส่งมา", unit);
+              console.log("จำนวน", data.amount);
+            } else {
+              data.cal_price = parseFloat(unit * vat).toFixed(2);
+            }
           }
         });
       } else {
-        this.inputField.cal_price = parseFloat(unit * vat);
+        if (unittype == "KG") {
+          if (vat == "0") {
+            this.inputField.cal_price = parseFloat(
+              unit * this.inputField.amount
+            ).toFixed(2);
+          } else {
+            this.inputField.cal_price = parseFloat(
+              unit * this.inputField.rmd_weight
+            ).toFixed(2);
+          }
+        } else {
+          this.inputField.cal_price = parseFloat(unit * vat).toFixed(2);
+        }
       }
-      this.changeUpdate(ids);
+      if (inputE) {
+        this.changeUpdate(ids);
+      }
+    },
+    changeNG(item, input, unit, id, i = "") {
+      console.log(item);
+      //พิมพ์มาใน input
+      if (!input) {
+        this.inputField.rmd_weight = item;
+      } else {
+        order.list[i].rmd_weight = item;
+      }
+      let vat = 0;
+      if (input && unit == "KG") {
+        this.edit(i, item, vat, true, unit, id);
+      } else if (!input && unit == "KG") {
+        this.edit(i, item, vat, false, unit, id);
+      }
     },
     addComma(a) {
       let x = a.split(".");
