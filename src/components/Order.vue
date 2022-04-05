@@ -20,17 +20,17 @@
           <th
             class="font-light border border-slate-200 w-auto text-xs md:text-sm"
           >
-            น้ำหนักหน่วย +/-
-          </th>
-          <th
-            class="font-light border border-slate-200 w-auto text-xs md:text-sm"
-          >
             จำนวน
           </th>
           <th
             class="font-light border border-slate-200 w-1/12 text-xs md:text-sm"
           >
             ราคาเส้นต่อมัด
+          </th>
+          <th
+            class="font-light border border-slate-200 w-auto text-xs md:text-sm"
+          >
+            น้ำหนักหน่วย +/-
           </th>
           <th
             class="font-light border border-slate-200 w-fit text-xs md:text-sm"
@@ -116,37 +116,6 @@
             <td
               class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
             >
-              <div class="flex justify-inline text-xs border-b border-gray-300">
-                <input
-                  class="w-1/2 text-center text-green-500 p-1 focus:outline-none cursor-pointer"
-                  v-model="items.min"
-                  @click="
-                    changeNG(items.min, true, items.unit, items.id, index)
-                  "
-                  readonly="readonly"
-                />
-                <input
-                  class="w-1/2 text-center text-red-500 p-1 focus:outline-none cursor-pointer"
-                  v-model="items.max"
-                  @click="
-                    changeNG(items.max, true, items.unit, items.id, index)
-                  "
-                  readonly="readonly"
-                />
-              </div>
-              <input
-                type="text"
-                v-model="items.rmd_weight"
-                class="w-4/6 text-xs p-1 text-center border-none focus:outline-none"
-                :disabled="!approveStat"
-                @input="
-                  changeNG(items.rmd_weight, true, items.unit, items.id, index)
-                "
-              />
-            </td>
-            <td
-              class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
-            >
               <input
                 type="text"
                 v-model="items.amount"
@@ -200,6 +169,38 @@
               </option>
             </select> -->
             </td>
+            <td
+              class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
+            >
+              <div class="flex justify-inline text-xs border-b border-gray-300">
+                <input
+                  class="w-1/2 text-center text-red-500 p-1 focus:outline-none cursor-pointer"
+                  v-model="items.min"
+                  @click="
+                    changeNG(items.min, true, items.unit, items.id, index)
+                  "
+                  readonly="readonly"
+                />
+                <input
+                  class="w-1/2 text-center text-green-500 p-1 focus:outline-none cursor-pointer"
+                  v-model="items.max"
+                  @click="
+                    changeNG(items.max, true, items.unit, items.id, index)
+                  "
+                  readonly="readonly"
+                />
+              </div>
+              <input
+                type="text"
+                v-model="items.rmd_weight"
+                class="w-4/6 text-xs p-1 text-center border-none focus:outline-none"
+                :disabled="!approveStat"
+                @input="
+                  changeNG(items.rmd_weight, true, items.unit, items.id, index)
+                "
+              />
+            </td>
+
             <td
               class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
             >
@@ -316,40 +317,6 @@
           <td
             class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
           >
-            <div class="flex justify-inline border-b border-gray-300">
-              <input
-                class="w-1/2 text-center text-xs p-1 focus:outline-none cursor-pointer text-green-500"
-                v-model="inputField.min"
-                readonly="readonly"
-                @click="
-                  changeNG(inputField.min, false, inputField.selectedUnittype)
-                "
-              />
-              <input
-                class="w-1/2 text-center text-xs p-1 focus:outline-none cursor-pointer text-red-500"
-                v-model="inputField.max"
-                readonly="readonly"
-                @click="
-                  changeNG(inputField.max, false, inputField.selectedUnittype)
-                "
-              />
-            </div>
-            <input
-              type="text"
-              class="tdi w-5/6 text-xs p-1 text-center border-none focus:outline-none"
-              v-model="inputField.rmd_weight"
-              @input="
-                changeNG(
-                  inputField.rmd_weight,
-                  false,
-                  inputField.selectedUnittype
-                )
-              "
-            />
-          </td>
-          <td
-            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
-          >
             <input
               type="text"
               class="tdi w-5/6 text-xs p-1 text-center border-none"
@@ -376,6 +343,41 @@
               </option>
             </select>
           </td>
+          <td
+            class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
+          >
+            <div class="flex justify-inline border-b border-gray-300">
+              <input
+                class="w-1/2 text-center text-xs p-1 focus:outline-none cursor-pointer text-red-500"
+                v-model="inputField.min"
+                readonly="readonly"
+                @click="
+                  changeNG(inputField.min, false, inputField.selectedUnittype)
+                "
+              />
+              <input
+                class="w-1/2 text-center text-xs p-1 focus:outline-none cursor-pointer text-green-500"
+                v-model="inputField.max"
+                readonly="readonly"
+                @click="
+                  changeNG(inputField.max, false, inputField.selectedUnittype)
+                "
+              />
+            </div>
+            <input
+              type="text"
+              class="tdi w-5/6 text-xs p-1 text-center border-none focus:outline-none"
+              v-model="inputField.rmd_weight"
+              @input="
+                changeNG(
+                  inputField.rmd_weight,
+                  false,
+                  inputField.selectedUnittype
+                )
+              "
+            />
+          </td>
+
           <td
             class="py-1 w-1/12 text-center text-xs md:text-sm border border-slate-200"
           >
@@ -519,8 +521,8 @@ export default {
           item.show = true;
         }
 
-        if (item.min == null) {
-          item.min = 0;
+        if (item.min == null || item.min == 0) {
+          item.min = "";
         }
       });
       console.log("DATA ORDER::", this.order.list);
@@ -794,6 +796,9 @@ export default {
       }
 
       //fixed
+      if (this.data.selection.minweight == 0) {
+        this.data.selection.minweight = "";
+      }
       this.inputField.min = this.data.selection.minweight;
       this.inputField.max = this.data.selection.maxweight;
 
@@ -901,6 +906,7 @@ export default {
 
             if (unittype == "KG") {
               if (vat == "0") {
+                data.price_unit = unit;
                 data.cal_price = parseFloat(unit * data.amount).toFixed(2);
               } else {
                 data.cal_price = parseFloat(unit * data.rmd_weight).toFixed(2);
@@ -934,16 +940,19 @@ export default {
     changeNG(item, input, unit, id, i = "") {
       console.log(item);
       //พิมพ์มาใน input
-      if (!input) {
-        this.inputField.rmd_weight = item;
-      } else {
-        order.list[i].rmd_weight = item;
-      }
-      let vat = 0;
-      if (input && unit == "KG") {
-        this.edit(i, item, vat, true, unit, id);
-      } else if (!input && unit == "KG") {
-        this.edit(i, item, vat, false, unit, id);
+      if (item !== "") {
+        if (!input) {
+          this.inputField.rmd_weight = item;
+        } else {
+          order.list[i].rmd_weight = item;
+        }
+
+        let vat = 0;
+        if (input && unit == "KG") {
+          this.edit(i, item, vat, true, unit, id);
+        } else if (!input && unit == "KG") {
+          this.edit(i, item, vat, false, unit, id);
+        }
       }
     },
     addComma(a) {
