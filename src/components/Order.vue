@@ -46,6 +46,11 @@
           <th
             class="font-light border border-slate-200 w-auto text-xs md:text-sm"
           >
+            รวม นน.
+          </th>
+          <th
+            class="font-light border border-slate-200 w-auto text-xs md:text-sm"
+          >
             จำนวนเงิน
           </th>
           <th v-if="approveStat" class="w-auto">
@@ -239,7 +244,19 @@
               />
             </td>
             <td class="py-1 w-1/12 text-center border border-slate-200">
-              <v-num #="{ number }" :value="items.cal_price">
+              <v-num #="{ number }" :value="items.rmd_weight * items.amount">
+                {{ number }}
+              </v-num>
+            </td>
+            <td class="py-1 w-1/12 text-center border border-slate-200">
+              <v-num
+                #="{ number }"
+                :value="
+                  items.unit == 'KG'
+                    ? items.rmd_weight * items.amount * items.price_unit
+                    : items.cal_price
+                "
+              >
                 {{ number }}
               </v-num>
             </td>
@@ -409,6 +426,15 @@
                 )
               "
             />
+          </td>
+          <td class="py-1 w-1/12 text-center border border-slate-200">
+            <v-num
+              #="{ number }"
+              :value="inputField.cal_price"
+              maximum-fraction-digits="2"
+            >
+              {{ number }}
+            </v-num>
           </td>
           <td class="py-1 w-1/12 text-center border border-slate-200">
             <v-num
@@ -695,8 +721,11 @@ export default {
           console.log("มีราคามาบน");
           this.inputField.price_unit = price.data[0].KBETR;
           if (unit == "KG") {
+            this.inputField.price_unit = this.inputField.rmd_weight;
             this.inputField.cal_price = parseFloat(
-              this.inputField.amount * this.inputField.rmd_weight
+              this.inputField.amount *
+                this.inputField.rmd_weight *
+                this.inputField.price_unit
             ).toFixed(2);
           } else {
             this.inputField.cal_price = parseFloat(
@@ -706,6 +735,7 @@ export default {
         } else {
           console.log("มีราคามาล่าง");
           order.list[i].price_unit = await price.data[0].KBETR;
+
           order.list[i].cal_price = parseFloat(
             order.list[i].amount * price.data[0].KBETR
           );
@@ -715,9 +745,14 @@ export default {
           console.log("ไม่มีราคามาบน");
           this.inputField.price_unit = 1;
           if (unit == "KG") {
+            // console.log("GGGGGG", this.inputField.rmd_weight);
+            this.inputField.price_unit = this.inputField.rmd_weight;
             this.inputField.cal_price = parseFloat(
-              this.inputField.amount * this.inputField.rmd_weight
+              this.inputField.amount *
+                this.inputField.rmd_weight *
+                this.inputField.price_unit
             ).toFixed(2);
+            this.inputField.cal_price;
           } else {
             this.inputField.cal_price = parseFloat(
               this.inputField.amount * this.inputField.price_unit
@@ -727,8 +762,11 @@ export default {
           console.log("ไม่มีราคามาล่าง");
           order.list[i].price_unit = 1;
           if (unit == "KG") {
+            order.list[i].price_unit = order.list[i].rmd_weight;
             order.list[i].cal_price = parseFloat(
-              order.list[i].amount * order.list[i].rmd_weight
+              order.list[i].amount *
+                order.list[i].rmd_weight *
+                order.list[i].price_unit
             ).toFixed(2);
           } else {
             order.list[i].cal_price = parseFloat(
@@ -749,7 +787,12 @@ export default {
       }
     },
     async selectItem(item) {
+      if (item.maxweight > 0) {
+        item.rmd_weight = item.maxweight;
+      }
+      // console.log("INPUTTTTTT", this.inputField);
       this.data.selection = item;
+
       document.getElementsByClassName(
         "simple-typeahead-list"
       )[0].style.visibility = "hidden";
@@ -760,7 +803,7 @@ export default {
         VKORG: 1000,
         MATNR: this.data.selection.rmd_mat,
         KONDA: typ[0],
-        KMEIN: this.data.selection.MEINS || "PC",
+        KMEIN: this.inputField.selectedUnittype || "PC",
       };
 
       sys.loading = true;
@@ -806,12 +849,14 @@ export default {
 
       if (price.data[0]) {
         this.inputField.price_unit = price.data[0].KBETR;
+
         let a = parseFloat(this.inputField.amount * price.data[0].KBETR);
         this.inputField.cal_price = a;
       } else {
         this.inputField.price_unit = 1;
         this.inputField.cal_price = 1;
       }
+
       // const getType = await OrderService.pmat({
       //   MATNR: item.rmd_mat,
       //   VKORG: 1000,
@@ -950,7 +995,7 @@ export default {
         }
 
         let vat = 0;
-        if (input && unit == "KG") {
+        if (unit == "KG") {
           this.edit(i, item, vat, true, unit, id);
         } else if (!input && unit == "KG") {
           this.edit(i, item, vat, false, unit, id);
