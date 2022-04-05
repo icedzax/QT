@@ -180,6 +180,7 @@
                     changeNG(items.min, true, items.unit, items.id, index)
                   "
                   readonly="readonly"
+                  :disabled="!approveStat"
                 />
                 <input
                   class="w-1/2 text-center text-green-500 p-1 focus:outline-none cursor-pointer"
@@ -188,6 +189,7 @@
                     changeNG(items.max, true, items.unit, items.id, index)
                   "
                   readonly="readonly"
+                  :disabled="!approveStat"
                 />
               </div>
               <input
