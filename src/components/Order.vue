@@ -181,18 +181,12 @@
                 <input
                   class="w-1/2 text-center text-red-500 p-1 focus:outline-none cursor-pointer"
                   v-model="items.min"
-                  @click="
-                    changeNG(items.min, true, items.unit, items.id, index)
-                  "
                   readonly="readonly"
                   :disabled="!approveStat"
                 />
                 <input
                   class="w-1/2 text-center text-green-500 p-1 focus:outline-none cursor-pointer"
                   v-model="items.max"
-                  @click="
-                    changeNG(items.max, true, items.unit, items.id, index)
-                  "
                   readonly="readonly"
                   :disabled="!approveStat"
                 />
@@ -370,17 +364,11 @@
                 class="w-1/2 text-center text-xs p-1 focus:outline-none cursor-pointer text-red-500"
                 v-model="inputField.min"
                 readonly="readonly"
-                @click="
-                  changeNG(inputField.min, false, inputField.selectedUnittype)
-                "
               />
               <input
                 class="w-1/2 text-center text-xs p-1 focus:outline-none cursor-pointer text-green-500"
                 v-model="inputField.max"
                 readonly="readonly"
-                @click="
-                  changeNG(inputField.max, false, inputField.selectedUnittype)
-                "
               />
             </div>
             <input
@@ -430,7 +418,7 @@
           <td class="py-1 w-1/12 text-center border border-slate-200">
             <v-num
               #="{ number }"
-              :value="inputField.cal_price"
+              :value="inputField.rmd_weight * inputField.amount"
               maximum-fraction-digits="2"
             >
               {{ number }}
@@ -439,7 +427,13 @@
           <td class="py-1 w-1/12 text-center border border-slate-200">
             <v-num
               #="{ number }"
-              :value="inputField.cal_price"
+              :value="
+                inputField.selectedUnittype == 'KG'
+                  ? inputField.rmd_weight *
+                    inputField.price_unit *
+                    inputField.amount
+                  : inputField.cal_price
+              "
               maximum-fraction-digits="2"
             >
               {{ number }}
@@ -734,11 +728,19 @@ export default {
           }
         } else {
           console.log("มีราคามาล่าง");
-          order.list[i].price_unit = await price.data[0].KBETR;
-
-          order.list[i].cal_price = parseFloat(
-            order.list[i].amount * price.data[0].KBETR
-          );
+          if (unit == "KG") {
+            order.list[i].price_unit = await order.list[i].rmd_weight;
+            order.list[i].cal_price = parseFloat(
+              order.list[i].amount *
+                order.list[i].rmd_weight *
+                order.list[i].price_unit
+            );
+          } else {
+            order.list[i].price_unit = await price.data[0].KBETR;
+            order.list[i].cal_price = parseFloat(
+              order.list[i].amount * price.data[0].KBETR
+            );
+          }
         }
       } else {
         if (isInput) {
@@ -850,12 +852,22 @@ export default {
       if (price.data[0]) {
         this.inputField.price_unit = price.data[0].KBETR;
 
-        let a = parseFloat(this.inputField.amount * price.data[0].KBETR);
-        this.inputField.cal_price = a;
+        this.inputField.cal_price = parseFloat(
+          this.inputField.amount * price.data[0].KBETR
+        );
       } else {
         this.inputField.price_unit = 1;
         this.inputField.cal_price = 1;
       }
+
+      if (this.selectedUnittype == "KG") {
+        this.inputField.price_unit = this.inputField.rmd_weight;
+        this.inputField.cal_price =
+          this.inputField.price_unit *
+          this.inputField.amount *
+          this.inputField.rmd_weight;
+      }
+      //! !TODO HERE
 
       // const getType = await OrderService.pmat({
       //   MATNR: item.rmd_mat,
@@ -973,7 +985,7 @@ export default {
             ).toFixed(2);
           } else {
             this.inputField.cal_price = parseFloat(
-              unit * this.inputField.rmd_weight
+              unit * this.inputField.rmd_weight * this.inputField.amount
             ).toFixed(2);
           }
         } else {
