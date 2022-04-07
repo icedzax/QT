@@ -245,11 +245,12 @@
           </td>
           <td>
             <div class="flex items-center">
-              <span
-                class="text-right text-xs w-4/6 mx-auto"
+              <input
+                class="text-right text-xs w-4/6 mx-auto border-none focus:outline-none"
                 v-if="inputField.min"
-                >{{ inputField.min }} -
-              </span>
+                :value="inputField.min + '  -'"
+                readonly="readonly"
+              />
               <input
                 type="text"
                 v-model="inputField.rmd_weight"
