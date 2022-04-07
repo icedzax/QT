@@ -3,6 +3,7 @@ import { reactive } from "vue";
 
 const sys = reactive({
   loading: false,
+  itemLoading: false,
 });
 
 export { sys };

@@ -72,7 +72,7 @@ import Header from "../components/header.vue";
 import Header_r from "../components/header_right.vue";
 import Sale from "../components/Sales.vue";
 import Customer from "../components/Customer.vue";
-import Orders from "../components/Order.vue";
+import Orders from "../components/Order2.vue";
 import Rule from "../components/Rule.vue";
 import Total from "../components/Total.vue";
 import License from "../components/License.vue";
@@ -194,15 +194,6 @@ export default {
 
       if (items.data) {
         order.list = items.data;
-
-        this.tprice.map((x) => {
-          order.list.map((y) => {
-            const t_type = x.includes(y.ptype);
-            if (t_type) {
-              y.ptype = x;
-            }
-          });
-        });
       }
     }
   },
@@ -215,7 +206,7 @@ export default {
 
       if (order.list) {
         order.list.map((data) => {
-          let price_item = data.amount * data.rmd_weight;
+          let price_item = data.amount * data.bundle * data.rmd_weight;
           this.sumweight = this.sumweight + parseFloat(price_item);
         });
       }
@@ -227,7 +218,7 @@ export default {
       if (order.list) {
         order.list.map((data) => {
           if (data.cal_price && data.cal_price.length > 3) {
-            data.cal_price = this.delcomma(data.cal_price);
+            data.cal_price = this.data.cal_price;
           }
           this.sumprice = this.sumprice + parseFloat(data.cal_price);
           // if (data.cal_price && data.cal_price.length > 3) {
@@ -246,26 +237,7 @@ export default {
       return cus.name;
     },
   },
-  methods: {
-    addComma(a) {
-      let x = a.split(".");
-      let x1 = x[0];
-
-      let x2 = x.length > 1 ? "." + x[1] : "";
-
-      var rgx = /(\d+)(\d{3})/;
-
-      while (rgx.test(x1)) {
-        x1 = x1.replace(rgx, "$1" + "," + "$2");
-      }
-      let aa = x1 + x2;
-      return aa;
-    },
-    delcomma(a) {
-      let x = a.replace(",", "");
-      return x;
-    },
-  },
+  methods: {},
 };
 </script>
 <style>
