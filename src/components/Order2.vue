@@ -306,7 +306,7 @@
               enable-background="new 0 0 48 48"
               class="mx-1 w-5 h-5"
               v-show="!sys.loading"
-              v-if="(this.List.length == 0 || approveStat) && !chkrepeat"
+              v-if="this.List.length == 0 || approveStat"
               @click="addFG(inputField)"
             >
               <circle fill="#4CAF50" cx="24" cy="24" r="21" />
@@ -423,7 +423,7 @@ export default {
 
       if (price.data[0]) {
         pre_priceunit = price.data[0].KBETR;
-        pre_calprice = pre_amount * pre_priceunit;
+        pre_calprice = pre_amount * pre_priceunit * prepush.data[0].bundle || 1;
       }
       const stock_payload = {
         rmd_mat: prepush.data[0].rmd_mat,
@@ -435,8 +435,9 @@ export default {
         price_unit: pre_priceunit,
         cal_price: pre_calprice,
         qt: pickQT,
+        bundle: prepush.data[0].bundle,
       };
-      console.log(stock_payload);
+      // console.log(stock_payload);
       await FgService.insert(stock_payload);
       const testii = await FgService.items(pickQT);
       order.list = await testii.data;
