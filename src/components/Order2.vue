@@ -1,6 +1,6 @@
 <template>
   <div class="mx-2">
-    <table class="table-fixed text-xs w-fit">
+    <table class="table-fixed text-xxs sm:text-xs w-fit">
       <thead>
         <tr>
           <th class="w-12">ลำดับ</th>
@@ -91,7 +91,7 @@
                 :disabled="!approveStat"
                 class="border-none text-xs"
                 v-model="items.ptype"
-                @change="itemChange(items, true), setiLoading(true)"
+                @change="itemChange(items, true), (items.loading = true)"
               >
                 <option
                   v-for="sItem in type.Wholesale"
@@ -104,7 +104,7 @@
             </td>
             <td>
               <div class="flex items-center">
-                <span class="text-right text-xs w-4/6 mx-auto" v-if="items.min"
+                <span class="text-right text-xs w-3/6 mx-auto" v-if="items.min"
                   >{{ items.min }} -
                 </span>
                 <input
@@ -122,7 +122,7 @@
                 v-model="items.unit"
                 class="w-full text-xs p-1 border-none"
                 :disabled="!approveStat"
-                @change="itemChange(items, true), setiLoading(true)"
+                @change="itemChange(items, true), (items.loading = true)"
               >
                 <option v-for="(i, index) in this.type_unit" :key="index">
                   {{ i }}
@@ -160,7 +160,7 @@
                 fill="red"
                 @click="deletes(index, items.id)"
                 class="mx-1 w-5 h-5"
-                v-show="!sys.itemLoading"
+                v-show="!items.loading"
               >
                 <title>Remove</title>
                 <path
@@ -170,7 +170,7 @@
                   d="M341.33,234.67H170.67a21.33,21.33,0,1,0,0,42.66H341.33a21.33,21.33,0,1,0,0-42.66Z"
                 />
               </svg>
-              <LoadingSpinner class="mx-1 w-5 h-5" v-show="sys.itemLoading" />
+              <LoadingSpinner class="mx-1 w-5 h-5" v-show="items.loading" />
             </td>
           </tr>
           <tr v-if="items.show" class="">
@@ -509,10 +509,9 @@ export default {
 
       await this.setOrder(items);
       await this.setLoading(false);
-      await this.setiLoading(false);
+      items.loading = await false;
     }, 800),
     async calItem(items) {
-      console.log("CAL", items);
       if (items.unit === "KG") {
         items.cal_price =
           items.price_unit * (items.amount * items.bundle * items.rmd_weight);
