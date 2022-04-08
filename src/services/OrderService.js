@@ -22,6 +22,9 @@ export default {
   Con(qt) {
     return Api().get("Con/" + qt);
   },
+  pv(payload) {
+    return Api().post("updateHead/", payload);
+  },
 
   pmat(payload) {
     return Api().post("unitMat/", payload);

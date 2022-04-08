@@ -34,21 +34,15 @@
         <div class="flex items-center">
           <span class="mr-1">ยืนราคา</span>
           <input
-            v-model="pValidity"
+            v-model="order.price_validity"
             type="number"
             min="0"
             max="15"
-            @change="
-              () => {
-                if (pValidity > 15 || pValidity < 0) {
-                  this.pValidity = null;
-                }
-              }
-            "
+            @change="pvChange()"
             class="w-12 h-6 text-center text-xs px-1 rounded"
           />
           <span class="ml-1"
-            >วัน <span v-if="pValidity">({{ addDays }})</span></span
+            >วัน <span v-if="order.price_validity">({{ addDays }})</span></span
           >
         </div>
       </div>
@@ -184,7 +178,7 @@ export default {
   computed: {
     addDays() {
       let result = new Date(order.date);
-      result.setDate(result.getDate() + this.pValidity);
+      result.setDate(result.getDate() + order.price_validity);
 
       return moment(result).format("MMM D");
     },
@@ -205,6 +199,14 @@ export default {
     },
   },
   methods: {
+    async pvChange() {
+      const payload = {
+        qt: auth.temp_qt,
+        attr: "price_validity",
+        value: order.price_validity,
+      };
+      await OrderService.pv(payload);
+    },
     async termChange(event) {
       const payload = {
         qt: auth.temp_qt,

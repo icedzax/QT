@@ -154,6 +154,7 @@ export default {
       order.sale_team = us.data[0].sale_team;
       order.term = us.data[0].term;
       order.ship = us.data[0].ship;
+      order.price_validity = us.data[0].price_validity;
       order.cust = {
         KUNNR: us.data[0].KUNNR,
         LAND1: us.data[0].LAND1,
