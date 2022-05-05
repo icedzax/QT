@@ -6,7 +6,7 @@
           <th class="w-12">ลำดับ</th>
           <th class="w-2/12">รหัสสินค้า</th>
           <th class="w-3/12">รายการสินค้า</th>
-          <th class="w-11">จำนวน</th>
+          <th class="w-11">จำนวนเส้น</th>
           <th class="w-11">เส้น/มัด</th>
           <th class="w-28">ราคา</th>
           <th class="w-1/12">น้ำหนัก</th>
@@ -76,15 +76,12 @@
                 @input="itemChange(items)"
               />
             </td>
-            <td>
-              <input
-                type="text"
-                v-model="items.bundle"
-                @keypress="NumbersOnly"
-                class="text-xs p-1 text-center border-none"
-                :disabled="!approveStat"
-                @input="itemChange(items)"
-              />
+            <td class="bg-gray-50 text-xs text-center bundle">
+              <span
+                >{{
+                  items.bundle === 1 || items.bundle === 0 ? "" : items.bundle
+                }}
+              </span>
             </td>
             <td class="">
               <select
@@ -140,10 +137,7 @@
               />
             </td>
             <td class="bg-gray-50 text-center">
-              <v-num
-                #="{ number }"
-                :value="items.rmd_weight * items.amount * items.bundle"
-              >
+              <v-num #="{ number }" :value="items.rmd_weight * items.amount">
                 {{ number }}
               </v-num>
             </td>
@@ -223,7 +217,7 @@
               v-model="inputField.bundle"
               @keypress="NumbersOnly"
               class="text-xs p-1 text-center border-none"
-              :disabled="!approveStat"
+              disabled
               @input="itemChange(inputField)"
             />
           </td>
@@ -286,10 +280,7 @@
           <td class="bg-gray-50 text-center">
             <v-num
               #="{ number }"
-              :value="
-                inputField.rmd_weight * inputField.amount * inputField.bundle ||
-                0
-              "
+              :value="inputField.rmd_weight * inputField.amount || 0"
             >
               {{ number }}
             </v-num>
@@ -424,7 +415,7 @@ export default {
 
       if (price.data[0]) {
         pre_priceunit = price.data[0].KBETR;
-        pre_calprice = pre_amount * pre_priceunit * prepush.data[0].bundle || 1;
+        pre_calprice = pre_amount * pre_priceunit;
       }
       const stock_payload = {
         rmd_mat: prepush.data[0].rmd_mat,
@@ -463,7 +454,7 @@ export default {
       item.ptype = "T1";
       item.unit = "PC";
       item = await this.getPriceMaster(item);
-
+      console.log("ITEM", item);
       this.inputField = await this.calItem(item);
       this.setLoading(false);
     },
@@ -515,10 +506,9 @@ export default {
     }, 800),
     async calItem(items) {
       if (items.unit === "KG") {
-        items.cal_price =
-          items.price_unit * (items.amount * items.bundle * items.rmd_weight);
+        items.cal_price = items.price_unit * (items.amount * items.rmd_weight);
       } else {
-        items.cal_price = items.price_unit * items.amount * items.bundle;
+        items.cal_price = items.price_unit * items.amount;
       }
 
       return await items;
@@ -629,5 +619,8 @@ th {
 }
 td {
   @apply w-1/12 text-xs md:text-sm border border-slate-200;
+}
+.bundle {
+  font-size: 0.75rem;
 }
 </style>
