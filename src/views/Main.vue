@@ -207,7 +207,7 @@ export default {
 
       if (order.list) {
         order.list.map((data) => {
-          let price_item = data.amount * data.bundle * data.rmd_weight;
+          let price_item = data.amount * data.rmd_weight;
           this.sumweight = this.sumweight + parseFloat(price_item);
         });
       }
