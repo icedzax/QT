@@ -129,10 +129,10 @@ export default {
       });
     },
     async newQT() {
-      console.log({
-        qt: auth.temp_qt,
-        emp_code: auth.user_id,
-      });
+      // console.log({
+      //   qt: auth.temp_qt,
+      //   emp_code: auth.user_id,
+      // });
       if (confirm("ยืนยันสร้างใบเสนอราคาใหม่ ?")) {
         sys.loading = true;
         const nqt = await UserService.newQT({
