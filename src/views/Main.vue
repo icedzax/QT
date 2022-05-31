@@ -135,7 +135,7 @@ export default {
     }
     // localStorage.setItem("tempqt", null);
     let us = await UserService.temp({ emp: auth.user_id });
-    console.log("auth.user_id", auth.user_id);
+    // console.log("auth.user_id", auth.user_id);
     if (initQT) {
       us = await UserService.tempQT({
         emp: auth.user_id,
@@ -143,7 +143,7 @@ export default {
       });
     }
 
-    console.log("### init ###", us.data[0]);
+    // console.log("### init ###", us.data[0]);
     if (us.data[0]) {
       auth.temp_qt = us.data[0].qt;
       localStorage.setItem("tempqt", auth.temp_qt);
