@@ -37,4 +37,7 @@ export default {
   del(body) {
     return Api().post("delQT/", body);
   },
+  isSale(body) {
+    return Api().post("isSales/", body);
+  },
 };

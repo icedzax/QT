@@ -1,5 +1,7 @@
 <template>
   <div class="mx-4">
+    <Modal @closeModal="changeSale" :value="!modalOpen"></Modal>
+
     <div
       class="grid overflow-hidden grid-cols-3 grid-rows-1 gap-1 text-left text-xs xl:text-sm p-1 xl:p-0"
     >
@@ -9,7 +11,14 @@
         ผู้เสนอราคา
       </div>
       <div class="row-start-1 row-span-1 col-start-2 col-span-2 flex">
-        <div>{{ auth.data_sale.sale_name }}</div>
+        <div class="flex items-center relative">
+          <span
+            @click="changeSale"
+            class="hover:cursor-pointer border rounded px-1 hover:border-green-400 hover:bg-green-50"
+          >
+            {{ auth.data_sale.sale_name }}</span
+          >
+        </div>
         <select
           v-if="isTeamList"
           v-model="soffice"
@@ -62,12 +71,18 @@
 <script>
 import UserService from "@/services/UserService";
 import { auth } from "../state/user";
+import Pen from "./Pen.vue";
+import Modal from "./Modal.vue";
 
 export default {
+  components: {
+    Pen,
+    Modal,
+  },
   data() {
     return {
+      modalOpen: false,
       auth,
-
       selected: 0,
     };
   },
@@ -87,6 +102,9 @@ export default {
     },
   },
   methods: {
+    changeSale() {
+      this.modalOpen = !this.modalOpen;
+    },
     selectOption(event) {
       const v_office = auth.data_sale.team
         .filter((item) => item.sale_office == event.target.value)

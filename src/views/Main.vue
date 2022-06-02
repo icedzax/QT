@@ -25,7 +25,10 @@
       <div
         class="row-start-1 row-span-5 col-start-1 col-span-2 md:col-span-1 h-auto"
       >
-        <Sale :soffice="order.sale_office"></Sale>
+        <Sale
+          class="border border-green-500"
+          :soffice="order.sale_office"
+        ></Sale>
       </div>
       <div
         class="row-span-5 col-start-1 col-span-2 md:col-start-2 md:col-span-1 h-auto"
@@ -124,6 +127,9 @@ export default {
     Header_r,
   },
   async created() {
+    // await UserService.isSale({ emp_code: "59100045" });
+    const isSales = await UserService.isSale({ emp_code: "62110077" });
+
     // console.log("### ROUTE ###", this.$route.params.list_qt);
     // console.log("### LOCAL TMPQT ###", localStorage.getItem("tempqt"));
 
