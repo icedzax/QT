@@ -17,7 +17,7 @@
             :class="
               this.pos
                 ? 'hover:cursor-pointer hover:border-green-400 hover:bg-green-50 border rounded px-1 '
-                : 'border rounded px-1 '
+                : ' '
             "
           >
             {{ auth.data_sale.sale_name }}</span

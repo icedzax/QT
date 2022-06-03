@@ -39,20 +39,20 @@
         <!-- Modal body -->
         <div class="p-6 space-y-2">
           <div
-            class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            class="text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
           >
             <button
               v-for="(item, index) in this.sale_list"
               :key="index"
               type="button"
-              class="w-full px-4 py-2 font-medium text-left border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white"
+              class="w-full text-center px-4 py-2 font-medium border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white"
               @click="updateSale(item.sale_name, item.emp_code, item.sale_code)"
             >
               {{ item.sale_code }} - {{ item.sale_name }}
             </button>
           </div>
           <hr />
-          <div>
+          <div class="">
             <span
               class="text-base leading-relaxed text-gray-500 dark:text-gray-400"
             >
@@ -62,11 +62,15 @@
               this.auth.temp_qt
             }}</span>
             <span> --> </span>
-            <span class="text-base leading-relaxed font-bold text-black">{{
-              this.newQT
-            }}</span>
+            <span
+              class="text-base leading-relaxed font-bold"
+              :class="
+                this.newQT == 'XX-XXX-XXXXXX' ? 'text-white' : 'text-black'
+              "
+              >{{ this.newQT }}</span
+            >
           </div>
-          <div>
+          <div class="">
             <span
               class="text-base leading-relaxed text-gray-500 dark:text-gray-400"
             >
