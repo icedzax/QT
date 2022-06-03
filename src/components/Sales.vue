@@ -13,8 +13,12 @@
       <div class="row-start-1 row-span-1 col-start-2 col-span-2 flex">
         <div class="flex items-center relative">
           <span
-            @click="changeSale"
-            class="hover:cursor-pointer border rounded px-1 hover:border-green-400 hover:bg-green-50"
+            @click="this.pos ? changeSale() : ''"
+            :class="
+              this.pos
+                ? 'hover:cursor-pointer hover:border-green-400 hover:bg-green-50 border rounded px-1 '
+                : 'border rounded px-1 '
+            "
           >
             {{ auth.data_sale.sale_name }}</span
           >
@@ -84,6 +88,7 @@ export default {
       modalOpen: false,
       auth,
       selected: 0,
+      pos: false,
     };
   },
   props: {
@@ -91,6 +96,10 @@ export default {
       type: Number,
       default: 0,
     },
+  },
+  created() {
+    //console.log("Data User:", auth);
+    this.checkAdmin();
   },
   computed: {
     isTeamList() {
@@ -102,6 +111,32 @@ export default {
     },
   },
   methods: {
+    async checkAdmin() {
+      const us = await UserService.isSale({
+        emp_code: auth.user_id,
+      });
+      if (us.data) {
+        this.pos = true;
+        const setnewSale = await UserService.getSalebyad(auth.user_id);
+        const lastQT = await UserService.selectSale({
+          sale_code: setnewSale.data[0].sale_code,
+        });
+        let calQT = lastQT.data[0].qt.slice(-3);
+        let newQ = "";
+        let QT = "";
+        if (calQT.slice(0, 1) == 0) {
+          newQ = parseInt(calQT) + 1;
+          QT = 0 + newQ.toString();
+          newQ = QT;
+        } else {
+          newQ = parseInt(calQT) + 1;
+          newQ = newQ.toString();
+        }
+        let newQT = lastQT.data[0].qt.slice(0, 11) + newQ;
+        auth.temp_qt = newQT;
+      }
+    },
+
     changeSale() {
       this.modalOpen = !this.modalOpen;
     },

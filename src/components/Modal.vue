@@ -42,16 +42,13 @@
             class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
           >
             <button
+              v-for="(item, index) in this.sale_list"
+              :key="index"
               type="button"
               class="w-full px-4 py-2 font-medium text-left border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white"
+              @click="updateSale(item.sale_name, item.emp_code, item.sale_code)"
             >
-              Settings
-            </button>
-            <button
-              type="button"
-              class="w-full px-4 py-2 font-medium text-left border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white"
-            >
-              Messages
+              {{ item.sale_code }} - {{ item.sale_name }}
             </button>
           </div>
           <hr />
@@ -61,11 +58,13 @@
             >
               QT :
             </span>
-            <span class="text-base leading-relaxed text-red-600">CURRENT </span>
+            <span class="text-base leading-relaxed text-red-600">{{
+              this.auth.temp_qt
+            }}</span>
             <span> --> </span>
-            <span class="text-base leading-relaxed font-bold text-black"
-              >NEW</span
-            >
+            <span class="text-base leading-relaxed font-bold text-black">{{
+              this.newQT
+            }}</span>
           </div>
           <div>
             <span
@@ -73,11 +72,13 @@
             >
               SALE :
             </span>
-            <span class="text-base leading-relaxed text-red-600">CURRENT </span>
+            <span class="text-base leading-relaxed text-red-600"
+              >{{ this.auth.data_sale.sale_name }}
+            </span>
             <span> --> </span>
-            <span class="text-base leading-relaxed font-bold text-black"
-              >NEW</span
-            >
+            <span class="text-base leading-relaxed font-bold text-black">{{
+              this.newSale
+            }}</span>
           </div>
         </div>
         <!-- Modal footer -->
@@ -85,7 +86,7 @@
           class="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600"
         >
           <button
-            @click="close"
+            @click="submit"
             data-modal-toggle="defaultModal"
             type="button"
             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -107,16 +108,73 @@
 </template>
 
 <script>
+import UserService from "@/services/UserService";
+import { auth } from "../state/user";
+
 export default {
   name: "Modal",
+  data() {
+    return {
+      auth,
+      sale_list: [],
+      newQT: "XX-XXX-XXXXXX",
+      newSale: "",
+      empnow: "",
+      codenow: "",
+    };
+  },
   props: {
     value: {
       required: true,
     },
   },
+  created() {
+    this.getSale();
+  },
   methods: {
     close() {
       this.$emit("closeModal", !this.value);
+    },
+    async getSale() {
+      const sale = await UserService.showSale({ emp_code: "63070045" });
+      this.sale_list = sale.data;
+    },
+
+    async updateSale(salename, emp, salecode) {
+      const empsale = await UserService.getEMP({
+        sale_name: salename,
+      });
+      this.empnow = empsale.data[0].PRS_NO;
+      this.codenow = salecode;
+      this.newSale = salename;
+      const upsale = await UserService.selectSale({ sale_code: salecode });
+      let calQT = upsale.data[0].qt.slice(-3);
+      let newQ = "";
+      let QT = "";
+      if (calQT.slice(0, 1) == 0) {
+        newQ = parseInt(calQT) + 1;
+        QT = 0 + newQ.toString();
+        newQ = QT;
+      } else {
+        newQ = parseInt(calQT) + 1;
+        newQ = newQ.toString();
+      }
+      this.newQT = upsale.data[0].qt.slice(0, 11) + newQ;
+    },
+    async submit() {
+      await UserService.updateSale({
+        emp_code: auth.user_id,
+        sale_code: this.codenow,
+      });
+
+      this.close();
+      this.setQT();
+    },
+    async setQT() {
+      const new_sale = await UserService.sale(this.empnow);
+      auth.temp_qt = this.newQT;
+      auth.data_sale = new_sale.data;
+      localStorage.setItem("tempqt", auth.temp_qt);
     },
   },
 };
