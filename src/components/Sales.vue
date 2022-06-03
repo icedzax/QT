@@ -1,6 +1,6 @@
 <template>
   <div class="mx-4">
-    <Modal @closeModal="changeSale" :value="!modalOpen"></Modal>
+    <Modal @closeModal="changeSale" :value="modalOpen"></Modal>
 
     <div
       class="grid overflow-hidden grid-cols-3 grid-rows-1 gap-1 text-left text-xs xl:text-sm p-1 xl:p-0"
