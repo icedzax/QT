@@ -4,9 +4,16 @@
       class="grid overflow-y-visible grid-cols-6 grid-rows-1 gap-1 text-xs xl:text-sm p-1 xl:p-0"
     >
       <div class="font-semibold">ลูกค้า</div>
-      <div class="col-span-4">
+      <div class="col-span-4 flex justify-inline">
+        <input
+          type="checkbox"
+          @click="checkvat"
+          v-model="selectVat"
+          class="mx-1"
+        />
+        <span class="text-xs"> VAT</span>
         <vue3-simple-typeahead
-          class="text-black text-xl"
+          class="text-black text-xl -mt-1 ml-1"
           v-if="approveStat || !cus.data.KUNNR"
           id="typeahead_id"
           :placeholder="place_holder"
@@ -245,6 +252,8 @@ export default {
       },
       statusE: false,
       list_qt: this.$route.params.list_qt,
+      selectVat: false,
+      vat: null,
     };
   },
   created() {},
@@ -266,6 +275,18 @@ export default {
       const result = await CusService.search({ cus_name: this.data.input });
       this.customers = result.data;
     }, 500),
+    checkvat() {
+      this.selectVat == false
+        ? (this.selectVat = true)
+        : (this.selectVat = false);
+
+      if (this.selectVat) {
+        this.vat = 1;
+      } else {
+        this.vat = null;
+      }
+      console.log(this.vat);
+    },
     async selectItem(item) {
       this.data.selection = item;
       const Data_cus = await CusService.select({
@@ -286,6 +307,7 @@ export default {
         MOBILE: Data_cus.data[0].MOBILE,
         CONTACTNAME: Data_cus.data[0].CONTACTNAME,
         qt: auth.temp_qt,
+        vat: this.vat,
       });
       const data_cus = await CusService.postCus({
         KUNNR: this.data.selection.KUNNR,
