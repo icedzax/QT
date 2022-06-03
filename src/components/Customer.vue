@@ -9,6 +9,7 @@
           type="checkbox"
           @click="checkvat"
           v-model="selectVat"
+          :checked="cus.vat !== 0"
           class="mx-1"
         />
         <span class="text-xs"> VAT</span>
@@ -275,17 +276,19 @@ export default {
       const result = await CusService.search({ cus_name: this.data.input });
       this.customers = result.data;
     }, 500),
-    checkvat() {
+    async checkvat() {
       this.selectVat == false
         ? (this.selectVat = true)
         : (this.selectVat = false);
 
       if (this.selectVat) {
         this.vat = 1;
+        cus.vat = 0.07;
       } else {
         this.vat = null;
+        cus.vat = 0;
       }
-      console.log(this.vat);
+      await CusService.updateVAT({ vat: this.vat, qt: auth.temp_qt });
     },
     async selectItem(item) {
       this.data.selection = item;

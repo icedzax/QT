@@ -51,7 +51,7 @@
         <Rule :sw="sumw" :pship="order.ship" :pterm="order.term"></Rule>
       </div>
       <div class="row-span-5 col-start-1 col-span-2 xl:col-start-3 h-auto">
-        <Total :sp="sump"></Total>
+        <Total :sp="sump" :vat="chk_vat"></Total>
       </div>
     </div>
     <!--  ก้อนลายเซนต์  -->
@@ -63,7 +63,7 @@
       </div>
     </div>
 
-    <!-- <div>{{ oo }}</div> -->
+    <!-- <div>{{ chk_vat }}</div> -->
   </div>
   <!--  change file name  -->
 </template>
@@ -196,6 +196,14 @@ export default {
       if (items.data) {
         order.list = items.data;
       }
+
+      const v_vat = await CusService.findVAT({ qt: initQT });
+      cus.vat = v_vat.data[0].vat;
+      if (cus.vat == 1) {
+        cus.vat = 0.07;
+      } else {
+        cus.vat = 0;
+      }
     }
   },
   computed: {
@@ -236,6 +244,9 @@ export default {
     },
     chk_cus() {
       return cus.name;
+    },
+    chk_vat() {
+      return cus.vat;
     },
   },
   methods: {},
