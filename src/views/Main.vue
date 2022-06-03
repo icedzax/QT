@@ -124,6 +124,9 @@ export default {
     Header_r,
   },
   async created() {
+    // await UserService.isSale({ emp_code: "59100045" });
+    const isSales = await UserService.isSale({ emp_code: "62110077" });
+
     // console.log("### ROUTE ###", this.$route.params.list_qt);
     // console.log("### LOCAL TMPQT ###", localStorage.getItem("tempqt"));
 

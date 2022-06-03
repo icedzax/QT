@@ -58,6 +58,7 @@ export default {
     if (!auth.user_id) {
       auth.user_id = localStorage.getItem("id");
       auth.user = localStorage.getItem("emp_name");
+      auth.pos = localStorage.getItem("sub_position");
     } else {
       localStorage.setItem("tempqt", null);
     }
