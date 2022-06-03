@@ -140,7 +140,7 @@ export default {
       this.$emit("closeModal", !this.value);
     },
     async getSale() {
-      const sale = await UserService.showSale({ emp_code: "63070045" });
+      const sale = await UserService.showSale({ emp_code: auth.user_id });
       this.sale_list = sale.data;
     },
 
