@@ -353,7 +353,16 @@ export default {
   },
   async created() {
     console.log("### USER_ID ###", auth.user_id);
-    const data_list = await UserService.list({ emp_code: auth.user_id });
+    const position = await UserService.isSale({ emp_code: auth.user_id });
+    let posi = "";
+    if (position.data) {
+      posi = "admin";
+    }
+    const data_list = await UserService.list({
+      emp_code: auth.user_id,
+      Position: posi,
+    });
+
     this.list_au = data_list.data;
     auth.list = this.list_au;
 

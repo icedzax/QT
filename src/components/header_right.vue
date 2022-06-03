@@ -116,7 +116,11 @@ export default {
       sys,
     };
   },
-  created() {},
+  created() {
+    if (auth.pos == "Admin") {
+      this.AdminQT();
+    }
+  },
   methods: {
     goto_pdf() {
       window.open(
@@ -144,6 +148,34 @@ export default {
         await localStorage.setItem("tempqt", nqt.data);
         await this.$router.go();
       }
+    },
+    async AdminQT() {
+      const setnewSale = await UserService.getSalebyad(auth.user_id);
+      const lastQT = await UserService.selectSale({
+        sale_code: setnewSale.data[0].sale_code,
+      });
+
+      let calQT = lastQT.data[0].qt.slice(-3);
+      let newQ = "";
+      let QT = "";
+      if (calQT.slice(0, 1) == 0) {
+        newQ = parseInt(calQT) + 1;
+        QT = 0 + newQ.toString();
+        newQ = QT;
+      } else {
+        newQ = parseInt(calQT) + 1;
+        newQ = newQ.toString();
+      }
+      let newQT = lastQT.data[0].qt.slice(0, 11) + newQ;
+      const a = await UserService.getEMP({
+        sale_name: lastQT.data[0].username,
+      });
+
+      const new_sale = await UserService.sale(a.data[0].PRS_NO);
+      auth.data_sale = new_sale.data;
+      auth.temp_qt = newQT;
+
+      localStorage.setItem("tempqt", auth.temp_qt);
     },
   },
 };

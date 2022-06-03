@@ -40,4 +40,19 @@ export default {
   isSale(body) {
     return Api().post("isSales/", body);
   },
+  showSale(body) {
+    return Api().post("adminList/", body);
+  },
+  selectSale(body) {
+    return Api().post("LastQT/", body);
+  },
+  updateSale(body) {
+    return Api().post("activeSale/", body);
+  },
+  getSalebyad(emp_code) {
+    return Api().get("activeQT/" + emp_code);
+  },
+  getEMP(body) {
+    return Api().post("saleEMP/", body);
+  },
 };
