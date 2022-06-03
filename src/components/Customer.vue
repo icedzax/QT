@@ -282,10 +282,11 @@ export default {
 
       if (this.selectVat) {
         this.vat = 1;
+        cus.vat = 0.07;
       } else {
         this.vat = null;
+        cus.vat = 0;
       }
-      console.log(this.vat);
     },
     async selectItem(item) {
       this.data.selection = item;

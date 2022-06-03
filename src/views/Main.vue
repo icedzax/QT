@@ -51,7 +51,7 @@
         <Rule :sw="sumw" :pship="order.ship" :pterm="order.term"></Rule>
       </div>
       <div class="row-span-5 col-start-1 col-span-2 xl:col-start-3 h-auto">
-        <Total :sp="sump"></Total>
+        <Total :sp="sump" :vat="chk_vat"></Total>
       </div>
     </div>
     <!--  ก้อนลายเซนต์  -->
@@ -63,7 +63,7 @@
       </div>
     </div>
 
-    <!-- <div>{{ oo }}</div> -->
+    <!-- <div>{{ chk_vat }}</div> -->
   </div>
   <!--  change file name  -->
 </template>
@@ -236,6 +236,10 @@ export default {
     },
     chk_cus() {
       return cus.name;
+    },
+    chk_vat() {
+      console.log(cus.vat);
+      return cus.vat;
     },
   },
   methods: {},

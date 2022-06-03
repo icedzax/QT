@@ -42,7 +42,7 @@
 </template>
 <script>
 export default {
-  props: ["sp"],
+  props: ["sp", "vat"],
   data() {
     return {
       transport: 0.0,
@@ -67,7 +67,8 @@ export default {
       return afSP;
     },
     cal_vat() {
-      const v = (this.sp * 0.07).toFixed(2);
+      console.log(this.vat);
+      const v = (this.sp * this.vat).toFixed(2);
       let a = v.toString();
       const afSP = this.addComma(a);
       return afSP;
