@@ -25,10 +25,4 @@ export default {
   delete() {
     return Api().delete("user/", user.id, user);
   },
-  findVAT(qt) {
-    return Api().post("getHeader/", qt);
-  },
-  updateVAT(body) {
-    return Api().post("updateVAT/", body);
-  },
 };
