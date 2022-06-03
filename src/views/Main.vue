@@ -196,6 +196,15 @@ export default {
       if (items.data) {
         order.list = items.data;
       }
+
+      const v_vat = await CusService.findVAT({ qt: initQT });
+      console.log("VAT ก่อนตรวจสอบ::", cus.vat);
+      cus.vat = v_vat.data[0].vat;
+      if (cus.vat == 1) {
+        cus.vat = 0.07;
+      } else {
+        cus.vat = 0;
+      }
     }
   },
   computed: {

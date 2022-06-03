@@ -9,6 +9,7 @@
           type="checkbox"
           @click="checkvat"
           v-model="selectVat"
+          :checked="cus.vat !== 0"
           class="mx-1"
         />
         <span class="text-xs"> VAT</span>
