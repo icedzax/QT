@@ -198,7 +198,6 @@ export default {
       }
 
       const v_vat = await CusService.findVAT({ qt: initQT });
-      console.log("VAT ก่อนตรวจสอบ::", cus.vat);
       cus.vat = v_vat.data[0].vat;
       if (cus.vat == 1) {
         cus.vat = 0.07;
@@ -247,7 +246,6 @@ export default {
       return cus.name;
     },
     chk_vat() {
-      console.log(cus.vat);
       return cus.vat;
     },
   },

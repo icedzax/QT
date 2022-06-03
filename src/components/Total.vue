@@ -51,7 +51,6 @@ export default {
   created() {},
   computed: {
     sumprice() {
-      console.log(this.sp);
       let fixsp = this.sp.toFixed(2);
       let a = fixsp.toString();
       const afSP = this.addComma(a);
@@ -67,7 +66,6 @@ export default {
       return afSP;
     },
     cal_vat() {
-      console.log(this.vat);
       const v = (this.sp * this.vat).toFixed(2);
       let a = v.toString();
       const afSP = this.addComma(a);

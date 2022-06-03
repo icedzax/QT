@@ -28,4 +28,7 @@ export default {
   findVAT(qt) {
     return Api().post("getHeader/", qt);
   },
+  updateVAT(body) {
+    return Api().post("updateVAT/", body);
+  },
 };

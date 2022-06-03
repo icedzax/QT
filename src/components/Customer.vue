@@ -276,7 +276,7 @@ export default {
       const result = await CusService.search({ cus_name: this.data.input });
       this.customers = result.data;
     }, 500),
-    checkvat() {
+    async checkvat() {
       this.selectVat == false
         ? (this.selectVat = true)
         : (this.selectVat = false);
@@ -288,6 +288,7 @@ export default {
         this.vat = null;
         cus.vat = 0;
       }
+      await CusService.updateVAT({ vat: this.vat, qt: auth.temp_qt });
     },
     async selectItem(item) {
       this.data.selection = item;
