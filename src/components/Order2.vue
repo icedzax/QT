@@ -357,7 +357,7 @@ export default {
           { t: "W3", text: "W3:ปลีก" },
         ],
       },
-      type_unit: ["PC", "KG"],
+      type_unit: ["PC", "KG", "TRP"],
       tprice: [],
       inputField: {},
     };
