@@ -121,7 +121,7 @@
                 :disabled="!approveStat"
                 @change="itemChange(items, true), (items.loading = true)"
               >
-                <option v-for="(i, index) in this.type_unit" :key="index">
+                <option v-for="(i, index) in items.typeunit" :key="index">
                   {{ i }}
                 </option>
               </select>
@@ -262,7 +262,7 @@
               :disabled="!approveStat"
               @change="itemChange(inputField, true), setLoading(true)"
             >
-              <option v-for="(i, index) in this.type_unit" :key="index">
+              <option v-for="(i, index) in inputField.typeunit" :key="index">
                 {{ i }}
               </option>
             </select>
@@ -374,7 +374,8 @@ export default {
       if (this.approveStat && order.list.length < 1) return;
     },
     List() {
-      this.order.list.map((item) => {
+      this.order.list.map(async (item) => {
+        item.typeunit = ["PC", "KG"];
         item.loading = false;
         if (item.REMARK) {
           item.show = true;
@@ -383,8 +384,22 @@ export default {
         if (item.min == null || item.min == 0) {
           item.min = "";
         }
+
+        const payloadi = {
+          VKORG: 1000,
+          MATNR: item.rmd_mat,
+          KONDA: item.ptype,
+        };
+        const alluom = await FgService.getUOM(payloadi);
+        let List_UOM = [];
+        if (alluom.data[0]) {
+          alluom.data.map((x) => {
+            List_UOM.push(x.KMEIN);
+          });
+          item.typeunit = List_UOM;
+        }
       });
-      // console.log("DATA ORDER::", this.order.list);
+      console.log("DATA ORDER::", this.order.list);
       return this.order.list;
     },
   },
@@ -453,9 +468,25 @@ export default {
       item.amount = 1;
       item.ptype = "T1";
       item.unit = "PC";
+      item.typeunit = ["PC", "KG"];
+      const payloadi = {
+        VKORG: 1000,
+        MATNR: item.rmd_mat,
+        KONDA: item.ptype,
+      };
+      const alluom = await FgService.getUOM(payloadi);
+      let UOM_LIST = [];
+      if (alluom.data[0]) {
+        alluom.data.map((x) => {
+          UOM_LIST.push(x.KMEIN);
+        });
+
+        item.typeunit = UOM_LIST;
+      }
       item = await this.getPriceMaster(item);
       console.log("ITEM", item);
       this.inputField = await this.calItem(item);
+
       this.setLoading(false);
     },
 
@@ -495,6 +526,26 @@ export default {
     },
 
     itemChange: debounce(async function (items, isUnit) {
+      items.loading = await true;
+      const checktype = {
+        VKORG: 1000,
+        MATNR: items.rmd_mat,
+        KONDA: items.ptype,
+      };
+
+      const alluom = await FgService.getUOM(checktype);
+      let UOM_LIST = [];
+      if (alluom.data[0]) {
+        alluom.data.map((x) => {
+          UOM_LIST.push(x.KMEIN);
+        });
+
+        items.typeunit = UOM_LIST;
+      } else {
+        items.typeunit = ["PC", "KG"];
+        items.unit = "PC";
+      }
+
       if (isUnit) {
         items = await this.getPriceMaster(items);
       }

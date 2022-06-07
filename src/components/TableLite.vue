@@ -809,7 +809,7 @@ export default defineComponent({
       let order = setting.order;
       let sort = setting.sort;
       let offset = (page - 1) * setting.pageSize;
-      let limit = setting.pageSize;
+      let limit = page * setting.pageSize;
       // console.log("LIST:", props.rows);
       // console.log("AUTH:", auth.list);
       if (!props.isReSearch || page > 1 || page == prevPage) {
