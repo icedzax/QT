@@ -16,4 +16,7 @@ export default {
   get(payload) {
     return Api().get("fg/" + payload);
   },
+  getUOM(body) {
+    return Api().post(`/uom`, body);
+  },
 };
