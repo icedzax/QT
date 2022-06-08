@@ -367,7 +367,7 @@ export default {
   computed: {
     saleType() {
       const scode = localStorage.getItem("tempqt").substring(3, 4);
-      if (scode == "X" || scode == "R") {
+      if (["X", "L", "R"].includes(scode)) {
         console.log(this.type.retail);
         return this.type.retail;
       }
@@ -426,7 +426,8 @@ export default {
       }
 
       let st = "T1";
-      if (SaleCharacter == "X" || SaleCharacter == "R") {
+      const rlx = ["X", "L", "R"];
+      if (rlx.includes(SaleCharacter)) {
         st = "R1";
       }
 
@@ -467,28 +468,17 @@ export default {
 
       this.$router.replace({});
     }
-
-    /*   if (SaleCharacter == "X" || SaleCharacter == "R") {
-      this.tprice = this.type.retail.map((t) => {
-        return t.text;
-      });
-    } else {
-      this.tprice = this.type.Wholesale.map((t) => {
-        return t.text;
-      });
-    } */
-    // console.log("tprice", this.tprice);
   },
 
   methods: {
     async selectItem(item) {
       this.setLoading(true);
-
-      const saleChannel =
-        localStorage.getItem("tempqt").substring(3, 4) == "X" ||
-        localStorage.getItem("tempqt").substring(3, 4) == "R"
-          ? "R1"
-          : "T1";
+      const r_price = ["X", "R", "l"];
+      const saleChannel = r_price.includes(
+        localStorage.getItem("tempqt").substring(3, 4)
+      )
+        ? "R1"
+        : "T1";
       document.getElementsByClassName(
         "simple-typeahead-list"
       )[0].style.visibility = "hidden";
