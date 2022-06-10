@@ -179,7 +179,11 @@ export default {
 
     if (auth.temp_qt) {
       const items = await FgService.items(auth.temp_qt);
-      const data_sale = await UserService.sale(auth.user_id);
+      //const data_sale = await UserService.sale(auth.user_id);
+      console.log(auth.temp_qt);
+      let arrTemp = auth.temp_qt.split("-");
+      const data_sale = await UserService.sale_test(arrTemp[1]);
+
       const data_con = await OrderService.Con(auth.temp_qt);
 
       const data_cus = await CusService.postCus({ KUNNR: order.kunnr });
@@ -187,6 +191,7 @@ export default {
       if (data_con.data[0]) {
         order.con = data_con.data;
       }
+      //console.log("dataSale:", data_sale);
       auth.data_sale = data_sale.data;
       if (data_cus.data[0]) {
         cus.data = data_cus.data[0];

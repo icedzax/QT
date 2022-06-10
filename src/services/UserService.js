@@ -19,6 +19,9 @@ export default {
   sale(empcode) {
     return Api().get("sale/" + empcode);
   },
+  sale_test(sale_code) {
+    return Api().get("sale_test/" + sale_code);
+  },
   getUser(userId) {
     return Api().post("auth/", userId);
   },
@@ -57,5 +60,8 @@ export default {
   },
   isSale(body) {
     return Api().post("isSales/", body);
+  },
+  newtemp(salecode) {
+    return Api().get("newtemp/" + salecode);
   },
 };
