@@ -7,6 +7,9 @@ export default {
   del(body) {
     return Api().post(`/delete`, body);
   },
+  delall(body) {
+    return Api().post(`/deleteall`, body);
+  },
   update(body) {
     return Api().post(`/update`, body);
   },

@@ -20,7 +20,7 @@
               data-name="Layer 1"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 128 128"
-              @click="deleteAll"
+              @click="deleteAll(this.auth.temp_qt)"
               class="mx-1 w-5 h-5"
             >
               <title>x</title>
@@ -91,7 +91,7 @@
                 @change="itemChange(items, true), (items.loading = true)"
               >
                 <option
-                  v-for="sItem in type.Wholesale"
+                  v-for="sItem in saleType"
                   :key="sItem.t"
                   :value="sItem.t"
                 >
@@ -228,11 +228,7 @@
               v-model="inputField.ptype"
               @change="itemChange(inputField, true), setLoading(true)"
             >
-              <option
-                v-for="sItem in type.Wholesale"
-                :key="sItem.t"
-                :value="sItem.t"
-              >
+              <option v-for="sItem in saleType" :key="sItem.t" :value="sItem.t">
                 {{ sItem.text }}
               </option>
             </select>
@@ -348,7 +344,11 @@ export default {
         selection: null,
       },
       type: {
-        // retail: ["R1:สดรับเอง", "R2:สดส่ง", "R3:เงินเชื่อ"],
+        retail: [
+          { t: "R1", text: "R1:สดรับเอง" },
+          { t: "R2", text: "R2:สดส่ง" },
+          { t: "R3", text: "R3:เงินเชื่อ" },
+        ],
         Wholesale: [
           { t: "T1", text: "T1:100 ตัน" },
           { t: "W0", text: "W0:ยกรถ" },
@@ -365,8 +365,17 @@ export default {
   props: ["statusApp", "mat"],
 
   computed: {
+    saleType() {
+      const scode = localStorage.getItem("tempqt").substring(3, 4);
+      if (["X", "L", "R"].includes(scode)) {
+        console.log(this.type.retail);
+        return this.type.retail;
+      }
+      console.log(this.type.Wholesale);
+      return this.type.Wholesale;
+    },
     approveStat() {
-      console.log(order.status);
+      // console.log(order.status);
       if (order.status == "TEMP" || order.status == "D") return true;
     },
 
@@ -399,27 +408,35 @@ export default {
           item.typeunit = List_UOM;
         }
       });
-      console.log("DATA ORDER::", this.order.list);
+      // console.log("DATA ORDER::", this.order.list);
       return this.order.list;
     },
   },
 
   async created() {
+    const SaleCharacter = localStorage.getItem("tempqt").substring(3, 4);
     let pickQT = "";
     if (this.mat) {
       const lqt = await OrderService.getLastQT(auth.user_id);
-      console.log("lqt", lqt.data);
+      // console.log("lqt", lqt.data);
       if (lqt.data[0]) {
         pickQT = await lqt.data[0].qt;
       } else {
         pickQT = await auth.temp_qt;
       }
+
+      let st = "T1";
+      const rlx = ["X", "L", "R"];
+      if (rlx.includes(SaleCharacter)) {
+        st = "R1";
+      }
+
       const prepush = await FgService.get(this.mat);
       console.log("prepush", prepush);
       const payload = {
         VKORG: 1000,
         MATNR: this.mat,
-        KONDA: "T1",
+        KONDA: st,
         KMEIN: "PC",
       };
       const price = await FgService.getPrice(payload);
@@ -436,7 +453,7 @@ export default {
         rmd_mat: prepush.data[0].rmd_mat,
         rmd_size: prepush.data[0].rmd_size,
         rmd_weight: prepush.data[0].NTGEW,
-        ptype: "T1",
+        ptype: st,
         amount: pre_amount,
         unit: "PC",
         price_unit: pre_priceunit,
@@ -451,14 +468,17 @@ export default {
 
       this.$router.replace({});
     }
-    this.tprice = this.type.Wholesale.map((t) => {
-      return t.text;
-    });
   },
 
   methods: {
     async selectItem(item) {
       this.setLoading(true);
+      const r_price = ["X", "R", "l"];
+      const saleChannel = r_price.includes(
+        localStorage.getItem("tempqt").substring(3, 4)
+      )
+        ? "R1"
+        : "T1";
       document.getElementsByClassName(
         "simple-typeahead-list"
       )[0].style.visibility = "hidden";
@@ -466,7 +486,7 @@ export default {
       item.rmd_weight = item.max > 0 ? item.max : item.stdweight;
       item.min = item.min == 0.0 ? 0 : item.min;
       item.amount = 1;
-      item.ptype = "T1";
+      item.ptype = saleChannel;
       item.unit = "PC";
       item.typeunit = ["PC", "KG"];
       const payloadi = {
@@ -570,7 +590,7 @@ export default {
           x = item;
         }
       });
-      console.log("updated : ", item);
+      // console.log("updated : ", item);
       await OrderService.update(item);
     },
     async getPriceMaster(items) {
@@ -616,9 +636,12 @@ export default {
         }
       }
     },
-    deleteAll() {
+    async deleteAll(qt) {
       if (confirm("Clear ข้อมูลทั้งหมดใช่หรือไม่?")) {
-        this.order.list = [];
+        const delall = await OrderService.delall({ qt: qt });
+        if (delall.status == 200) {
+          this.order.list = [];
+        }
       }
     },
 
