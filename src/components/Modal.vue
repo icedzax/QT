@@ -104,7 +104,6 @@ export default {
   },
   methods: {
     close() {
-      console.log("Close:");
       this.$emit("closeModal", !this.value);
     },
     async getSale() {
@@ -125,7 +124,6 @@ export default {
       let QT = "";
       if (calQT.slice(0, 1) == 0) {
         newQ = parseInt(calQT) + 1;
-        console.log("calQT:", calQT.slice(0, 2));
         if (calQT.slice(0, 2) == "00") {
           QT = "00" + newQ.toString();
         } else {
@@ -137,6 +135,7 @@ export default {
         newQ = newQ.toString();
       }
       this.newQT = upsale.data[0].qt.slice(0, 11) + newQ;
+      console.log("เลขที่เอกสารตามเซลล์:", this.newQT);
     },
     async submit() {
       await UserService.updateSale({
