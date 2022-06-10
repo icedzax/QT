@@ -135,7 +135,14 @@ export default {
     }
     // localStorage.setItem("tempqt", null);
     let us = await UserService.temp({ emp: auth.user_id });
-    // console.log("auth.user_id", auth.user_id);
+    console.log("qt:::", us.data[0]);
+
+    let sale = await UserService.isSale({ emp_code: auth.user_id });
+    if (sale.data) {
+      auth.position = "Admin";
+    } else {
+      auth.position = "Sale";
+    }
     if (initQT) {
       us = await UserService.tempQT({
         emp: auth.user_id,

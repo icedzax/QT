@@ -136,22 +136,21 @@ export default {
       });
     },
     async newQT() {
-      // console.log({
-      //   qt: auth.temp_qt,
-      //   emp_code: auth.user_id,
-      // });
-      // if (confirm("ยืนยันสร้างใบเสนอราคาใหม่ ?")) {
-      //   sys.loading = true;
-      //   const nqt = await UserService.newQT({
-      //     qt: auth.temp_qt,
-      //     emp_code: auth.user_id,
-      //   });
-      //   sys.loading = await false;
-      //   await console.log("NQT", nqt.data);
-      //   await localStorage.setItem("tempqt", nqt.data);
-      //   await this.$router.go();
-      // }
-      this.modalOpen = !this.modalOpen;
+      if (this.auth.position == "Admin") {
+        this.modalOpen = !this.modalOpen;
+      } else {
+        if (confirm("ยืนยันสร้างใบเสนอราคาใหม่ ?")) {
+          sys.loading = true;
+          const nqt = await UserService.newQT({
+            qt: auth.temp_qt,
+            emp_code: auth.user_id,
+          });
+          sys.loading = await false;
+          await console.log("NQT", nqt.data);
+          await localStorage.setItem("tempqt", nqt.data);
+          await this.$router.go();
+        }
+      }
     },
   },
 };

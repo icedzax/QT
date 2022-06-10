@@ -86,6 +86,9 @@ export default {
       }
     },
   },
+  created() {
+    console.log("DataSale from Sale.vue::", auth.data_sale);
+  },
   methods: {
     selectOption(event) {
       const v_office = auth.data_sale.team

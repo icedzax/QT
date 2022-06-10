@@ -118,33 +118,36 @@ export default {
       this.empnow = empsale.data[0].PRS_NO;
       this.codenow = salecode;
       this.newSale = salename;
-      const upsale = await UserService.selectSale({ sale_code: salecode });
-      let calQT = upsale.data[0].qt.slice(-3);
-      let newQ = "";
-      let QT = "";
-      if (calQT.slice(0, 1) == 0) {
-        newQ = parseInt(calQT) + 1;
-        if (calQT.slice(0, 2) == "00") {
-          QT = "00" + newQ.toString();
-        } else {
-          QT = "0" + newQ.toString();
-        }
-        newQ = QT;
-      } else {
-        newQ = parseInt(calQT) + 1;
-        newQ = newQ.toString();
-      }
-      this.newQT = upsale.data[0].qt.slice(0, 11) + newQ;
-      console.log("เลขที่เอกสารตามเซลล์:", this.newQT);
     },
     async submit() {
-      await UserService.updateSale({
+      //หาข้อมูลเซลล์คนใหม่ที่เลือก
+      const new_sale = await UserService.sale(this.empnow);
+      auth.data_sale = new_sale.data;
+
+      await UserService.activeAd({
         emp_code: auth.user_id,
-        sale_code: this.codenow,
+        sale_code: auth.data_sale.sale_code,
       });
 
+      await UserService.newQT_ad({
+        empcode: auth.user_id,
+      });
+
+      const upsale = await UserService.selectSale({
+        sale_code: this.codenow,
+        emp_code: this.empnow,
+      });
+
+      this.newQT = upsale.data[0].qt;
+
+      //หาข้อมูลเซลล์คนใหม่ที่เลือก
+      // const new_sale = await UserService.sale(this.empnow);
+      // auth.data_sale = new_sale.data;
+      auth.temp_qt = this.newQT;
+      localStorage.setItem("tempqt", auth.temp_qt);
+
+      alert("สร้างใบใหม่เรียบร้อยแล้ว");
       this.close();
-      this.setQT();
     },
     async setQT() {
       const new_sale = await UserService.sale(this.empnow);

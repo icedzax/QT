@@ -46,4 +46,16 @@ export default {
   selectSale(body) {
     return Api().post("LastQT/", body);
   },
+  newQT_ad(body) {
+    return Api().post("newQT_admin/", body);
+  },
+  activeAd(body) {
+    return Api().post("activeAdmin/", body);
+  },
+  newLast_QT() {
+    return Api().post("createTemp/", body);
+  },
+  isSale(body) {
+    return Api().post("isSales/", body);
+  },
 };
