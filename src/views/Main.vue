@@ -198,6 +198,7 @@ export default {
       }
 
       const v_vat = await CusService.findVAT({ qt: initQT });
+      console.log("QT:", initQT);
       cus.vat = v_vat.data[0].vat;
       if (cus.vat == 1) {
         cus.vat = 0.07;

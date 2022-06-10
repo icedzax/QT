@@ -37,4 +37,13 @@ export default {
   del(body) {
     return Api().post("delQT/", body);
   },
+  showSale(body) {
+    return Api().post("adminList/", body);
+  },
+  getEMP(body) {
+    return Api().post("saleEMP/", body);
+  },
+  selectSale(body) {
+    return Api().post("LastQT/", body);
+  },
 };

@@ -1,5 +1,6 @@
 <template>
   <div class="px-2">
+    <Modal @closeModal="newQT" :value="modalOpen"></Modal>
     <div
       class="row-start-1 row-span-1 col-start-3 col-span-1 text-center text-xs md:text-sm"
     >
@@ -108,13 +109,19 @@ import { order } from "../state/order";
 import UserService from "../services/UserService";
 
 import { sys } from "../state/system";
+import Modal from "./Modal.vue";
+
 export default {
   data() {
     return {
       auth,
       order,
       sys,
+      modalOpen: false,
     };
+  },
+  components: {
+    Modal,
   },
   created() {},
   methods: {
@@ -133,17 +140,18 @@ export default {
       //   qt: auth.temp_qt,
       //   emp_code: auth.user_id,
       // });
-      if (confirm("ยืนยันสร้างใบเสนอราคาใหม่ ?")) {
-        sys.loading = true;
-        const nqt = await UserService.newQT({
-          qt: auth.temp_qt,
-          emp_code: auth.user_id,
-        });
-        sys.loading = await false;
-        await console.log("NQT", nqt.data);
-        await localStorage.setItem("tempqt", nqt.data);
-        await this.$router.go();
-      }
+      // if (confirm("ยืนยันสร้างใบเสนอราคาใหม่ ?")) {
+      //   sys.loading = true;
+      //   const nqt = await UserService.newQT({
+      //     qt: auth.temp_qt,
+      //     emp_code: auth.user_id,
+      //   });
+      //   sys.loading = await false;
+      //   await console.log("NQT", nqt.data);
+      //   await localStorage.setItem("tempqt", nqt.data);
+      //   await this.$router.go();
+      // }
+      this.modalOpen = !this.modalOpen;
     },
   },
 };
