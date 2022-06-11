@@ -48,7 +48,7 @@
               class="w-full text-center px-4 py-2 font-medium border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white"
               @click="updateSale(item.sale_name, item.emp_code, item.sale_code)"
             >
-              {{ item.sale_code }} - {{ item.sale_name }}
+              {{ item.sale_team }} - {{ item.sale_code }} - {{ item.sale_name }}
             </button>
           </div>
         </div>
