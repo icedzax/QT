@@ -1,6 +1,6 @@
 <template>
   <div class="px-2">
-    <Modal @closeModal="newQT" :value="modalOpen"></Modal>
+    <Modal @closeModal="newQT" @newQ="reRenderNewQT" :value="modalOpen"></Modal>
     <div
       class="row-start-1 row-span-1 col-start-3 col-span-1 text-center text-xs md:text-sm"
     >
@@ -135,8 +135,13 @@ export default {
         name: "List",
       });
     },
+    reRenderNewQT() {
+      //  localStorage.setItem("tempqt", nqt.data);
+      this.$router.go();
+    },
     async newQT() {
-      if (this.auth.position == "Admin") {
+      const sale = await UserService.showSale({ emp_code: auth.user_id });
+      if (sale.data.length > 0) {
         this.modalOpen = !this.modalOpen;
       } else {
         if (confirm("ยืนยันสร้างใบเสนอราคาใหม่ ?")) {

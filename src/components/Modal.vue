@@ -39,13 +39,13 @@
         <!-- Modal body -->
         <div class="p-6 space-y-2">
           <div
-            class="text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            class="grid font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
           >
             <button
               v-for="(item, index) in this.sale_list"
               :key="index"
               type="button"
-              class="w-full text-center px-4 py-2 font-medium border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white"
+              class="text-left px-4 py-2 font-medium border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white"
               @click="updateSale(item.sale_name, item.emp_code, item.sale_code)"
             >
               {{ item.sale_team }} - {{ item.sale_code }} - {{ item.sale_name }}
@@ -125,6 +125,8 @@ export default {
       this.empnow = empsale.data[0].PRS_NO;
       this.codenow = salecode;
       this.newSale = salename;
+
+      // const data_cus = await CusService.postCus({ KUNNR: order.kunnr });
     },
     async submit() {
       //หาข้อมูลเซลล์คนใหม่ที่เลือก
@@ -154,6 +156,7 @@ export default {
       localStorage.setItem("tempqt", auth.temp_qt);
 
       this.close();
+      this.$emit("newQ");
     },
     async setQT() {
       const new_sale = await UserService.sale(this.empnow);
