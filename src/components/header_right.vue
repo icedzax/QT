@@ -141,7 +141,7 @@ export default {
     },
     async newQT() {
       const sale = await UserService.showSale({ emp_code: auth.user_id });
-      if (sale.data) {
+      if (sale.data.length > 0) {
         this.modalOpen = !this.modalOpen;
       } else {
         if (confirm("ยืนยันสร้างใบเสนอราคาใหม่ ?")) {
