@@ -19,6 +19,9 @@ export default {
   sale(empcode) {
     return Api().get("sale/" + empcode);
   },
+  sale_test(sale_code) {
+    return Api().get("sale_test/" + sale_code);
+  },
   getUser(userId) {
     return Api().post("auth/", userId);
   },
@@ -36,5 +39,29 @@ export default {
   },
   del(body) {
     return Api().post("delQT/", body);
+  },
+  showSale(body) {
+    return Api().post("adminList/", body);
+  },
+  getEMP(body) {
+    return Api().post("saleEMP/", body);
+  },
+  selectSale(body) {
+    return Api().post("LastQT/", body);
+  },
+  newQT_ad(body) {
+    return Api().post("newQT_admin/", body);
+  },
+  activeAd(body) {
+    return Api().post("activeAdmin/", body);
+  },
+  newLast_QT() {
+    return Api().post("createTemp/", body);
+  },
+  isSale(body) {
+    return Api().post("isSales/", body);
+  },
+  newtemp(salecode) {
+    return Api().get("newtemp/" + salecode);
   },
 };

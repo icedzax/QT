@@ -379,12 +379,13 @@ export default {
     // });
   },
   methods: {
-    goto_qt(qt) {
+    async goto_qt(qt) {
+      console.log("VAT:", cus.vat);
       localStorage.setItem("tempqt", qt);
-      this.$router.push({
-        name: "Home",
-        params: { list_qt: qt },
-      });
+      // this.$router.push({
+      //   name: "Home",
+      //   params: { list_qt: qt },
+      // });
     },
     goto_pdf(qt) {
       window.open("https://report.zubbsteel.com/tcpdf/pdf/ZQT.php?ref=" + qt);
