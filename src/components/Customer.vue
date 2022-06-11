@@ -295,7 +295,7 @@ export default {
       });
       this.showcus =
         this.data.selection.KUNNR + " " + this.data.selection.CNAME;
-      const send_update = await CusService.setCus({
+      await CusService.setCus({
         KUNNR: this.data.selection.KUNNR,
         LAND1: Data_cus.data[0].LAND1,
         CNAME: Data_cus.data[0].CNAME,
@@ -308,7 +308,7 @@ export default {
         MOBILE: Data_cus.data[0].MOBILE,
         CONTACTNAME: Data_cus.data[0].CONTACTNAME,
         qt: auth.temp_qt,
-        vat: this.vat,
+        vat: Data_cus.data[0].VATTYPE,
       });
       const data_cus = await CusService.postCus({
         KUNNR: this.data.selection.KUNNR,
@@ -332,6 +332,7 @@ export default {
         MOBILE: this.cusdata.MOBILE,
         CONTACTNAME: this.cusdata.CONTACTNAME,
         qt: auth.temp_qt,
+        vat: this.vat,
       });
       alert("Update ข้อมูลแล้ว");
       this.statusE = false;
