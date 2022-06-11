@@ -393,6 +393,9 @@ import {
   onMounted,
 } from "vue";
 import { auth } from "../state/user";
+import { cus } from "../state/cus";
+
+import CusService from "@/services/CusService";
 
 export default defineComponent({
   data() {
@@ -402,7 +405,15 @@ export default defineComponent({
   },
   async created() {},
   methods: {
-    goto_qt(qt) {
+    async goto_qt(qt) {
+      const v_vat = await CusService.findVAT({ qt: qt });
+      cus.vat = v_vat.data[0].vat;
+      if (cus.vat == 1) {
+        cus.vat = 0.07;
+      } else {
+        cus.vat = 0;
+      }
+
       localStorage.setItem("tempqt", qt);
       this.$router.push({
         name: "Home",

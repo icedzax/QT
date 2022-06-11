@@ -135,7 +135,7 @@ export default {
     }
     // localStorage.setItem("tempqt", null);
     let us = await UserService.temp({ emp: auth.user_id });
-    console.log("qt:::", us.data[0]);
+    // console.log("qt:::", us.data[0]);
 
     let sale = await UserService.isSale({ emp_code: auth.user_id });
     if (sale.data) {
@@ -180,7 +180,7 @@ export default {
     if (auth.temp_qt) {
       const items = await FgService.items(auth.temp_qt);
       //const data_sale = await UserService.sale(auth.user_id);
-      console.log(auth.temp_qt);
+      // console.log(auth.temp_qt);
       let arrTemp = auth.temp_qt.split("-");
       const data_sale = await UserService.sale_test(arrTemp[1]);
 
@@ -210,7 +210,6 @@ export default {
       }
 
       const v_vat = await CusService.findVAT({ qt: initQT });
-      console.log("QT:", initQT);
       cus.vat = v_vat.data[0].vat;
       if (cus.vat == 1) {
         cus.vat = 0.07;

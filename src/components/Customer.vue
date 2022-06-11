@@ -7,9 +7,8 @@
       <div class="col-span-4 flex justify-inline">
         <input
           type="checkbox"
-          @click="checkvat"
-          v-model="selectVat"
-          :checked="cus.vat !== 0"
+          @change="checkvat($event)"
+          :checked="this.vvat == 0.07"
           class="mx-1"
         />
         <span class="text-xs"> VAT</span>
@@ -253,11 +252,10 @@ export default {
       },
       statusE: false,
       list_qt: this.$route.params.list_qt,
-      selectVat: false,
-      vat: null,
     };
   },
   created() {},
+
   computed: {
     place_holder() {
       return cus.data.KUNNR
@@ -270,24 +268,24 @@ export default {
     approveStat() {
       if (order.status == "TEMP" || order.status == "D") return true;
     },
+    vvat() {
+      return cus.vat;
+    },
   },
   methods: {
     lookupUser: debounce(async function () {
       const result = await CusService.search({ cus_name: this.data.input });
       this.customers = result.data;
     }, 500),
-    async checkvat() {
-      this.selectVat == false
-        ? (this.selectVat = true)
-        : (this.selectVat = false);
-
-      if (this.selectVat) {
+    async checkvat(event) {
+      if (event.target.checked) {
         this.vat = 1;
         cus.vat = 0.07;
       } else {
         this.vat = null;
         cus.vat = 0;
       }
+
       await CusService.updateVAT({ vat: this.vat, qt: auth.temp_qt });
     },
     async selectItem(item) {
