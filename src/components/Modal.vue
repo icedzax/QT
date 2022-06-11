@@ -132,6 +132,7 @@ export default {
     },
     async submit() {
       //หาข้อมูลเซลล์คนใหม่ที่เลือก
+
       const new_sale = await UserService.sale(this.empnow);
       auth.data_sale = new_sale.data;
 
@@ -142,6 +143,7 @@ export default {
 
       await UserService.newQT_ad({
         empcode: auth.user_id,
+        oqt: auth.temp_qt,
       });
 
       const upsale = await UserService.selectSale({
