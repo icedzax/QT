@@ -370,7 +370,10 @@ export default {
     },
   },
   async created() {
-    const data_list = await UserService.list({ emp_code: auth.user_id });
+    const data_list = await UserService.list({
+      emp_code: auth.user_id,
+      sale_code: this.selectSale,
+    });
     this.list_au = data_list.data;
     this.list_au.map((data) => {
       let codesale = data.QT.split("-");
@@ -400,7 +403,10 @@ export default {
     async searchcus_input(input) {
       input = input.trim();
       if (input == "") {
-        const data_list = await UserService.list({ emp_code: auth.user_id });
+        const data_list = await UserService.list({
+          emp_code: auth.user_id,
+          sale_code: this.selectSale,
+        });
         this.list_au = data_list.data;
         this.table.rows = this.list_au;
         auth.list = this.table.rows;
