@@ -34,6 +34,12 @@ export default {
   list(body) {
     return Api().post("qtList/", body);
   },
+  filterlist(body) {
+    return Api().post("qtList_filter", body);
+  },
+  filterVendors(body) {
+    return Api().post("qtList_vendors", body);
+  },
   newQT(body) {
     return Api().post("newQT/", body);
   },
