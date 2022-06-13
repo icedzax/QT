@@ -319,21 +319,40 @@ export default {
       }
     },
     async update_data() {
-      const send_update = await CusService.setCus({
-        KUNNR: cus.data.KUNNR,
-        LAND1: cus.data.LAND1,
-        CNAME: cus.data.CNAME,
-        TELNU: this.cusdata.TELNU,
-        TELFX: cus.data.TELFX,
-        FAXNU: this.cusdata.FAXNU,
-        TAXNO: cus.data.TAXNO,
-        EMAIL: this.cusdata.EMAIL,
-        ADDRS: this.cusdata.ADDRS,
-        MOBILE: this.cusdata.MOBILE,
-        CONTACTNAME: this.cusdata.CONTACTNAME,
-        qt: auth.temp_qt,
-        vat: this.vat,
-      });
+      if (this.data.selection !== null) {
+        const send_update = await CusService.setCus({
+          KUNNR: cus.data.KUNNR,
+          LAND1: cus.data.LAND1,
+          CNAME: cus.data.CNAME,
+          TELNU: this.cusdata.TELNU,
+          TELFX: cus.data.TELFX,
+          FAXNU: this.cusdata.FAXNU,
+          TAXNO: cus.data.TAXNO,
+          EMAIL: this.cusdata.EMAIL,
+          ADDRS: this.cusdata.ADDRS,
+          MOBILE: this.cusdata.MOBILE,
+          CONTACTNAME: this.cusdata.CONTACTNAME,
+          qt: auth.temp_qt,
+          vat: this.vat,
+        });
+      } else {
+        const send_update = await CusService.setCus({
+          KUNNR: "",
+          LAND1: "",
+          CNAME: this.data.input,
+          TELNU: this.cusdata.TELNU,
+          TELFX: cus.data.TELFX,
+          FAXNU: this.cusdata.FAXNU,
+          TAXNO: cus.data.TAXNO,
+          EMAIL: this.cusdata.EMAIL,
+          ADDRS: this.cusdata.ADDRS,
+          MOBILE: this.cusdata.MOBILE,
+          CONTACTNAME: this.cusdata.CONTACTNAME,
+          qt: auth.temp_qt,
+          vat: this.vat,
+        });
+      }
+
       alert("Update ข้อมูลแล้ว");
       this.statusE = false;
     },
