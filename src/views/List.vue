@@ -402,26 +402,15 @@ export default {
     },
     async searchcus_input(input) {
       input = input.trim();
-      if (input == "") {
-        const data_list = await UserService.list({
-          emp_code: auth.user_id,
-          sale_code: this.selectSale,
-        });
-        this.list_au = data_list.data;
-        this.table.rows = this.list_au;
-        auth.list = this.table.rows;
-        this.doSearch(0, 10, "id", "asc");
-      } else {
-        const data_list = await UserService.filterVendors({
-          emp_code: auth.user_id,
-          vendor: input,
-          QT: this.selectSale,
-        });
-        this.list_au = data_list.data;
-        this.table.rows = data_list.data;
-        auth.list = this.table.rows;
-        this.doSearch(0, 10, "id", "asc");
-      }
+      const data_list = await UserService.filterCustomer({
+        emp_code: auth.user_id,
+        customer: input,
+        QT: this.selectSale,
+      });
+      this.list_au = data_list.data;
+      this.table.rows = data_list.data;
+      auth.list = this.table.rows;
+      this.doSearch(0, 10, "id", "asc");
     },
   },
 };
