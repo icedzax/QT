@@ -72,7 +72,7 @@
                 v-model="items.amount"
                 @keypress="NumbersOnly"
                 class="text-xs p-1 text-center border-none"
-                :disabled="!approveStat"
+                :disabled="!approveStat || items.loading"
                 @input="itemChange(items)"
               />
             </td>
@@ -207,8 +207,8 @@
               v-model="inputField.amount"
               @keypress="NumbersOnly"
               class="text-xs p-1 text-center border-none"
-              :disabled="!approveStat"
-              @input="itemChange(inputField)"
+              :disabled="!approveStat || sys.loading"
+              @change="itemChange(inputField)"
             />
           </td>
           <td>
@@ -226,7 +226,7 @@
               :disabled="!approveStat"
               class="border-none text-xs"
               v-model="inputField.ptype"
-              @change="itemChange(inputField, true), setLoading(true)"
+              @change="itemChange(inputField, true)"
             >
               <option v-for="sItem in saleType" :key="sItem.t" :value="sItem.t">
                 {{ sItem.text }}
@@ -256,7 +256,7 @@
               v-model="inputField.unit"
               class="w-full text-xs p-1 border-none"
               :disabled="!approveStat"
-              @change="itemChange(inputField, true), setLoading(true)"
+              @change="itemChange(inputField, true)"
             >
               <option v-for="(i, index) in inputField.typeunit" :key="index">
                 {{ i }}
@@ -483,6 +483,7 @@ export default {
         "simple-typeahead-list"
       )[0].style.visibility = "hidden";
       console.log(item);
+      this.data.selection = item;
       item.rmd_weight = item.max > 0 ? item.max : item.stdweight;
       item.min = item.min == 0.0 ? 0 : item.min;
       item.amount = 1;
@@ -546,13 +547,24 @@ export default {
     },
 
     itemChange: debounce(async function (items, isUnit) {
-      items.loading = await true;
+      //ถ้าไม่มี mat ให้ใส่ข้อมูลนี้
+      if (!items.rmd_mat) {
+        items.rmd_mat = " ";
+        if (this.data.selection == null && !items.created_at) {
+          //ในช่อง input ล่างสุด
+          this.setLoading(true);
+        }
+      }
       const checktype = {
         VKORG: 1000,
         MATNR: items.rmd_mat,
         KONDA: items.ptype,
       };
 
+      //เลือกเอา
+      // if (this.data.selection !== null) {
+      items.loading = await true;
+      // if (this.data.selection !== null){}
       const alluom = await FgService.getUOM(checktype);
       let UOM_LIST = [];
       if (alluom.data[0]) {
@@ -562,8 +574,8 @@ export default {
 
         items.typeunit = UOM_LIST;
       } else {
-        items.typeunit = ["PC", "KG"];
-        items.unit = "PC";
+        items.typeunit = this.type_unit;
+        // items.unit = "PC";
       }
 
       if (isUnit) {
@@ -581,7 +593,7 @@ export default {
       } else {
         items.cal_price = items.price_unit * items.amount;
       }
-
+      // console.log("cal price::", items.cal_price);
       return await items;
     },
     async setOrder(item) {
@@ -590,6 +602,9 @@ export default {
           x = item;
         }
       });
+      if (item.rmd_mat == " ") {
+        item.rmd_mat = null;
+      }
       // console.log("updated : ", item);
       await OrderService.update(item);
     },
@@ -612,6 +627,9 @@ export default {
       return items;
     },
     async addFG(items) {
+      if (items.rmd_mat == null) {
+        items.rmd_size = this.data.input;
+      }
       (items.qt = auth.temp_qt), await FgService.insert(items);
       const new_order = await FgService.items(auth.temp_qt);
 
