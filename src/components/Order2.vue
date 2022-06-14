@@ -549,8 +549,7 @@ export default {
     itemChange: debounce(async function (items, isUnit) {
       //ถ้าไม่มี mat ให้ใส่ข้อมูลนี้
       if (!items.rmd_mat) {
-        items.rmd_mat = "9999";
-        items.ptype = "9999";
+        items.rmd_mat = " ";
       }
       const checktype = {
         VKORG: 1000,
@@ -572,7 +571,6 @@ export default {
 
         items.typeunit = UOM_LIST;
       } else {
-        sys.loading = true;
         items.typeunit = this.type_unit;
         items.unit = "PC";
       }
@@ -601,6 +599,9 @@ export default {
           x = item;
         }
       });
+      if (item.rmd_mat == " ") {
+        item.rmd_mat = null;
+      }
       // console.log("updated : ", item);
       await OrderService.update(item);
     },
@@ -623,7 +624,7 @@ export default {
       return items;
     },
     async addFG(items) {
-      if (items.rmd_mat == "9999") {
+      if (items.rmd_mat == null) {
         items.rmd_size = this.data.input;
         items.rmd_mat = null;
       }
