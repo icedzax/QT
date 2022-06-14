@@ -72,7 +72,7 @@
                 v-model="items.amount"
                 @keypress="NumbersOnly"
                 class="text-xs p-1 text-center border-none"
-                :disabled="!approveStat"
+                :disabled="!approveStat || items.loading"
                 @input="itemChange(items)"
               />
             </td>
@@ -207,7 +207,7 @@
               v-model="inputField.amount"
               @keypress="NumbersOnly"
               class="text-xs p-1 text-center border-none"
-              :disabled="!approveStat"
+              :disabled="!approveStat || sys.loading"
               @change="itemChange(inputField)"
             />
           </td>
@@ -550,6 +550,10 @@ export default {
       //ถ้าไม่มี mat ให้ใส่ข้อมูลนี้
       if (!items.rmd_mat) {
         items.rmd_mat = " ";
+        if (this.data.selection == null && !items.created_at) {
+          //ในช่อง input ล่างสุด
+          this.setLoading(true);
+        }
       }
       const checktype = {
         VKORG: 1000,
@@ -560,11 +564,10 @@ export default {
       //เลือกเอา
       // if (this.data.selection !== null) {
       items.loading = await true;
+      // if (this.data.selection !== null){}
       const alluom = await FgService.getUOM(checktype);
-      console.log(alluom);
       let UOM_LIST = [];
       if (alluom.data[0]) {
-        console.log("uom ที่ได้::", alluom.data[0]);
         alluom.data.map((x) => {
           UOM_LIST.push(x.KMEIN);
         });
@@ -572,7 +575,7 @@ export default {
         items.typeunit = UOM_LIST;
       } else {
         items.typeunit = this.type_unit;
-        items.unit = "PC";
+        // items.unit = "PC";
       }
 
       if (isUnit) {
@@ -626,7 +629,6 @@ export default {
     async addFG(items) {
       if (items.rmd_mat == null) {
         items.rmd_size = this.data.input;
-        items.rmd_mat = null;
       }
       (items.qt = auth.temp_qt), await FgService.insert(items);
       const new_order = await FgService.items(auth.temp_qt);
