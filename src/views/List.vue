@@ -154,7 +154,7 @@
     </div> -->
     <div>
       <label for="table-search" class="sr-only">Search</label>
-      <div class="relative mt-1 mb-2">
+      <div class="relative mt-1 mb-2 flex justify-inline">
         <div
           class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
         >
@@ -179,6 +179,18 @@
           v-model="searchCus"
           @input="searchcus_input(searchCus)"
         />
+        <div class="text-gray-500 p-2.5">เลือก Sale Code</div>
+        <select
+          class="ml-2 bg-gray-50 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-32 pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          name=""
+          id=""
+          v-model="selectSale"
+          @change="SelectSale_met"
+        >
+          <option :value="item" v-for="(item, index) in Sale_code" :key="index">
+            {{ item }}
+          </option>
+        </select>
       </div>
 
       <table-lite
@@ -274,6 +286,8 @@ export default {
     return {
       list_au: [],
       searchCus: "",
+      selectSale: "ALL",
+      salecode_group: ["ALL"],
     };
   },
 
@@ -352,10 +366,15 @@ export default {
     AllList() {
       return this.list_au;
     },
+    Sale_code() {
+      return this.salecode_group;
+    },
   },
   async created() {
-    console.log("### USER_ID ###", auth.user_id);
-    const data_list = await UserService.list({ emp_code: auth.user_id });
+    const data_list = await UserService.list({
+      emp_code: auth.user_id,
+      sale_code: this.selectSale,
+    });
     this.list_au = data_list.data;
     auth.list = data_list.data;
 
@@ -382,43 +401,32 @@ export default {
   },
   methods: {
     async goto_qt(qt) {
-      console.log("VAT:", cus.vat);
       localStorage.setItem("tempqt", qt);
-      // this.$router.push({
-      //   name: "Home",
-      //   params: { list_qt: qt },
-      // });
+    },
+    async SelectSale_met() {
+      //แสดงข้อมูลในตารางใหม่ ให้ auth.list = ข้อมูลใหม่ แล้วใช้ฟังก์ชัน doSearch
+      const data_list = await UserService.filterlist({
+        emp_code: auth.user_id,
+        sale_code: this.selectSale,
+        customer: this.searchCus,
+      });
+      auth.list = data_list.data;
+      this.doSearch(0, 10, "id", "asc");
     },
     goto_pdf(qt) {
       window.open("https://report.zubbsteel.com/tcpdf/pdf/ZQT.php?ref=" + qt);
     },
     async searchcus_input(input) {
       input = input.trim();
-      if (input == "") {
-        const data_list = await UserService.list({ emp_code: auth.user_id });
-        this.list_au = data_list.data;
-        this.table.rows = this.list_au;
-        auth.list = this.table.rows;
-        this.doSearch(0, 10, "id", "asc");
-      } else {
-        const R = [];
-        for (let i = 0; i < this.list_au.length; i++) {
-          if (this.list_au[i].CNAME !== null) {
-            R.push(this.list_au[i].CNAME.toUpperCase());
-          }
-        }
-
-        const result = R.filter((word) => word.includes(input.toUpperCase())); //ข้อมูลที่ฟิลเตอร์เจอจริงๆ
-
-        const A = Object.values(this.list_au); //ดาต้าจริงก้อนใหญ่
-
-        const res = result.map((item) => {
-          return A.find((i) => i.CNAME.toUpperCase() == item);
-        });
-
-        this.table.rows = res;
-        auth.list = res;
-      }
+      const data_list = await UserService.filterCustomer({
+        emp_code: auth.user_id,
+        customer: input,
+        QT: this.selectSale,
+      });
+      this.list_au = data_list.data;
+      this.table.rows = data_list.data;
+      auth.list = this.table.rows;
+      this.doSearch(0, 10, "id", "asc");
     },
   },
 };
