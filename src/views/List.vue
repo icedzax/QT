@@ -180,7 +180,9 @@
           @input="searchcus_input(searchCus)"
         />
       </div>
+
       <table-lite
+        v-show="this.list_au.length > 0"
         :is-loading="table.isLoading"
         :columns="table.columns"
         :rows="table.rows"
@@ -355,7 +357,7 @@ export default {
     console.log("### USER_ID ###", auth.user_id);
     const data_list = await UserService.list({ emp_code: auth.user_id });
     this.list_au = data_list.data;
-    auth.list = this.list_au;
+    auth.list = data_list.data;
 
     // this.list_au.map((data) => {
     //   data.comfirm_cus = "";
