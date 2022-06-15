@@ -194,6 +194,7 @@
       </div>
 
       <table-lite
+        v-show="this.list_au.length > 0"
         :is-loading="table.isLoading"
         :columns="table.columns"
         :rows="table.rows"
@@ -375,13 +376,28 @@ export default {
       sale_code: this.selectSale,
     });
     this.list_au = data_list.data;
-    this.list_au.map((data) => {
-      let codesale = data.QT.split("-");
-      if (!this.salecode_group.includes(codesale[1])) {
-        this.salecode_group.push(codesale[1]);
-      }
-    });
-    auth.list = this.list_au;
+    auth.list = data_list.data;
+
+    // this.list_au.map((data) => {
+    //   data.comfirm_cus = "";
+    //   if (data.status == "TEMP" || data.status == "D") {
+    //     data.status = "แบบร่าง";
+    //     data.classi =
+    //       "bg-gray-100 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300";
+    //   } else if (data.status == "A" || data.status == "C") {
+    //     if (data.status == "C") {
+    //       data.comfirm_cus = "ลูกค้า";
+    //     }
+    //     data.status = "อนุมัติแล้ว";
+    //     data.classi =
+    //       "bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900";
+    //   } else if (data.status == "W") {
+    //     data.status = "รออนุมัติ";
+    //     data.classi =
+    //       "bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900";
+    //   }
+    //   data.created_at = data.created_at.substring(0, 16);
+    // });
   },
   methods: {
     async goto_qt(qt) {
