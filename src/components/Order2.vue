@@ -357,7 +357,7 @@ export default {
           { t: "W3", text: "W3:ปลีก" },
         ],
       },
-      type_unit: ["PC", "KG", "TRP"],
+      type_unit: ["PC", "KG", "EA", "LE", "ROL"],
       tprice: [],
       inputField: {},
     };
@@ -399,16 +399,11 @@ export default {
           MATNR: item.rmd_mat,
           KONDA: item.ptype,
         };
-        // const alluom = await FgService.getUOM(payloadi);
-        // let List_UOM = [];
-        // if (alluom.data[0]) {
-        //   alluom.data.map((x) => {
-        //     List_UOM.push(x.KMEIN);
-        //   });
-        //   item.typeunit = List_UOM;
-        // }
+        const UOM_return = await this.getUOM_n(payloadi);
+        if (UOM_return.length !== 0) {
+          item.typeunit = UOM_return;
+        }
       });
-      // console.log("DATA ORDER::", this.order.list);
       return this.order.list;
     },
   },
@@ -510,6 +505,16 @@ export default {
 
       this.setLoading(false);
     },
+    async getUOM_n(payload) {
+      const alluom = await FgService.getUOM(payload);
+      let List_UOM = [];
+      if (alluom.data[0]) {
+        alluom.data.map((x) => {
+          List_UOM.push(x.KMEIN);
+        });
+      }
+      return List_UOM;
+    },
 
     onInput(event) {
       this.data.selection = null;
@@ -551,16 +556,16 @@ export default {
       if (!items.rmd_mat) {
         items.rmd_mat = " ";
         if (this.data.selection == null && !items.created_at) {
-          //ในช่อง input ล่างสุด
           this.setLoading(true);
         }
+      } else {
+        await this.setLoading(true);
       }
       const checktype = {
         VKORG: 1000,
         MATNR: items.rmd_mat,
         KONDA: items.ptype,
       };
-
       //เลือกเอา
       // if (this.data.selection !== null) {
       items.loading = await true;
