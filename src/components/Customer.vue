@@ -319,7 +319,7 @@ export default {
       }
     },
     async update_data() {
-      if (this.data.selection !== null) {
+      if (this.data.selection !== null || this.cus.data.CNAME) {
         const send_update = await CusService.setCus({
           KUNNR: cus.data.KUNNR,
           LAND1: cus.data.LAND1,
