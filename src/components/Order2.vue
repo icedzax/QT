@@ -357,7 +357,7 @@ export default {
           { t: "W3", text: "W3:ปลีก" },
         ],
       },
-      type_unit: ["PC", "KG", "TRP"],
+      type_unit: ["PC", "KG", "EA", "LE", "ROL"],
       tprice: [],
       inputField: {},
     };
@@ -399,14 +399,10 @@ export default {
           MATNR: item.rmd_mat,
           KONDA: item.ptype,
         };
-        // const alluom = await FgService.getUOM(payloadi);
-        // let List_UOM = [];
-        // if (alluom.data[0]) {
-        //   alluom.data.map((x) => {
-        //     List_UOM.push(x.KMEIN);
-        //   });
-        //   item.typeunit = List_UOM;
-        // }
+        const UOM_LOAD = await this.getUOM_n(payloadi);
+        if (UOM_LOAD.length > 0) {
+          item.typeunit = UOM_LOAD;
+        }
       });
       // console.log("DATA ORDER::", this.order.list);
       return this.order.list;
@@ -509,6 +505,16 @@ export default {
       this.inputField = await this.calItem(item);
 
       this.setLoading(false);
+    },
+    async getUOM_n(body) {
+      const alluom = await FgService.getUOM(body);
+      let UOM_LIST = [];
+      if (alluom.data[0]) {
+        alluom.data.map((x) => {
+          UOM_LIST.push(x.KMEIN);
+        });
+      }
+      return UOM_LIST;
     },
 
     onInput(event) {
