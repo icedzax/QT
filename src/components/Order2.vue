@@ -552,6 +552,11 @@ export default {
         items.rmd_mat = " ";
         if (this.data.selection == null && !items.created_at) {
           //ในช่อง input ล่างสุด
+
+          this.setLoading(true);
+        }
+      } else {
+        if (!items.created_at) {
           this.setLoading(true);
         }
       }
