@@ -174,7 +174,8 @@
                 type="text"
                 class="w-full text-xs p-1 text-left border-none"
                 v-model="items.REMARK"
-                @input="itemChange(items)"
+                @keydown="EditRemark(items)"
+                @change="itemChange(items)"
               />
             </td>
           </tr>
@@ -360,6 +361,7 @@ export default {
       type_unit: ["PC", "KG", "EA", "LE", "ROL"],
       tprice: [],
       inputField: {},
+      remark: "all",
     };
   },
   props: ["statusApp", "mat"],
@@ -385,6 +387,7 @@ export default {
     List() {
       this.order.list.map(async (item) => {
         item.typeunit = ["PC", "KG", "EA", "LE", "ROL"];
+
         item.loading = false;
         if (item.REMARK) {
           item.show = true;
@@ -394,17 +397,18 @@ export default {
           item.min = "";
         }
 
-        const payloadi = {
-          VKORG: 1000,
-          MATNR: item.rmd_mat,
-          KONDA: item.ptype,
-        };
-        const UOM_LOAD = await this.getUOM_n(payloadi);
-        if (UOM_LOAD.length > 0) {
-          item.typeunit = UOM_LOAD;
+        if (this.remark == "all" || item.id == this.remark) {
+          const payloadi = {
+            VKORG: 1000,
+            MATNR: item.rmd_mat,
+            KONDA: item.ptype,
+          };
+          const UOM_LOAD = await this.getUOM_n(payloadi);
+          if (UOM_LOAD.length > 0) {
+            item.typeunit = UOM_LOAD;
+          }
         }
       });
-      // console.log("DATA ORDER::", this.order.list);
       return this.order.list;
     },
   },
@@ -501,7 +505,6 @@ export default {
         item.typeunit = UOM_LIST;
       }
       item = await this.getPriceMaster(item);
-      console.log("ITEM", item);
       this.inputField = await this.calItem(item);
 
       this.setLoading(false);
@@ -598,6 +601,7 @@ export default {
       await this.setLoading(false);
       items.loading = await false;
     }, 800),
+
     async calItem(items) {
       if (items.unit === "KG") {
         items.cal_price = items.price_unit * (items.amount * items.rmd_weight);
@@ -638,6 +642,7 @@ export default {
       return items;
     },
     async addFG(items) {
+      this.remark = "all";
       if (items.rmd_mat == null) {
         items.rmd_size = this.data.input;
       }
@@ -656,6 +661,9 @@ export default {
       this.$refs["typeahead"].$data.input = "";
     },
 
+    EditRemark(items) {
+      this.remark = items.id;
+    },
     async deletes(no, idsent) {
       let num = parseInt(no) + 1;
       if (confirm("นำรายการที่ " + num + " ออกใช่หรือไม่?")) {
