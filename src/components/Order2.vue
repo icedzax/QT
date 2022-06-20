@@ -1,20 +1,20 @@
 <template>
   <div class="mx-2">
-    <table class="table-fixed text-xxs sm:text-sm w-fit">
+    <table class="table-auto text-xxs sm:text-sm">
       <thead>
         <tr>
-          <th class="w-12">ลำดับ</th>
+          <th>ลำดับ</th>
           <th class="w-2/12">รหัสสินค้า</th>
           <th class="w-3/12">รายการสินค้า</th>
-          <th class="w-11">จำนวนเส้น</th>
-          <th class="w-11">เส้น/มัด</th>
-          <th class="w-28">ราคา</th>
-          <th class="w-1/12">น้ำหนัก</th>
-          <th class="w-12">หน่วย</th>
-          <th class="w-1/12">ราคาก่อน VAT7%</th>
+          <th>จำนวนเส้น</th>
+          <th>เส้น/มัด</th>
+          <th>ราคา</th>
+          <th>น้ำหนัก</th>
+          <th>หน่วย</th>
+          <th>ราคาก่อน VAT7%</th>
           <th class="w-5" id="font_com">ไม่คิดคอม</th>
-          <th class="w-1/12">รวม นน.</th>
-          <th class="w-1/12">จำนวนเงิน</th>
+          <th>รวม นน.</th>
+          <th>จำนวนเงิน</th>
 
           <th v-if="approveStat">
             <svg
@@ -23,7 +23,7 @@
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 128 128"
               @click="deleteAll(this.auth.temp_qt)"
-              class="mx-1 w-5 h-5"
+              class="w-5 h-5"
             >
               <title>x</title>
               <path
@@ -42,7 +42,7 @@
         <template v-for="(items, index) in List" :key="index">
           <tr class="w-full">
             <td @click="toggle(items.id)">
-              <div class="flex items-center">
+              <div class="flex justify-center">
                 <span class="mx-1 text-xs">{{ index + 1 }}</span>
 
                 <div class="mx-1">
@@ -141,7 +141,6 @@
             <td class="bg-gray-50 text-center">
               <input
                 type="checkbox"
-                class="w-44"
                 v-model="checkbox_com"
                 :value="items.id"
                 :id="items.id"
@@ -164,7 +163,7 @@
                 viewBox="0 0 512 512"
                 fill="red"
                 @click="deletes(index, items.id)"
-                class="mx-1 w-5 h-5"
+                class="w-5 h-5"
                 v-show="!items.loading"
               >
                 <title>Remove</title>
