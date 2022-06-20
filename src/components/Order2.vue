@@ -12,8 +12,10 @@
           <th class="w-1/12">น้ำหนัก</th>
           <th class="w-12">หน่วย</th>
           <th class="w-1/12">ราคาก่อน VAT7%</th>
+          <th class="w-9">ไม่คิดคอม</th>
           <th class="w-1/12">รวม นน.</th>
           <th class="w-1/12">จำนวนเงิน</th>
+
           <th v-if="approveStat">
             <svg
               id="Layer_1"
@@ -134,6 +136,15 @@
                 @change="itemChange(items)"
                 class="p-1 text-sm border-none text-center"
                 :disabled="!approveStat"
+              />
+            </td>
+            <td class="bg-gray-50 text-center">
+              <input
+                type="checkbox"
+                class="w-44"
+                v-model="checkbox_com"
+                :value="items.id"
+                :id="items.id"
               />
             </td>
             <td class="bg-gray-50 text-center">
@@ -273,6 +284,9 @@
               :disabled="!approveStat"
             />
           </td>
+          <td>
+            <input type="checkbox" v-model="inputField.ipcheckbox" />
+          </td>
           <td class="bg-gray-50 text-center">
             <v-num
               #="{ number }"
@@ -311,6 +325,7 @@
       </tbody>
       <!-- <InputItem  /> -->
     </table>
+    <p>{{ this.checkbox_com }}</p>
   </div>
 </template>
 <script>
@@ -360,6 +375,7 @@ export default {
       type_unit: ["PC", "KG", "TRP"],
       tprice: [],
       inputField: {},
+      checkbox_com: [],
     };
   },
   props: ["statusApp", "mat"],
