@@ -1,6 +1,6 @@
 <template>
   <div class="mx-2">
-    <table class="table-fixed text-xxs sm:text-xs w-fit">
+    <table class="table-fixed text-xxs sm:text-sm w-fit">
       <thead>
         <tr>
           <th class="w-12">ลำดับ</th>
@@ -12,7 +12,7 @@
           <th class="w-1/12">น้ำหนัก</th>
           <th class="w-12">หน่วย</th>
           <th class="w-1/12">ราคาก่อน VAT7%</th>
-          <th class="w-9">ไม่คิดคอม</th>
+          <th class="w-5" id="font_com">ไม่คิดคอม</th>
           <th class="w-1/12">รวม นน.</th>
           <th class="w-1/12">จำนวนเงิน</th>
 
@@ -730,5 +730,8 @@ td {
 }
 .bundle {
   font-size: 0.75rem;
+}
+#font_com {
+  font-size: 10px;
 }
 </style>
