@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-5 md:container">
+  <div class="mx-5 lg:container">
     <div
       class="box grid overflow-hidden grid-cols-2 xl:grid-cols-3 grid-rows-2 gap-2 flex-wrap mt-1"
     >
