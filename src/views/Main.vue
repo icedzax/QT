@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-5 md:container">
+  <div class="mx-5 lg:container">
     <div
       class="box grid overflow-hidden grid-cols-2 xl:grid-cols-3 grid-rows-2 gap-2 flex-wrap mt-1"
     >
@@ -7,7 +7,7 @@
         <Header></Header>
       </div>
       <div
-        class="xl:row-start-1 xl:row-span-2 xl:col-start-3 xl:col-span-1 xl:h-24 invisible xl:visible"
+        class="row-start-6 xl:row-start-1 xl:row-span-2 xl:col-start-3 xl:col-span-1 xl:h-24 invisible xl:visible"
       >
         <Header_r></Header_r>
       </div>
