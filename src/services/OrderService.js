@@ -1,6 +1,12 @@
 import Api from "../services/Api";
 
 export default {
+  unApp(payload) {
+    return Api().post(`/unApp`, payload);
+  },
+  isRef(payload) {
+    return Api().post(`/isRef`, payload);
+  },
   priceValid(payload) {
     return Api().post(`/pvalid`, payload);
   },
