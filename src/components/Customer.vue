@@ -254,7 +254,13 @@ export default {
       list_qt: this.$route.params.list_qt,
     };
   },
-  created() {},
+  created() {
+    if (cus.vat == "0.07") {
+      this.vat = 1;
+    } else {
+      this.vat = 0;
+    }
+  },
 
   computed: {
     place_holder() {
