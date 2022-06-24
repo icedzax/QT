@@ -272,7 +272,7 @@ export default {
       if (cus.vat == "0.07") {
         this.vat = 1;
       } else {
-        this.vat = 0;
+        this.vat = null;
       }
       return cus.vat;
     },
