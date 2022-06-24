@@ -254,13 +254,7 @@ export default {
       list_qt: this.$route.params.list_qt,
     };
   },
-  created() {
-    if (cus.vat == "0.07") {
-      this.vat = 1;
-    } else {
-      this.vat = 0;
-    }
-  },
+  created() {},
 
   computed: {
     place_holder() {
@@ -275,6 +269,11 @@ export default {
       if (order.status == "TEMP" || order.status == "D") return true;
     },
     vvat() {
+      if (cus.vat == "0.07") {
+        this.vat = 1;
+      } else {
+        this.vat = 0;
+      }
       return cus.vat;
     },
   },
@@ -325,6 +324,7 @@ export default {
       }
     },
     async update_data() {
+      console.log("this.vat:", this.vat);
       if (this.data.selection !== null || this.cus.data.CNAME) {
         const send_update = await CusService.setCus({
           KUNNR: cus.data.KUNNR,
