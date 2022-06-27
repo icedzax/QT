@@ -51,7 +51,7 @@
         <Rule :sw="sumw" :pship="order.ship" :pterm="order.term"></Rule>
       </div>
       <div class="row-span-5 col-start-1 col-span-2 xl:col-start-3 h-auto">
-        <Total :sp="sump" :vat="chk_vat"></Total>
+        <Total :sp="sump" :vat="chk_vat" :tf="sumtf"></Total>
       </div>
     </div>
     <!--  ก้อนลายเซนต์  -->
@@ -93,6 +93,7 @@ export default {
       order,
       sumweight: 0,
       sumprice: 0,
+      sumtranf: 0,
       cus,
       tprice: [],
       type: {
@@ -238,16 +239,30 @@ export default {
 
       if (order.list) {
         order.list.map((data) => {
-          if (data.cal_price && data.cal_price.length > 3) {
-            data.cal_price = this.data.cal_price;
+          if (data.rmd_mat !== "TRANSPORT") {
+            if (data.cal_price && data.cal_price.length > 3) {
+              data.cal_price = this.data.cal_price;
+            }
+            this.sumprice = this.sumprice + parseFloat(data.cal_price);
+            // if (data.cal_price && data.cal_price.length > 3) {
+            //   data.cal_price = this.addComma(data.cal_price);
+            // }
           }
-          this.sumprice = this.sumprice + parseFloat(data.cal_price);
-          // if (data.cal_price && data.cal_price.length > 3) {
-          //   data.cal_price = this.addComma(data.cal_price);
-          // }
         });
       }
       return this.sumprice;
+    },
+    sumtf() {
+      this.sumtranf = 0;
+      order.list.map((data) => {
+        if (data.rmd_mat === "TRANSPORT") {
+          this.sumtranf = this.sumtranf + parseFloat(data.cal_price);
+          // if (data.cal_price && data.cal_price.length > 3) {
+          //   data.cal_price = this.addComma(data.cal_price);
+          // }
+        }
+      });
+      return this.sumtranf;
     },
     approved() {
       const app = order.status;

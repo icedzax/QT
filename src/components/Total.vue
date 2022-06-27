@@ -15,7 +15,9 @@
         ค่าขนส่ง
       </div>
       <div class="row-start-2 col-start-3 xl:col-start-2">
-        {{ this.transport }}
+        <v-num #="{ number }" :value="tranf" round>
+          {{ number }}
+        </v-num>
       </div>
       <div
         class="row-start-3 col-start-2 xl:col-start-1 col-span-1 font-semibold"
@@ -42,7 +44,7 @@
 </template>
 <script>
 export default {
-  props: ["sp", "vat"],
+  props: ["sp", "vat", "tf"],
   data() {
     return {
       transport: 0.0,
@@ -50,6 +52,9 @@ export default {
   },
   created() {},
   computed: {
+    tranf() {
+      return this.tf;
+    },
     sumprice() {
       let fixsp = this.sp.toFixed(2);
       let a = fixsp.toString();
@@ -59,14 +64,17 @@ export default {
     },
     sumprice_2() {
       let fixsp = this.sp.toFixed(2);
-      let sum = fixsp + this.transport;
+      let sum = parseFloat(fixsp) + parseFloat(this.tranf);
 
       let a = parseFloat(sum).toFixed(2).toString();
       const afSP = this.addComma(a);
       return afSP;
     },
     cal_vat() {
-      const v = (this.sp * this.vat).toFixed(2);
+      const v = (
+        (parseFloat(this.sp) + parseFloat(this.tranf)) *
+        this.vat
+      ).toFixed(2);
       let a = v.toString();
       const afSP = this.addComma(a);
       return afSP;

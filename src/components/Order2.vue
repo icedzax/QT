@@ -368,10 +368,10 @@ export default {
     saleType() {
       const scode = localStorage.getItem("tempqt").substring(3, 4);
       if (["X", "L", "R"].includes(scode)) {
-        console.log(this.type.retail);
+        // console.log(this.type.retail);
         return this.type.retail;
       }
-      console.log(this.type.Wholesale);
+      // console.log(this.type.Wholesale);
       return this.type.Wholesale;
     },
     approveStat() {
@@ -432,7 +432,7 @@ export default {
       }
 
       const prepush = await FgService.get(this.mat);
-      console.log("prepush", prepush);
+      // console.log("prepush", prepush);
       const payload = {
         VKORG: 1000,
         MATNR: this.mat,
@@ -473,7 +473,7 @@ export default {
   methods: {
     async selectItem(item) {
       this.setLoading(true);
-      const r_price = ["X", "R", "l"];
+      const r_price = ["X", "R", "L"];
       const saleChannel = r_price.includes(
         localStorage.getItem("tempqt").substring(3, 4)
       )
@@ -482,7 +482,7 @@ export default {
       document.getElementsByClassName(
         "simple-typeahead-list"
       )[0].style.visibility = "hidden";
-      console.log(item);
+      // console.log(item);
       this.data.selection = item;
       item.rmd_weight = item.max > 0 ? item.max : item.stdweight;
       item.min = item.min == 0.0 ? 0 : item.min;
@@ -505,7 +505,7 @@ export default {
         item.typeunit = UOM_LIST;
       }
       item = await this.getPriceMaster(item);
-      console.log("ITEM", item);
+      // console.log("ITEM", item);
       this.inputField = await this.calItem(item);
 
       this.setLoading(false);
@@ -548,11 +548,11 @@ export default {
 
     itemChange: debounce(async function (items, isUnit) {
       //ถ้าไม่มี mat ให้ใส่ข้อมูลนี้
+      this.setLoading(true);
       if (!items.rmd_mat) {
         items.rmd_mat = " ";
         if (this.data.selection == null && !items.created_at) {
           //ในช่อง input ล่างสุด
-          this.setLoading(true);
         }
       }
       const checktype = {
