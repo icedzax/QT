@@ -8,8 +8,8 @@
         <div class="text-base md:text-xl text-center lg:text-left">
           ใบเสนอราคา (สำนักงานใหญ่)
         </div>
-        <div class="flex justify-inline">
-          <div class="mx-2 h-10 w-10" @click="goto_pdf">
+        <div class="flex justify-inline ml-2">
+          <div class="h-10 w-10" @click="goto_pdf">
             <svg
               version="1"
               xmlns="http://www.w3.org/2000/svg"
@@ -36,6 +36,59 @@
               <g fill="#1976D2">
                 <rect x="16" y="33" width="17" height="2" />
                 <rect x="16" y="37" width="13" height="2" />
+              </g>
+            </svg>
+          </div>
+          <div class="w-10" @click="goto_so">
+            <svg
+              version="1"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              enable-background="new 0 0 48 48"
+            >
+              <polygon
+                fill="#eb9ecd"
+                points="40,45 8,45 8,3 30,3 40,13"
+                id="id_101"
+              ></polygon>
+              <polygon
+                fill="#E1F5FE"
+                points="38.5,14 29,14 29,4.5"
+                id="id_102"
+              ></polygon>
+              <g fill="#1976D2">
+                <rect
+                  x="16"
+                  y="21"
+                  width="17"
+                  height="2"
+                  id="id_103"
+                  style="fill: rgb(143, 83, 120)"
+                ></rect>
+                <rect
+                  x="16"
+                  y="25"
+                  width="13"
+                  height="2"
+                  id="id_104"
+                  style="fill: rgb(143, 83, 129)"
+                ></rect>
+                <rect
+                  x="16"
+                  y="29"
+                  width="17"
+                  height="2"
+                  id="id_105"
+                  style="fill: rgb(143, 83, 132)"
+                ></rect>
+                <rect
+                  x="16"
+                  y="33"
+                  width="13"
+                  height="2"
+                  id="id_106"
+                  style="fill: rgb(143, 83, 132)"
+                ></rect>
               </g>
             </svg>
           </div>
@@ -128,6 +181,12 @@ export default {
     goto_pdf() {
       window.open(
         "https://report.zubbsteel.com/tcpdf/pdf/ZQT.php?ref=" + auth.temp_qt
+      );
+    },
+    goto_so() {
+      window.open(
+        "https://report.zubbsteel.com/tcpdf/pdf/ZORDER_A5.php?ref=" +
+          auth.temp_qt
       );
     },
     goto_list() {
