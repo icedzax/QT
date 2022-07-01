@@ -168,12 +168,22 @@
             </td>
           </tr>
           <tr v-if="items.show" class="">
-            <td :colspan="12" class="border text-xs">
+            <td :colspan="8" class="border text-xs">
               <input
                 placeholder="หมายเหตุ : .."
                 type="text"
                 class="w-full text-xs p-1 text-left border-none"
                 v-model="items.REMARK"
+                @input="itemChange(items)"
+              />
+            </td>
+            <td class="font-semibold text-center bg-gray-50">ราคาเบส</td>
+            <td :colspan="3">
+              <input
+                placeholder=""
+                type="text"
+                class="w-full text-xs p-1 text-left border-none"
+                v-model="items.base_price"
                 @input="itemChange(items)"
               />
             </td>
