@@ -5,7 +5,7 @@
         <tr>
           <th class="w-12">ลำดับ</th>
           <th class="w-2/12">รหัสสินค้า</th>
-          <th class="w-3/12">รายการสินค้า</th>
+          <th class="w-4/12">รายการสินค้า</th>
           <th class="w-11">จำนวนเส้น</th>
           <th class="w-11">เส้น/มัด</th>
           <th class="w-28">ราคา</th>
@@ -21,7 +21,7 @@
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 128 128"
               @click="deleteAll(this.auth.temp_qt)"
-              class="mx-1 w-5 h-5"
+              class="w-4"
             >
               <title>x</title>
               <path
@@ -52,7 +52,7 @@
               <input
                 type="text"
                 v-model="items.rmd_mat"
-                class="text-xs p-1 text-center border-none"
+                class="tdlist text-xs p-1 text-center border-none"
                 :disabled="!approveStat"
                 @input="itemChange(items)"
               />
@@ -61,7 +61,7 @@
               <input
                 type="text"
                 v-model="items.rmd_size"
-                class="py-0.5 text-xs border-none text-center"
+                class="tdlist py-0.5 text-xs border-none text-center"
                 :disabled="!approveStat"
                 @input="itemChange(items)"
               />
@@ -71,13 +71,13 @@
                 type="text"
                 v-model="items.amount"
                 @keypress="NumbersOnly"
-                class="text-xs p-1 text-center border-none"
+                class="tdlist text-xs p-1 text-center border-none"
                 :disabled="!approveStat || items.loading"
                 @input="itemChange(items)"
               />
             </td>
             <td class="bg-gray-50 text-xs text-center bundle">
-              <span
+              <span class="tdlist"
                 >{{
                   items.bundle === 1 || items.bundle === 0 ? "" : items.bundle
                 }}
@@ -86,7 +86,7 @@
             <td class="">
               <select
                 :disabled="!approveStat"
-                class="border-none text-xs"
+                class="tdlist border-none text-xs"
                 v-model="items.ptype"
                 @change="itemChange(items, true), (items.loading = true)"
               >
@@ -101,14 +101,16 @@
             </td>
             <td>
               <div class="flex items-center">
-                <span class="text-right text-xs w-3/6 mx-auto" v-if="items.min"
+                <span
+                  class="tdlist text-right text-xs w-3/6 mx-auto"
+                  v-if="items.min"
                   >{{ items.min }} -
                 </span>
                 <input
                   type="text"
                   v-model="items.rmd_weight"
                   @change="itemChange(items)"
-                  class="text-xs p-1 text-center border-none focus:outline-none"
+                  class="tdlist text-xs p-1 text-center border-none focus:outline-none"
                   :disabled="!approveStat"
                 />
               </div>
@@ -117,7 +119,7 @@
             <td>
               <select
                 v-model="items.unit"
-                class="w-full text-xs p-1 border-none"
+                class="tdlist w-full text-xs p-1 border-none"
                 :disabled="!approveStat"
                 @change="itemChange(items, true), (items.loading = true)"
               >
@@ -129,20 +131,21 @@
 
             <td>
               <input
+                id="price_u"
                 type="text"
                 v-model="items.price_unit"
                 @change="itemChange(items)"
-                class="p-1 text-sm border-none text-center"
+                class="tdlist p-1 text-sm border-none text-center"
                 :disabled="!approveStat"
               />
             </td>
-            <td class="bg-gray-50 text-center">
+            <td class="tdlist bg-gray-50 text-center">
               <v-num #="{ number }" :value="items.rmd_weight * items.amount">
                 {{ number }}
               </v-num>
             </td>
-            <td class="bg-gray-50 text-center">
-              <v-num #="{ number }" :value="items.cal_price">
+            <td class="tdlist bg-gray-50 text-center">
+              <v-num class="" #="{ number }" :value="items.cal_price">
                 {{ number }}
               </v-num>
             </td>
@@ -153,7 +156,7 @@
                 viewBox="0 0 512 512"
                 fill="red"
                 @click="deletes(index, items.id)"
-                class="mx-1 w-5 h-5"
+                class="w-4"
                 v-show="!items.loading"
               >
                 <title>Remove</title>
@@ -302,7 +305,7 @@
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 48 48"
               enable-background="new 0 0 48 48"
-              class="mx-1 w-5 h-5"
+              class="w-4"
               v-show="!sys.loading"
               v-if="this.List.length == 0 || approveStat"
               @click="addFG(inputField)"
@@ -724,5 +727,9 @@ td {
 }
 .bundle {
   font-size: 0.75rem;
+}
+
+.tdlist {
+  font-size: 11px;
 }
 </style>
