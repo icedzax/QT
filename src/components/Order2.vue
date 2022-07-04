@@ -145,7 +145,7 @@
               </v-num>
             </td>
             <td class="tdlist bg-gray-50 text-center">
-              <v-num class="" #="{ number }" :value="items.cal_price">
+              <v-num #="{ number }" :value="items.cal_price">
                 {{ number }}
               </v-num>
             </td>

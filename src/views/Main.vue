@@ -176,6 +176,7 @@ export default {
         MOBILE: us.data[0].MOBILE,
         CONTACTNAME: us.data[0].CONTACTNAME,
       };
+      order.plant = us.data[0].plant;
     }
 
     if (auth.temp_qt) {

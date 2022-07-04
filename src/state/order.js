@@ -9,6 +9,7 @@ const order = reactive({
   cust: {},
   term: null,
   ship: null,
+  plant: null,
 });
 
 export { order };
