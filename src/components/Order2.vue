@@ -8,9 +8,9 @@
           <th class="w-4/12">รายการสินค้า</th>
           <th class="w-11">จำนวนเส้น</th>
           <th class="w-11">เส้น/มัด</th>
-          <th class="w-24">ราคา</th>
+          <th class="w-28">ราคา</th>
           <th class="w-1/12">น้ำหนัก</th>
-          <th class="w-12">หน่วย</th>
+          <th class="w-14">หน่วย</th>
           <th class="w-1/12">ราคาก่อน VAT7%</th>
           <th class="w-1/12">รวม นน.</th>
           <th class="w-1/12">จำนวนเงิน</th>
@@ -61,7 +61,7 @@
               <input
                 type="text"
                 v-model="items.rmd_size"
-                class="tdlist py-0.5 text-xs border-none text-center"
+                class="tdlist_s py-0.5 text-xs border-none text-center"
                 :disabled="!approveStat"
                 @input="itemChange(items)"
               />
@@ -697,7 +697,7 @@ export default {
 <style>
 #typeahead_id {
   width: 95%;
-  font-size: 0.5rem;
+  font-size: 2vh;
   line-height: 0.96rem;
   padding: 0.25rem;
   text-align: center;
@@ -735,19 +735,14 @@ td {
   @apply w-1/12 text-xs md:text-sm border border-slate-200;
 }
 .bundle {
-  font-size: 0.75rem;
+  font-size: 100%;
 }
 
-.tdlist {
-  font-size: 2vh;
-}
-.inputlist {
-  font-size: 2vh;
-}
-.optionalcss {
-  font-size: 2vh;
-}
+.tdlist,
+.tdlist_s,
+.inputlist,
+.optionalcss,
 th {
-  font-size: 2.5vh;
+  font-size: 100%;
 }
 </style>
