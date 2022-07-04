@@ -8,7 +8,7 @@
           <th class="w-4/12">รายการสินค้า</th>
           <th class="w-11">จำนวนเส้น</th>
           <th class="w-11">เส้น/มัด</th>
-          <th class="w-20">ราคา</th>
+          <th class="w-24">ราคา</th>
           <th class="w-1/12">น้ำหนัก</th>
           <th class="w-12">หน่วย</th>
           <th class="w-1/12">ราคาก่อน VAT7%</th>
@@ -86,7 +86,7 @@
             <td class="">
               <select
                 :disabled="!approveStat"
-                class="tdlist border-none text-xs"
+                class="tdlist border-none text-xs w-full"
                 v-model="items.ptype"
                 @change="itemChange(items, true), (items.loading = true)"
               >
@@ -739,15 +739,15 @@ td {
 }
 
 .tdlist {
-  font-size: 8px;
+  font-size: 2vh;
 }
 .inputlist {
-  font-size: 9px;
+  font-size: 2vh;
 }
 .optionalcss {
-  font-size: 8px;
+  font-size: 2vh;
 }
 th {
-  font-size: 10px;
+  font-size: 2.5vh;
 }
 </style>
