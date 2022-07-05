@@ -703,7 +703,14 @@ export default {
   text-align: center;
   border-style: none;
 }
-
+#typeahead_id_cname {
+  width: 95%;
+  font-size: 2vh;
+  line-height: 0.96rem;
+  padding: 0.25rem;
+  text-align: center;
+  border-style: none;
+}
 div.simple-typeahead-list {
   height: 130px;
   font-size: 9px;

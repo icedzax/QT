@@ -25,12 +25,32 @@
           :minInputLength="1"
           :itemProjection="
             (customers) => {
-              return `${customers.KUNNR} ${customers.CNAME}`;
+              return `${customers.KUNNR}`;
             }
           "
         >
         </vue3-simple-typeahead>
-        <p class="font-bold" v-else>{{ place_holder }}</p>
+        <vue3-simple-typeahead
+          class="text-black text-xl -mt-1 ml-1"
+          v-if="approveStat || !cus.data.KUNNR"
+          id="typeahead_id_cname"
+          :placeholder="place_holder_cname"
+          :items="customers"
+          @selectItem="selectItem"
+          @onInput="onInput"
+          @onBlur="onBlur"
+          @input="lookupUser"
+          :minInputLength="1"
+          :itemProjection="
+            (customers) => {
+              return `${customers.CNAME}`;
+            }
+          "
+        >
+        </vue3-simple-typeahead>
+        <p class="font-bold" v-else>
+          {{ place_holder }} + {{ place_holder_cname }}
+        </p>
       </div>
       <div class="w-full">
         <div
@@ -252,15 +272,17 @@ export default {
       },
       statusE: false,
       list_qt: this.$route.params.list_qt,
+      code_cus: "",
     };
   },
   created() {},
 
   computed: {
     place_holder() {
-      return cus.data.KUNNR
-        ? `${cus.data.KUNNR} ${cus.data.CNAME || ""}`
-        : "รหัส / ชื่อลูกค้า";
+      return cus.data.KUNNR ? `${cus.data.KUNNR || ""}` : "รหัส / ชื่อลูกค้า";
+    },
+    place_holder_cname() {
+      return cus.data.CNAME ? `${cus.data.CNAME || ""}` : "รหัส / ชื่อลูกค้า";
     },
     cusdata() {
       return this.data.selection || order.cust;
@@ -275,6 +297,16 @@ export default {
         this.vat = null;
       }
       return cus.vat;
+    },
+  },
+  watch: {
+    place_holder(after, before) {
+      console.log("ช่อง1หลัง::", after);
+      console.log("ช่อง1ก่อน::", before);
+    },
+    place_holder_cname(after, before) {
+      console.log("ช่อง2หลัง::", after);
+      console.log("ช่อง2ก่อน::", before);
     },
   },
   methods: {
@@ -298,8 +330,12 @@ export default {
       const Data_cus = await CusService.select({
         cus_name: this.data.selection.KUNNR,
       });
-      this.showcus =
-        this.data.selection.KUNNR + " " + this.data.selection.CNAME;
+      console.log(this.data.selection);
+      var namec = document.getElementById("typeahead_id_cname");
+      var codec = document.getElementById("typeahead_id");
+      console.log("CODE:", codec);
+      console.log("NAME:", namec);
+
       await CusService.setCus({
         KUNNR: this.data.selection.KUNNR,
         LAND1: Data_cus.data[0].LAND1,
@@ -376,6 +412,7 @@ export default {
       this.data.selection = null;
       this.data.input = event.input;
       this.listFiltered = event.items;
+      console.log("place_holcn:", this.place_holder_cname);
     },
     onBlur(event) {
       this.data.input = event.input;
@@ -390,6 +427,7 @@ export default {
   padding-top: 2px;
   padding-bottom: 2px;
 }
+
 .st0 {
   fill: url(#SVGID_1_);
 }
