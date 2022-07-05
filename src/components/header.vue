@@ -16,7 +16,7 @@
           <div class="row-start-1 row-span-2 col-span-1">
             <img src="../img/QR.png" alt="" class="w-auto h-auto md:h-20" />
           </div>
-          <div class="mt-4 flex justify-inline col-span-3">
+          <div class="mt-4 items-center flex justify-inline col-span-3">
             <label class="mr-4">ขึ้นของที่ </label>
             <select
               :disabled="

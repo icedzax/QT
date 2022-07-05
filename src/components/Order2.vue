@@ -1,6 +1,6 @@
 <template>
   <div class="mx-2">
-    <table class="table-fixed text-xxs sm:text-xs w-fit">
+    <table class="table-fixed w-fit">
       <thead>
         <tr>
           <th class="w-12">ลำดับ</th>
@@ -61,7 +61,7 @@
               <input
                 type="text"
                 v-model="items.rmd_size"
-                class="tdlist_s py-0.5 text-xs border-none text-center"
+                class="py-0.5 border-none text-center xl:text-sm text-xs"
                 :disabled="!approveStat"
                 @input="itemChange(items)"
               />
@@ -100,12 +100,11 @@
               </select>
             </td>
             <td>
-              <div class="flex items-center">
-                <span
-                  class="tdlist text-right text-xs w-3/6 mx-auto"
-                  v-if="items.min"
-                  >{{ items.min }} -
+              <div class="flex flex-row items-center">
+                <span class="tdlist text-right text-xs mx-auto" v-if="items.min"
+                  >{{ items.min }}
                 </span>
+                <span v-if="items.min" class="ml-1">-</span>
                 <input
                   type="text"
                   v-model="items.rmd_weight"
@@ -727,6 +726,7 @@ select {
 input {
   @apply w-full;
 }
+
 th {
   @apply font-light border border-slate-200 text-xs md:text-sm;
 }
