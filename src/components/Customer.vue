@@ -301,12 +301,8 @@ export default {
   },
   watch: {
     place_holder(after, before) {
-      console.log("ช่อง1หลัง::", after);
-      console.log("ช่อง1ก่อน::", before);
-    },
-    place_holder_cname(after, before) {
-      console.log("ช่อง2หลัง::", after);
-      console.log("ช่อง2ก่อน::", before);
+      console.log("หลัง==", after);
+      this.place_holder = after;
     },
   },
   methods: {
@@ -330,11 +326,9 @@ export default {
       const Data_cus = await CusService.select({
         cus_name: this.data.selection.KUNNR,
       });
-      console.log(this.data.selection);
-      var namec = document.getElementById("typeahead_id_cname");
-      var codec = document.getElementById("typeahead_id");
-      console.log("CODE:", codec);
-      console.log("NAME:", namec);
+      document.getElementById("typeahead_id_cname").value =
+        Data_cus.data[0].CNAME;
+      document.getElementById("typeahead_id").value = this.data.selection.KUNNR;
 
       await CusService.setCus({
         KUNNR: this.data.selection.KUNNR,
