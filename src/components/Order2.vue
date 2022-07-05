@@ -1,16 +1,16 @@
 <template>
   <div class="mx-2">
-    <table class="table-fixed text-xxs sm:text-xs w-fit">
+    <table class="table-fixed w-fit">
       <thead>
         <tr>
           <th class="w-12">ลำดับ</th>
           <th class="w-2/12">รหัสสินค้า</th>
-          <th class="w-3/12">รายการสินค้า</th>
+          <th class="w-4/12">รายการสินค้า</th>
           <th class="w-11">จำนวนเส้น</th>
           <th class="w-11">เส้น/มัด</th>
           <th class="w-28">ราคา</th>
           <th class="w-1/12">น้ำหนัก</th>
-          <th class="w-12">หน่วย</th>
+          <th class="w-14">หน่วย</th>
           <th class="w-1/12">ราคาก่อน VAT7%</th>
           <th class="w-1/12">รวม นน.</th>
           <th class="w-1/12">จำนวนเงิน</th>
@@ -21,7 +21,7 @@
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 128 128"
               @click="deleteAll(this.auth.temp_qt)"
-              class="mx-1 w-5 h-5"
+              class="w-4"
             >
               <title>x</title>
               <path
@@ -41,7 +41,7 @@
           <tr class="w-full">
             <td @click="toggle(items.id)">
               <div class="flex items-center">
-                <span class="mx-1 text-xs">{{ index + 1 }}</span>
+                <span class="tdlist mx-1 text-xs">{{ index + 1 }}</span>
 
                 <div class="mx-1">
                   <Toggle :arrow="!items.show ? 'down' : 'up'" />
@@ -52,7 +52,7 @@
               <input
                 type="text"
                 v-model="items.rmd_mat"
-                class="text-xs p-1 text-center border-none"
+                class="tdlist text-xs p-1 text-center border-none"
                 :disabled="!approveStat"
                 @input="itemChange(items)"
               />
@@ -61,7 +61,7 @@
               <input
                 type="text"
                 v-model="items.rmd_size"
-                class="py-0.5 text-xs border-none text-center"
+                class="py-0.5 border-none text-center xl:text-sm text-xs"
                 :disabled="!approveStat"
                 @input="itemChange(items)"
               />
@@ -71,13 +71,13 @@
                 type="text"
                 v-model="items.amount"
                 @keypress="NumbersOnly"
-                class="text-xs p-1 text-center border-none"
+                class="tdlist text-xs p-1 text-center border-none"
                 :disabled="!approveStat || items.loading"
                 @input="itemChange(items)"
               />
             </td>
             <td class="bg-gray-50 text-xs text-center bundle">
-              <span
+              <span class="tdlist"
                 >{{
                   items.bundle === 1 || items.bundle === 0 ? "" : items.bundle
                 }}
@@ -86,7 +86,7 @@
             <td class="">
               <select
                 :disabled="!approveStat"
-                class="border-none text-xs"
+                class="tdlist border-none text-xs w-full"
                 v-model="items.ptype"
                 @change="itemChange(items, true), (items.loading = true)"
               >
@@ -100,15 +100,16 @@
               </select>
             </td>
             <td>
-              <div class="flex items-center">
-                <span class="text-right text-xs w-3/6 mx-auto" v-if="items.min"
-                  >{{ items.min }} -
+              <div class="flex flex-row items-center">
+                <span class="tdlist text-right text-xs mx-auto" v-if="items.min"
+                  >{{ items.min }}
                 </span>
+                <span v-if="items.min" class="ml-1">-</span>
                 <input
                   type="text"
                   v-model="items.rmd_weight"
                   @change="itemChange(items)"
-                  class="text-xs p-1 text-center border-none focus:outline-none"
+                  class="tdlist text-xs p-1 text-center border-none focus:outline-none"
                   :disabled="!approveStat"
                 />
               </div>
@@ -117,7 +118,7 @@
             <td>
               <select
                 v-model="items.unit"
-                class="w-full text-xs p-1 border-none"
+                class="tdlist w-full text-xs p-1 border-none"
                 :disabled="!approveStat"
                 @change="itemChange(items, true), (items.loading = true)"
               >
@@ -129,19 +130,20 @@
 
             <td>
               <input
+                id="price_u"
                 type="text"
                 v-model="items.price_unit"
                 @change="itemChange(items)"
-                class="p-1 text-sm border-none text-center"
+                class="tdlist p-1 text-sm border-none text-center"
                 :disabled="!approveStat"
               />
             </td>
-            <td class="bg-gray-50 text-center">
+            <td class="tdlist bg-gray-50 text-center">
               <v-num #="{ number }" :value="items.rmd_weight * items.amount">
                 {{ number }}
               </v-num>
             </td>
-            <td class="bg-gray-50 text-center">
+            <td class="tdlist bg-gray-50 text-center">
               <v-num #="{ number }" :value="items.cal_price">
                 {{ number }}
               </v-num>
@@ -153,7 +155,7 @@
                 viewBox="0 0 512 512"
                 fill="red"
                 @click="deletes(index, items.id)"
-                class="mx-1 w-5 h-5"
+                class="w-4"
                 v-show="!items.loading"
               >
                 <title>Remove</title>
@@ -195,7 +197,7 @@
             <vue3-simple-typeahead
               ref="typeahead"
               id="typeahead_id"
-              class="tdi"
+              class="tdi inputlist"
               :placeholder="options.placeholder"
               :items="fg.items"
               @selectItem="selectItem"
@@ -216,7 +218,7 @@
               type="text"
               v-model="inputField.amount"
               @keypress="NumbersOnly"
-              class="text-xs p-1 text-center border-none"
+              class="inputlist text-xs p-1 text-center border-none"
               :disabled="!approveStat || sys.loading"
               @change="itemChange(inputField)"
             />
@@ -226,19 +228,24 @@
               type="text"
               v-model="inputField.bundle"
               @keypress="NumbersOnly"
-              class="text-xs p-1 text-center border-none"
+              class="inputlist text-xs p-1 text-center border-none"
               disabled
               @input="itemChange(inputField)"
             />
           </td>
-          <td class="">
+          <td>
             <select
               :disabled="!approveStat"
-              class="border-none text-xs"
+              class="inputlist w-full border-none text-xs"
               v-model="inputField.ptype"
               @change="itemChange(inputField, true)"
             >
-              <option v-for="sItem in saleType" :key="sItem.t" :value="sItem.t">
+              <option
+                v-for="sItem in saleType"
+                :key="sItem.t"
+                :value="sItem.t"
+                class="optionalcss"
+              >
                 {{ sItem.text }}
               </option>
             </select>
@@ -246,7 +253,7 @@
           <td>
             <div class="flex items-center">
               <input
-                class="text-right text-xs w-4/6 mx-auto border-none focus:outline-none"
+                class="inputlist text-right text-xs w-4/6 mx-auto border-none focus:outline-none"
                 v-if="inputField.min"
                 :value="inputField.min + '  -'"
                 readonly="readonly"
@@ -255,7 +262,7 @@
                 type="text"
                 v-model="inputField.rmd_weight"
                 @change="itemChange(inputField)"
-                class="text-xs p-1 text-center border-none focus:outline-none"
+                class="inputlist text-xs p-1 text-center border-none focus:outline-none"
                 :disabled="!approveStat"
               />
             </div>
@@ -264,11 +271,15 @@
           <td>
             <select
               v-model="inputField.unit"
-              class="w-full text-xs p-1 border-none"
+              class="inputlist w-full text-xs p-1 border-none"
               :disabled="!approveStat"
               @change="itemChange(inputField, true)"
             >
-              <option v-for="(i, index) in inputField.typeunit" :key="index">
+              <option
+                v-for="(i, index) in inputField.typeunit"
+                :key="index"
+                class="optionalcss"
+              >
                 {{ i }}
               </option>
             </select>
@@ -279,11 +290,11 @@
               type="text"
               v-model="inputField.price_unit"
               @change="itemChange(inputField)"
-              class="p-1 text-sm border-none text-center"
+              class="inputlist p-1 text-sm border-none text-center"
               :disabled="!approveStat"
             />
           </td>
-          <td class="bg-gray-50 text-center">
+          <td class="inputlist bg-gray-50 text-center">
             <v-num
               #="{ number }"
               :value="inputField.rmd_weight * inputField.amount || 0"
@@ -291,7 +302,7 @@
               {{ number }}
             </v-num>
           </td>
-          <td class="bg-gray-50 text-center">
+          <td class="inputlist bg-gray-50 text-center">
             <v-num #="{ number }" :value="inputField.cal_price || 0">
               {{ number }}
             </v-num>
@@ -302,7 +313,7 @@
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 48 48"
               enable-background="new 0 0 48 48"
-              class="mx-1 w-5 h-5"
+              class="w-4"
               v-show="!sys.loading"
               v-if="this.List.length == 0 || approveStat"
               @click="addFG(inputField)"
@@ -685,7 +696,7 @@ export default {
 <style>
 #typeahead_id {
   width: 95%;
-  font-size: 0.75rem;
+
   line-height: 0.96rem;
   padding: 0.25rem;
   text-align: center;
@@ -694,7 +705,6 @@ export default {
 
 div.simple-typeahead-list {
   height: 130px;
-  font-size: 12px;
 }
 .cls-1 {
   fill: #2e79bd;
@@ -716,6 +726,7 @@ select {
 input {
   @apply w-full;
 }
+
 th {
   @apply font-light border border-slate-200 text-xs md:text-sm;
 }
@@ -723,6 +734,14 @@ td {
   @apply w-1/12 text-xs md:text-sm border border-slate-200;
 }
 .bundle {
-  font-size: 0.75rem;
+  font-size: 100%;
+}
+
+.tdlist,
+.tdlist_s,
+.inputlist,
+.optionalcss,
+th {
+  font-size: 100%;
 }
 </style>
