@@ -194,24 +194,31 @@
         <!-- INPUT AREA -->
         <tr class="w-full">
           <td colspan="3">
-            <vue3-simple-typeahead
-              ref="typeahead"
-              id="typeahead_id"
-              class="tdi inputlist"
-              :placeholder="options.placeholder"
-              :items="fg.items"
-              @selectItem="selectItem"
-              @onInput="onInput"
-              @onBlur="onBlur"
-              @input="lookupFG"
-              :minInputLength="1"
-              :itemProjection="
-                (fg) => {
-                  return fg.search;
-                }
-              "
-            >
-            </vue3-simple-typeahead>
+            <div class="flex items-center">
+              <vue3-simple-typeahead
+                ref="typeahead"
+                id="typeahead_id"
+                class="tdi inputlist"
+                :placeholder="options.placeholder"
+                :items="fg.items"
+                @selectItem="selectItem"
+                @onInput="onInput"
+                @onBlur="onBlur"
+                @input="lookupFG"
+                :minInputLength="1"
+                :itemProjection="
+                  (fg) => {
+                    return fg.search;
+                  }
+                "
+              >
+              </vue3-simple-typeahead>
+              <div class="flex text-center mx-auto px-1 items-center">
+                <button>
+                  <SpinnerIcon v-if="loading" /> <RefreshIcon v-else />
+                </button>
+              </div>
+            </div>
           </td>
           <td>
             <input
@@ -346,9 +353,18 @@ import InputItemText from "./InputItemText.vue";
 import InputItem from "./InputItem.vue";
 import LoadingSpinner from "./LoadingSpinner.vue";
 import Toggle from "./Toggle.vue";
+import RefreshIcon from "./RefreshIcon.vue";
+import SpinnerIcon from "./SpinnerIcon.vue";
 
 export default {
-  components: { InputItemText, LoadingSpinner, Toggle, InputItem },
+  components: {
+    InputItemText,
+    LoadingSpinner,
+    Toggle,
+    InputItem,
+    RefreshIcon,
+    SpinnerIcon,
+  },
   data() {
     return {
       sys,
