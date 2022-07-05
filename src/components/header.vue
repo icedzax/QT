@@ -18,7 +18,11 @@
           </div>
           <div class="mt-4 flex justify-inline col-span-3">
             <label class="mr-4">ขึ้นของที่ </label>
-            <select v-model="Selectplant" @change="postPlant">
+            <select
+              :disabled="order.status == 'A' || order.status == 'C'"
+              v-model="Selectplant"
+              @change="postPlant"
+            >
               <option v-for="item in this.PLANT" :key="item.plant">
                 {{ item.plant }} - {{ item.name }}
               </option>
