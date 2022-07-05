@@ -4,12 +4,12 @@
       <thead>
         <tr>
           <th class="w-12">ลำดับ</th>
-          <th class="w-2/12">รหัสสินค้า</th>
+          <th class="w-3/12">รหัสสินค้า</th>
           <th class="w-4/12">รายการสินค้า</th>
           <th class="w-11">จำนวนเส้น</th>
           <th class="w-11">เส้น/มัด</th>
-          <th class="w-28">ราคา</th>
-          <th class="w-1/12">น้ำหนัก</th>
+          <th class="w-24">ราคา</th>
+          <th class="w-2/12">น้ำหนัก</th>
           <th class="w-14">หน่วย</th>
           <th class="w-1/12">ราคาก่อน VAT7%</th>
           <th class="w-1/12">รวม นน.</th>
@@ -52,7 +52,7 @@
               <input
                 type="text"
                 v-model="items.rmd_mat"
-                class="tdlist text-xs p-1 text-center border-none"
+                class="tdlist_s text-xs p-1 text-center border-none"
                 :disabled="!approveStat"
                 @input="itemChange(items)"
               />
@@ -100,17 +100,26 @@
               </select>
             </td>
             <td>
-              <div class="flex items-center">
-                <span
-                  class="tdlist text-right text-xs w-3/6 mx-auto"
+              <div class="weightlist flex items-center">
+                <input
                   v-if="items.min"
-                  >{{ items.min }} -
-                </span>
+                  type="text"
+                  :value="items.min"
+                  class="weightlist text-xs p-1 text-center border-none focus:outline-none"
+                  disabled
+                />
+                <input
+                  v-if="items.min"
+                  type="text"
+                  value="-"
+                  class="weightlist text-xs p-1 text-center border-none focus:outline-none"
+                  disabled
+                />
                 <input
                   type="text"
                   v-model="items.rmd_weight"
                   @change="itemChange(items)"
-                  class="tdlist text-xs p-1 text-center border-none focus:outline-none"
+                  class="weightlist text-xs p-1 text-center border-none focus:outline-none"
                   :disabled="!approveStat"
                 />
               </div>
@@ -739,10 +748,14 @@ td {
 }
 
 .tdlist,
-.tdlist_s,
 .inputlist,
 .optionalcss,
 th {
-  font-size: 100%;
+  font-size: 85%;
+}
+
+.weightlist,
+.tdlist_s {
+  font-size: 2vh;
 }
 </style>
