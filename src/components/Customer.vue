@@ -58,41 +58,64 @@
         </p>
       </div>
       <div class="w-full">
-        <div
-          v-if="!this.statusE && approveStat"
-          class="flex justify-center border-2 border-yellow-500 cursor-pointer rounded-md hover:text-yellow-500 hover:ring-1 hover:ring-yellow-300"
-          @click="chg_edit"
-        >
-          <div class="text-xs pt-1 font-semibold">EDIT</div>
-          <div class="py-0.5">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              class="w-5"
-            >
-              <defs></defs>
-              <title>Comments, compose, edit, note, write</title>
-              <g id="_01" data-name="01">
-                <polygon
-                  class="cls-1"
-                  points="7 3 7 19 17 19 17 21 4 21 4 3 7 3"
-                />
-                <polygon
-                  class="cls-1"
-                  points="20 7 10 17 10.5 13.5 18 6 20 7"
-                />
-                <path
-                  d="M17,22H4a1,1,0,0,1-1-1V3A1,1,0,0,1,4,2H17a1,1,0,0,1,1,1V7a1,1,0,0,1-2,0V4H5V20H16V13a1,1,0,0,1,2,0v8A1,1,0,0,1,17,22Z"
-                />
-                <path
-                  d="M13,18H10a1,1,0,0,1-1-1V14a1,1,0,0,1,.29-.71l8.5-8.5a1,1,0,0,1,1.42,0l2.5,2.5a1,1,0,0,1-1.42,1.42L18.5,6.91,11,14.41V16h1.59l5.7-5.71a1,1,0,0,1,1.42,1.42l-6,6A1,1,0,0,1,13,18Z"
-                />
-                <path d="M10,8H7A1,1,0,0,1,7,6h3a1,1,0,0,1,0,2Z" />
-                <path d="M9,11H7A1,1,0,0,1,7,9H9a1,1,0,0,1,0,2Z" />
-              </g>
-            </svg>
+        <div v-if="!this.statusE && approveStat" class="flex justify-inline">
+          <div
+            class="flex justify-center border-2 border-yellow-500 cursor-pointer rounded-md hover:text-yellow-500 hover:ring-1 hover:ring-yellow-300"
+            @click="chg_edit"
+          >
+            <div class="text-xs pt-1 font-semibold">EDIT</div>
+            <div class="py-0.5">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                class="w-5"
+              >
+                <defs></defs>
+                <g id="_01" data-name="01">
+                  <polygon
+                    class="cls-1"
+                    points="7 3 7 19 17 19 17 21 4 21 4 3 7 3"
+                  />
+                  <polygon
+                    class="cls-1"
+                    points="20 7 10 17 10.5 13.5 18 6 20 7"
+                  />
+                  <path
+                    d="M17,22H4a1,1,0,0,1-1-1V3A1,1,0,0,1,4,2H17a1,1,0,0,1,1,1V7a1,1,0,0,1-2,0V4H5V20H16V13a1,1,0,0,1,2,0v8A1,1,0,0,1,17,22Z"
+                  />
+                  <path
+                    d="M13,18H10a1,1,0,0,1-1-1V14a1,1,0,0,1,.29-.71l8.5-8.5a1,1,0,0,1,1.42,0l2.5,2.5a1,1,0,0,1-1.42,1.42L18.5,6.91,11,14.41V16h1.59l5.7-5.71a1,1,0,0,1,1.42,1.42l-6,6A1,1,0,0,1,13,18Z"
+                  />
+                  <path d="M10,8H7A1,1,0,0,1,7,6h3a1,1,0,0,1,0,2Z" />
+                  <path d="M9,11H7A1,1,0,0,1,7,9H9a1,1,0,0,1,0,2Z" />
+                </g>
+              </svg>
+            </div>
           </div>
+          <svg
+            id="Layer_1"
+            data-name="Layer 1"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            class="pl-1 w-7"
+            @click="searchcustomer"
+            v-show="!imloading"
+          >
+            <title>Search Customer...</title>
+            <path
+              d="M20.57,9.43A8,8,0,0,0,5.26,10,5,5,0,1,0,5,20h5V18H5a3,3,0,0,1,0-6,3.1,3.1,0,0,1,.79.12l1.12.31.14-1.15a6,6,0,0,1,11.74-.82l.15.54.54.16A3.46,3.46,0,0,1,22,14.5,3.5,3.5,0,0,1,18.5,18H16v2h2.5A5.48,5.48,0,0,0,20.57,9.43Z"
+              id="id_101"
+              style="fill: rgb(39, 62, 214)"
+            ></path>
+            <polygon
+              points="12 11 12 15.59 10.71 14.29 9.29 15.71 13 19.41 16.71 15.71 15.29 14.29 14 15.59 14 11 12 11"
+              id="id_102"
+              style="fill: rgb(39, 173, 214)"
+            ></polygon>
+          </svg>
+          <LoadingSpinner class="w-8 mt-1" v-show="imloading" />
         </div>
+
         <div
           v-else-if="approveStat"
           class="flex justify-center border-2 border-violet-500 rounded-md cursor-pointer hover:bg-violet-100 hover:text-violet-600 hover:ring-1 hover:ring-violet-300"
@@ -257,9 +280,11 @@ import { debounce } from "lodash";
 import { order } from "../state/order";
 
 import CusService from "../services/CusService.js";
+import LoadingSpinner from "./LoadingSpinner.vue";
 
 export default {
   props: ["customername", "statusApp"],
+  components: { LoadingSpinner },
   data() {
     return {
       examdefault: "exammm ....",
@@ -281,6 +306,7 @@ export default {
       input_cname: null,
       input_code: null,
       chkclick_ip: 0,
+      loading: false,
     };
   },
   created() {},
@@ -305,6 +331,9 @@ export default {
         this.vat = null;
       }
       return cus.vat;
+    },
+    imloading() {
+      return this.loading;
     },
   },
 
@@ -402,17 +431,20 @@ export default {
     chkclick(x) {
       this.chkclick_ip = x;
     },
+    searchcustomer() {
+      if (this.input_code !== null) {
+        this.loading = true;
+        setTimeout(() => {
+          this.loading = false;
+        }, 3000);
+      }
+    },
     async cancel_edit() {
       const data_cus = await CusService.postCus({
         KUNNR: cus.data.KUNNR,
       });
       cus.data = data_cus.data[0];
       this.statusE = false;
-    },
-    testcus() {
-      console.log("CODE:", this.input_code);
-      console.log("NAME:", this.input_cname);
-      console.log();
     },
     chg_edit() {
       this.statusE = true;
@@ -423,10 +455,15 @@ export default {
       this.listFiltered = event.items;
       if (this.chkclick_ip == 0) {
         this.input_code = this.data.input;
+        if (this.input_code == "") {
+          this.input_code = null;
+        }
       } else {
         this.input_cname = this.data.input;
+        if (this.input_cname == "") {
+          this.input_cname = null;
+        }
       }
-      console.log(this.data.selection);
     },
     onBlur(event) {
       this.data.input = event.input;
