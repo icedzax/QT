@@ -73,6 +73,13 @@
       </div>
       <div v-else></div>
       <div class=""></div>
+      <div class="mx-auto hover:text-blue-700" @click="Pricepdf">
+        <div class="mx-auto w-10 h-10" @click="Pricepdf">
+          <printer />
+        </div>
+        <span class="cursor-pointer">ใบขอราคา</span>
+      </div>
+
       <!-- <div class="">(.........................................)</div> -->
       <!-- <div class="">({{ sd.sale_name }})</div> -->
     </div>
@@ -86,9 +93,10 @@ import { cus } from "../state/cus";
 import LoadingButton from "./LoadingButton.vue";
 import OrderService from "../services/OrderService.js";
 import UnappList from "./UnappModal.vue";
+import Printer from "./Printer.vue";
 
 export default {
-  components: { LoadingButton, UnappList },
+  components: { LoadingButton, UnappList, Printer },
   data() {
     return {
       sys,
@@ -106,6 +114,12 @@ export default {
   },
   async created() {},
   methods: {
+    Pricepdf() {
+      window.open(
+        "https://report.zubbsteel.com/tcpdf/pdf/ZRQ_PRICE.php?ref=" +
+          auth.temp_qt
+      );
+    },
     unApp() {
       this.isModalUnapp = !this.isModalUnapp;
     },
