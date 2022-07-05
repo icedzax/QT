@@ -19,11 +19,7 @@
           <div class="mt-4 flex justify-inline col-span-3">
             <label class="mr-4">ขึ้นของที่ </label>
             <select
-              :disabled="
-                order.status == 'A' ||
-                order.status == 'C' ||
-                order.status == 'W'
-              "
+              :disabled="order.status == 'A' || order.status == 'C'"
               v-model="Selectplant"
               @change="postPlant"
             >
