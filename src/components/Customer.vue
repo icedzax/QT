@@ -12,30 +12,35 @@
           class="mx-1"
         />
         <span class="text-xs"> VAT</span>
-        <vue3-simple-typeahead
-          class="text-black text-xl -mt-1 ml-1"
-          v-if="approveStat || !cus.data.KUNNR"
-          id="typeahead_id"
-          :placeholder="place_holder"
-          :items="customers"
-          @selectItem="selectItem"
-          @onInput="onInput"
-          @onBlur="onBlur"
-          @input="lookupUser"
-          :minInputLength="1"
-          :itemProjection="
-            (customers) => {
-              return `${customers.KUNNR}`;
-            }
-          "
-        >
-        </vue3-simple-typeahead>
+        <div class="w-36" v-if="approveStat || !cus.data.KUNNR">
+          <vue3-simple-typeahead
+            class="text-black text-xl -mt-1 ml-1"
+            id="typeahead_id"
+            v-model="input_code"
+            :placeholder="place_holder"
+            :items="customers"
+            @click="chkclick(0)"
+            @selectItem="selectItem"
+            @onInput="onInput"
+            @onBlur="onBlur"
+            @input="lookupUser"
+            :minInputLength="1"
+            :itemProjection="
+              (customers) => {
+                return `${customers.KUNNR}`;
+              }
+            "
+          >
+          </vue3-simple-typeahead>
+        </div>
+
         <vue3-simple-typeahead
           class="text-black text-xl -mt-1 ml-1"
           v-if="approveStat || !cus.data.KUNNR"
           id="typeahead_id_cname"
           :placeholder="place_holder_cname"
           :items="customers"
+          @click="chkclick(1)"
           @selectItem="selectItem"
           @onInput="onInput"
           @onBlur="onBlur"
@@ -48,8 +53,8 @@
           "
         >
         </vue3-simple-typeahead>
-        <p class="font-bold" v-else>
-          {{ place_holder }} + {{ place_holder_cname }}
+        <p class="font-bold text-xs pl-4" v-else>
+          {{ place_holder }} {{ place_holder_cname }}
         </p>
       </div>
       <div class="w-full">
@@ -273,16 +278,19 @@ export default {
       statusE: false,
       list_qt: this.$route.params.list_qt,
       code_cus: "",
+      input_cname: null,
+      input_code: null,
+      chkclick_ip: 0,
     };
   },
   created() {},
 
   computed: {
     place_holder() {
-      return cus.data.KUNNR ? `${cus.data.KUNNR || ""}` : "รหัส / ชื่อลูกค้า";
+      return cus.data.KUNNR ? `${cus.data.KUNNR || ""}` : "รหัสลูกค้า";
     },
     place_holder_cname() {
-      return cus.data.CNAME ? `${cus.data.CNAME || ""}` : "รหัส / ชื่อลูกค้า";
+      return cus.data.CNAME ? `${cus.data.CNAME || ""}` : "ชื่อลูกค้า";
     },
     cusdata() {
       return this.data.selection || order.cust;
@@ -299,12 +307,7 @@ export default {
       return cus.vat;
     },
   },
-  watch: {
-    place_holder(after, before) {
-      console.log("หลัง==", after);
-      this.place_holder = after;
-    },
-  },
+
   methods: {
     lookupUser: debounce(async function () {
       const result = await CusService.search({ cus_name: this.data.input });
@@ -322,13 +325,13 @@ export default {
       await CusService.updateVAT({ vat: this.vat, qt: auth.temp_qt });
     },
     async selectItem(item) {
+      this.input_cname = null;
+      this.input_code = null;
       this.data.selection = item;
+      console;
       const Data_cus = await CusService.select({
         cus_name: this.data.selection.KUNNR,
       });
-      document.getElementById("typeahead_id_cname").value =
-        Data_cus.data[0].CNAME;
-      document.getElementById("typeahead_id").value = this.data.selection.KUNNR;
 
       await CusService.setCus({
         KUNNR: this.data.selection.KUNNR,
@@ -354,8 +357,9 @@ export default {
       }
     },
     async update_data() {
-      console.log("this.vat:", this.vat);
-      if (this.data.selection !== null || this.cus.data.CNAME) {
+      if (this.data.selection !== null) {
+        // console.log(cus.data.KUNNR);
+        // console.log(cus.data.CNAME);
         const send_update = await CusService.setCus({
           KUNNR: cus.data.KUNNR,
           LAND1: cus.data.LAND1,
@@ -372,10 +376,12 @@ export default {
           vat: this.vat,
         });
       } else {
+        cus.data.KUNNR = this.input_code;
+        cus.data.CNAME = this.input_cname;
         const send_update = await CusService.setCus({
-          KUNNR: "",
+          KUNNR: this.input_code,
           LAND1: "",
-          CNAME: this.data.input,
+          CNAME: this.input_cname,
           TELNU: this.cusdata.TELNU,
           TELFX: cus.data.TELFX,
           FAXNU: this.cusdata.FAXNU,
@@ -392,12 +398,21 @@ export default {
       alert("Update ข้อมูลแล้ว");
       this.statusE = false;
     },
+
+    chkclick(x) {
+      this.chkclick_ip = x;
+    },
     async cancel_edit() {
       const data_cus = await CusService.postCus({
         KUNNR: cus.data.KUNNR,
       });
       cus.data = data_cus.data[0];
       this.statusE = false;
+    },
+    testcus() {
+      console.log("CODE:", this.input_code);
+      console.log("NAME:", this.input_cname);
+      console.log();
     },
     chg_edit() {
       this.statusE = true;
@@ -406,7 +421,12 @@ export default {
       this.data.selection = null;
       this.data.input = event.input;
       this.listFiltered = event.items;
-      console.log("place_holcn:", this.place_holder_cname);
+      if (this.chkclick_ip == 0) {
+        this.input_code = this.data.input;
+      } else {
+        this.input_cname = this.data.input;
+      }
+      console.log(this.data.selection);
     },
     onBlur(event) {
       this.data.input = event.input;
