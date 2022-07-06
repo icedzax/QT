@@ -101,12 +101,9 @@
             </td>
             <td>
               <div class="flex flex-row items-center">
-                <span class="tdlist text-right text-xs mx-auto" v-if="items.min"
-                  >{{ items.min }}
-                </span>
-                <span v-if="items.min" class="ml-1">-</span>
                 <input
                   type="text"
+                  @keypress="NumbersOnly"
                   v-model="items.rmd_weight"
                   @change="itemChange(items)"
                   class="tdlist text-xs p-1 text-center border-none focus:outline-none"
@@ -170,7 +167,7 @@
             </td>
           </tr>
           <tr v-if="items.show" class="">
-            <td :colspan="8" class="border text-xs">
+            <td :colspan="5" class="border text-xs">
               <input
                 placeholder="หมายเหตุ : .."
                 type="text"
@@ -179,7 +176,28 @@
                 @input="itemChange(items)"
               />
             </td>
-            <td class="font-semibold text-center bg-gray-50">ราคาเบส</td>
+            <td class="font-semibold text-center bg-gray-50">ช่วง</td>
+            <td class="text-xs bg-yellow-50">
+              <div class="flex items-center w-full">
+                <input
+                  @keypress="NumbersOnly"
+                  type="text"
+                  class="w-full text-xs p-1 text-center border-none bg-yellow-50"
+                  v-model="items.min"
+                  @input="itemChange(items)"
+                />-<input
+                  @keypress="NumbersOnly"
+                  type="text"
+                  class="w-full text-xs p-1 text-center border-none bg-yellow-50"
+                  v-model="items.max"
+                  @input="itemChange(items)"
+                />
+              </div>
+            </td>
+
+            <td :colspan="2" class="font-semibold text-center bg-gray-50">
+              ราคาเบส
+            </td>
             <td :colspan="3">
               <input
                 placeholder=""
@@ -260,6 +278,7 @@
               />
               <input
                 type="text"
+                @keypress="NumbersOnly"
                 v-model="inputField.rmd_weight"
                 @change="itemChange(inputField)"
                 class="inputlist text-xs p-1 text-center border-none focus:outline-none"
@@ -626,7 +645,7 @@ export default {
       if (item.rmd_mat == " ") {
         item.rmd_mat = null;
       }
-      // console.log("updated : ", item);
+      console.log("updated : ", item);
       await OrderService.update(item);
     },
     async getPriceMaster(items) {
