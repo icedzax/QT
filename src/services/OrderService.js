@@ -56,4 +56,7 @@ export default {
   getplant(qt) {
     return Api().get("getplant/" + qt);
   },
+  postnote(note) {
+    return Api().post(`/updatenote`, note);
+  },
 };

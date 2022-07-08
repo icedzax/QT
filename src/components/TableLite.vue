@@ -240,6 +240,13 @@
                           </g>
                         </svg>
                       </div>
+                      <div v-else-if="col.field == 'note'">
+                        <input
+                          type="text"
+                          v-model="row[col.field]"
+                          @change="updatenote(row.QT, row[col.field])"
+                        />
+                      </div>
                       <span :class="col.field" v-else>{{
                         row[col.field]
                       }}</span>
@@ -394,8 +401,10 @@ import {
 } from "vue";
 import { auth } from "../state/user";
 import { cus } from "../state/cus";
+import { debounce } from "lodash";
 
 import CusService from "@/services/CusService";
+import OrderService from "@/services/OrderService";
 
 export default defineComponent({
   data() {
@@ -453,6 +462,9 @@ export default defineComponent({
         }
       }
     },
+    updatenote: debounce(async function (isQT, inputnote) {
+      await OrderService.postnote({ note: inputnote, qt: isQT });
+    }, 800),
   },
   name: "my-table",
   emits: ["return-checked-rows", "do-search", "is-finished", "get-now-page"],
