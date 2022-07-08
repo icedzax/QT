@@ -319,13 +319,13 @@ export default {
         {
           label: "สถานะ",
           field: "status_show",
-          width: "5%",
+          width: "7%",
           sortable: true,
         },
         {
           label: "โน็ต",
           field: "note",
-          width: "10%",
+          width: "8%",
           sortable: true,
         },
         {
