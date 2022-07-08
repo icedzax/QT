@@ -231,7 +231,6 @@ const sampleData1 = (offst, limit) => {
       }
     }
   });
-
   for (let i = offst; i < limit; i++) {
     if (i < auth.list.length) {
       data.push({
@@ -241,6 +240,7 @@ const sampleData1 = (offst, limit) => {
         status: auth.list[i].status,
         classi: auth.list[i].classi,
         status_cus: auth.list[i].status_cus,
+        note: auth.list[i].note,
         other: "Edit",
       });
     }
@@ -275,6 +275,7 @@ const sampleData2 = (offst, limit) => {
         status: auth.list[i].status,
         status_cus: auth.list[i].status_cus,
         classi: auth.list[i].classi,
+        note: auth.list[i].note,
         other: "Edit",
       });
     }
@@ -299,7 +300,7 @@ export default {
         {
           label: "ลูกค้า",
           field: "CNAME",
-          width: "20%",
+          width: "15%",
           sortable: true,
           isKey: true,
         },
@@ -322,6 +323,12 @@ export default {
           sortable: true,
         },
         {
+          label: "โน็ต",
+          field: "note",
+          width: "10%",
+          sortable: true,
+        },
+        {
           field: "other",
           width: "3%",
         },
@@ -340,9 +347,9 @@ export default {
       table.isLoading = true;
       setTimeout(() => {
         table.isReSearch = offset == undefined ? true : false;
-        if (offset >= 10 || limit >= 20) {
-          limit = auth.list.length;
-        }
+        // if (offset >= 10 || limit >= 20) {
+        //   limit = auth.list.length;
+        // }
         if (sort == "asc") {
           table.rows = sampleData1(offset, limit);
         } else {
@@ -377,7 +384,7 @@ export default {
     });
     this.list_au = data_list.data;
     auth.list = data_list.data;
-
+    console.log("auth list::", auth.list);
     // this.list_au.map((data) => {
     //   data.comfirm_cus = "";
     //   if (data.status == "TEMP" || data.status == "D") {
