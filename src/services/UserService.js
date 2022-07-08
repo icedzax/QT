@@ -70,4 +70,7 @@ export default {
   newtemp(salecode) {
     return Api().get("newtemp/" + salecode);
   },
+  newQT_ad_ref(body) {
+    return Api().post("newQT_admin_ref/", body);
+  },
 };

@@ -52,6 +52,16 @@
             </button>
           </div>
         </div>
+        <div class="p-6 space-y-1">
+          <span class="px-1">กรอกเลข QT</span>
+          <input class="mx-1 h-8" type="text" v-model="input_qt_ref" />
+          <button
+            @click="refQT"
+            class="px-1 border-2 hover:text-green-500 rounded-full border-green-400"
+          >
+            REF
+          </button>
+        </div>
         <!-- Modal footer -->
         <div
           class="flex justify-center p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600"
@@ -84,6 +94,8 @@
 
 <script>
 import UserService from "@/services/UserService";
+import OrderService from "@/services/OrderService";
+
 import { auth } from "../state/user";
 
 export default {
@@ -97,6 +109,7 @@ export default {
       empnow: "",
       codenow: "",
       checksale: false,
+      input_qt_ref: "",
     };
   },
   props: {
@@ -165,6 +178,39 @@ export default {
       auth.temp_qt = this.newQT;
       auth.data_sale = new_sale.data;
       localStorage.setItem("tempqt", auth.temp_qt);
+    },
+    async refQT() {
+      const dataref = await OrderService.chkQT({
+        qt: this.input_qt_ref,
+        emp: auth.user_id,
+      });
+      const salec = this.input_qt_ref.split("-");
+      //console.log(salec[1]);
+      await UserService.newQT_ad_ref({
+        emp_code: auth.user_id,
+        oqt: auth.temp_qt,
+        sale_code: salec[1],
+      });
+      const upsale = await UserService.selectSale({
+        sale_code: salec[1],
+        emp_code: auth.user_id,
+      });
+
+      if (dataref.data[0]) {
+        this.newQT = upsale.data[0].qt;
+
+        auth.temp_qt = this.newQT;
+        localStorage.setItem("tempqt", auth.temp_qt);
+
+        this.close();
+        this.$emit("newQ");
+        alert("REF สำเร็จแล้ว");
+      } else {
+        alert("ไม่พบ QT ดังกล่าว ตรวจสอบอีกครั้ง");
+      }
+    },
+    onInput(event) {
+      console.log("evt:", event);
     },
   },
 };
