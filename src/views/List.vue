@@ -191,22 +191,43 @@
             {{ item }}
           </option>
         </select>
-        <div class="text-gray-500">
-          <label class="mx-2">เลือกช่วงวัน</label>
-          <input
-            type="date"
-            v-model="this.startdate"
-            class="bg-gray-50 border border-gray-300 rounded-lg p-2.5"
-            @change="selectdate"
-          />
-          <label class="mx-2">ถึง</label>
-          <input
-            type="date"
-            v-model="this.enddate"
-            class="bg-gray-50 border border-gray-300 rounded-lg p-2.5"
-            @change="selectdate"
-            :min="this.startdate"
-          />
+        <div class="text-gray-500 flex justify-inline">
+          <div class="pt-2">
+            <input
+              type="radio"
+              v-model="setdate"
+              value="1"
+              class="ml-2 p-2"
+              @click="clickchange(1)"
+            />
+            <span class="ml-1">เลือกวัน</span>
+            <input
+              type="radio"
+              v-model="setdate"
+              value="0"
+              class="ml-2 p-2"
+              checked
+              @click="clickchange(0)"
+            />
+            <label class="ml-1">ไม่เลือกวัน</label>
+          </div>
+          <div v-show="this.setdate == 1">
+            <label class="mx-2">เลือกช่วงวัน</label>
+            <input
+              type="date"
+              v-model="this.startdate"
+              class="bg-gray-50 border border-gray-300 rounded-lg p-2.5"
+              @change="selectdate"
+            />
+            <label class="mx-2">ถึง</label>
+            <input
+              type="date"
+              v-model="this.enddate"
+              class="bg-gray-50 border border-gray-300 rounded-lg p-2.5"
+              @change="selectdate"
+              :min="this.startdate"
+            />
+          </div>
         </div>
       </div>
 
@@ -310,6 +331,7 @@ export default {
       salecode_group: ["ALL"],
       startdate: "",
       enddate: "",
+      setdate: 0,
     };
   },
 
@@ -427,14 +449,23 @@ export default {
     // });
   },
   methods: {
+    clickchange(set) {
+      this.setdate = set;
+      if (set == 0) {
+        this.searchcus_input();
+      } else {
+        this.selectdate();
+      }
+    },
     async selectdate() {
       // console.log("เริ่ม", this.startdate + "จบ", this.enddate);
       const datafilter = await OrderService.filterdate({
         day1: this.startdate,
         day2: this.enddate,
         empcode: auth.user_id,
+        customer: this.searchCus,
       });
-      //console.log("หลังฟิลเตอร์", datafilter);
+
       this.table.rows = datafilter.data;
       auth.list = this.table.rows;
       this.doSearch(0, 10, "id", "asc");
@@ -456,11 +487,19 @@ export default {
       window.open("https://report.zubbsteel.com/tcpdf/pdf/ZQT.php?ref=" + qt);
     },
     async searchcus_input(input) {
-      input = input.trim();
+      if (input == "" || !input) {
+        input = this.searchCus;
+      } else {
+        input = input.trim();
+      }
+
       const data_list = await UserService.filterCustomer({
         emp_code: auth.user_id,
         customer: input,
         QT: this.selectSale,
+        day1: this.startdate,
+        day2: this.enddate,
+        statusdate: this.setdate,
       });
       this.list_au = data_list.data;
       this.table.rows = data_list.data;
