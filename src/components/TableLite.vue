@@ -243,6 +243,7 @@
                       <div v-else-if="col.field == 'note'">
                         <input
                           type="text"
+                          class="border-t-0 border-r-0 border-l-0 border-b-1"
                           v-model="row[col.field]"
                           @change="updatenote(row.QT, row[col.field])"
                         />
