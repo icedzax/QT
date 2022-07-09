@@ -191,6 +191,23 @@
             {{ item }}
           </option>
         </select>
+        <div class="text-gray-500">
+          <label class="mx-2">เลือกช่วงวัน</label>
+          <input
+            type="date"
+            v-model="this.startdate"
+            class="bg-gray-50 border border-gray-300 rounded-lg p-2.5"
+            @change="selectdate"
+          />
+          <label class="mx-2">ถึง</label>
+          <input
+            type="date"
+            v-model="this.enddate"
+            class="bg-gray-50 border border-gray-300 rounded-lg p-2.5"
+            @change="selectdate"
+            :min="this.startdate"
+          />
+        </div>
       </div>
 
       <table-lite
@@ -212,10 +229,12 @@ import UserService from "@/services/UserService";
 import { auth } from "@/state/user";
 import { reactive } from "vue";
 import TableLite from "../components/TableLite.vue";
+import OrderService from "@/services/OrderService";
 
 const sampleData1 = (offst, limit) => {
   let data = [];
   auth.list.forEach((element) => {
+    element.qt = element.qt;
     element.status_cus = "";
     if (element.status == "D" || element.status == "TEMP") {
       element.classi =
@@ -289,6 +308,8 @@ export default {
       searchCus: "",
       selectSale: "ALL",
       salecode_group: ["ALL"],
+      startdate: "",
+      enddate: "",
     };
   },
 
@@ -384,29 +405,40 @@ export default {
     });
     this.list_au = data_list.data;
     auth.list = data_list.data;
-    console.log("auth list::", auth.list);
-    // this.list_au.map((data) => {
-    //   data.comfirm_cus = "";
-    //   if (data.status == "TEMP" || data.status == "D") {
-    //     data.status = "แบบร่าง";
-    //     data.classi =
-    //       "bg-gray-100 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300";
-    //   } else if (data.status == "A" || data.status == "C") {
-    //     if (data.status == "C") {
-    //       data.comfirm_cus = "ลูกค้า";
-    //     }
-    //     data.status = "อนุมัติแล้ว";
-    //     data.classi =
-    //       "bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900";
-    //   } else if (data.status == "W") {
-    //     data.status = "รออนุมัติ";
-    //     data.classi =
-    //       "bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900";
-    //   }
-    //   data.created_at = data.created_at.substring(0, 16);
+
+    var today = new Date();
+    let new_month = "";
+    let new_day = "";
+
+    let month = today.getMonth() + 1;
+    let day = today.getDate();
+
+    if (month.toString().length == 1) {
+      new_month = "0" + month;
+    }
+    if (day.toString().length == 1) {
+      new_day = "0" + day;
+    }
+
+    let day1 = today.getFullYear() + "-" + new_month + "-" + new_day;
+
+    this.startdate = day1;
+    this.enddate = day1;
     // });
   },
   methods: {
+    async selectdate() {
+      // console.log("เริ่ม", this.startdate + "จบ", this.enddate);
+      const datafilter = await OrderService.filterdate({
+        day1: this.startdate,
+        day2: this.enddate,
+        empcode: auth.user_id,
+      });
+      //console.log("หลังฟิลเตอร์", datafilter);
+      this.table.rows = datafilter.data;
+      auth.list = this.table.rows;
+      this.doSearch(0, 10, "id", "asc");
+    },
     async goto_qt(qt) {
       localStorage.setItem("tempqt", qt);
     },

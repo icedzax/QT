@@ -59,4 +59,7 @@ export default {
   postnote(note) {
     return Api().post(`/updatenote`, note);
   },
+  filterdate(day) {
+    return Api().post(`/changeDate`, day);
+  },
 };
