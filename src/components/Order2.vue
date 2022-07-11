@@ -4,11 +4,11 @@
       <thead>
         <tr>
           <th class="w-12">ลำดับ</th>
-          <th class="w-2/12">รหัสสินค้า</th>
+          <th class="w-36">รหัสสินค้า</th>
           <th class="w-3/12">รายการสินค้า</th>
           <th class="w-11">จำนวนเส้น</th>
           <th class="w-11">เส้น/มัด</th>
-          <th class="w-28">ราคา</th>
+          <th class="w-32">ราคา</th>
           <th class="w-1/12">น้ำหนัก</th>
           <th class="w-12">หน่วย</th>
           <th class="w-1/12">ราคาก่อน VAT7%</th>
@@ -84,20 +84,62 @@
               </span>
             </td>
             <td class="">
-              <select
-                :disabled="!approveStat"
-                class="border-none text-xs"
-                v-model="items.ptype"
-                @change="itemChange(items, true), (items.loading = true)"
-              >
-                <option
-                  v-for="sItem in saleType"
-                  :key="sItem.t"
-                  :value="sItem.t"
+              <div class="flex justify-inline">
+                <select
+                  :disabled="!approveStat"
+                  class="border-none text-xs w-28"
+                  v-model="items.ptype"
+                  @change="itemChange(items, true), (items.loading = true)"
                 >
-                  {{ sItem.text }}
-                </option>
-              </select>
+                  <option
+                    v-for="sItem in saleType"
+                    :key="sItem.t"
+                    :value="sItem.t"
+                  >
+                    {{ sItem.text }}
+                  </option>
+                </select>
+                <svg
+                  id="Layer_1"
+                  data-name="Layer 1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 512 512"
+                  class="w-full"
+                >
+                  <title>Refresh Price</title>
+                  <path
+                    d="M446.452,231.973A192.112,192.112,0,0,0,285.51,66.251l9.57-9.493a21.333,21.333,0,1,0-30.048-30.292L219.6,71.536a21.333,21.333,0,0,0-.123,30.169l45.067,45.44A21.333,21.333,0,0,0,294.834,117.1l-7-7.053A149.412,149.412,0,0,1,349.307,372.6a21.334,21.334,0,1,0,26.7,33.279A190.874,190.874,0,0,0,446.452,231.973Z"
+                    id="id_101"
+                    style="fill: rgb(252, 184, 25)"
+                  ></path>
+                  <path
+                    d="M247.421,364.863a21.333,21.333,0,0,0-30.294,30.046l7,7.055a149.413,149.413,0,0,1-61.435-262.585A21.334,21.334,0,1,0,136,106.091,192.091,192.091,0,0,0,226.438,445.77l-9.556,9.479a21.333,21.333,0,0,0,30.048,30.292l45.434-45.07a21.334,21.334,0,0,0,.123-30.169Z"
+                    id="id_102"
+                    style="fill: rgb(235, 173, 29)"
+                  ></path>
+                </svg>
+              </div>
+              <!-- <div class="flex justify-right w-24 ml-4 pt-2">
+                <svg
+                  id="Layer_1"
+                  data-name="Layer 1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 512 512"
+                  class="w-4 h-4"
+                >
+                  <title>Synchronization</title>
+                  <path
+                    d="M446.452,231.973A192.112,192.112,0,0,0,285.51,66.251l9.57-9.493a21.333,21.333,0,1,0-30.048-30.292L219.6,71.536a21.333,21.333,0,0,0-.123,30.169l45.067,45.44A21.333,21.333,0,0,0,294.834,117.1l-7-7.053A149.412,149.412,0,0,1,349.307,372.6a21.334,21.334,0,1,0,26.7,33.279A190.874,190.874,0,0,0,446.452,231.973Z"
+                    id="id_101"
+                    style="fill: rgb(252, 184, 25)"
+                  ></path>
+                  <path
+                    d="M247.421,364.863a21.333,21.333,0,0,0-30.294,30.046l7,7.055a149.413,149.413,0,0,1-61.435-262.585A21.334,21.334,0,1,0,136,106.091,192.091,192.091,0,0,0,226.438,445.77l-9.556,9.479a21.333,21.333,0,0,0,30.048,30.292l45.434-45.07a21.334,21.334,0,0,0,.123-30.169Z"
+                    id="id_102"
+                    style="fill: rgb(235, 173, 29)"
+                  ></path>
+                </svg>
+              </div> -->
             </td>
             <td>
               <div class="flex items-center">
