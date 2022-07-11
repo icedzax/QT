@@ -294,6 +294,7 @@ export default {
         : "รหัส / ชื่อลูกค้า";
     },
     cusdata() {
+      console.log("ORDER:", order.cust);
       return this.data.selection || order.cust;
     },
     approveStat() {
@@ -365,8 +366,7 @@ export default {
       }
     },
     async update_data() {
-      console.log("this.vat:", this.vat);
-      if (this.data.selection !== null || this.cus.data.CNAME) {
+      if (this.data.selection !== null) {
         const send_update = await CusService.setCus({
           KUNNR: cus.data.KUNNR,
           LAND1: cus.data.LAND1,
@@ -383,10 +383,11 @@ export default {
           vat: this.vat,
         });
       } else {
+        let inputcus = this.data.input.split(" ");
         const send_update = await CusService.setCus({
-          KUNNR: "",
+          KUNNR: inputcus[0],
           LAND1: "",
-          CNAME: this.data.input,
+          CNAME: inputcus[1],
           TELNU: this.cusdata.TELNU,
           TELFX: cus.data.TELFX,
           FAXNU: this.cusdata.FAXNU,
