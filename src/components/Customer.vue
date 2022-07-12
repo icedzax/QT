@@ -289,8 +289,8 @@ export default {
 
   computed: {
     place_holder() {
-      return cus.data.KUNNR
-        ? `${cus.data.KUNNR} ${cus.data.CNAME || ""}`
+      return order.cust.CNAME
+        ? `${cus.data.KUNNR || ""} ${order.cust.CNAME}`
         : "รหัส / ชื่อลูกค้า";
     },
     cusdata() {
@@ -365,8 +365,7 @@ export default {
       }
     },
     async update_data() {
-      console.log("this.vat:", this.vat);
-      if (this.data.selection !== null || this.cus.data.CNAME) {
+      if (this.data.selection !== null) {
         const send_update = await CusService.setCus({
           KUNNR: cus.data.KUNNR,
           LAND1: cus.data.LAND1,
@@ -384,7 +383,7 @@ export default {
         });
       } else {
         const send_update = await CusService.setCus({
-          KUNNR: "",
+          KUNNR: null,
           LAND1: "",
           CNAME: this.data.input,
           TELNU: this.cusdata.TELNU,
