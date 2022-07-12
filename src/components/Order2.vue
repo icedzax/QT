@@ -100,11 +100,14 @@
                   </option>
                 </select>
                 <svg
+                  v-if="approveStat"
                   id="Layer_1"
                   data-name="Layer 1"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 512 512"
-                  class="w-full"
+                  class="mt-1"
+                  @click="itemChange(items, true)"
+                  v-show="!items.loading"
                 >
                   <title>Refresh Price</title>
                   <path
@@ -118,28 +121,8 @@
                     style="fill: rgb(235, 173, 29)"
                   ></path>
                 </svg>
+                <LoadingSpinnerP class="mt-2" v-show="items.loading" />
               </div>
-              <!-- <div class="flex justify-right w-24 ml-4 pt-2">
-                <svg
-                  id="Layer_1"
-                  data-name="Layer 1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 512 512"
-                  class="w-4 h-4"
-                >
-                  <title>Synchronization</title>
-                  <path
-                    d="M446.452,231.973A192.112,192.112,0,0,0,285.51,66.251l9.57-9.493a21.333,21.333,0,1,0-30.048-30.292L219.6,71.536a21.333,21.333,0,0,0-.123,30.169l45.067,45.44A21.333,21.333,0,0,0,294.834,117.1l-7-7.053A149.412,149.412,0,0,1,349.307,372.6a21.334,21.334,0,1,0,26.7,33.279A190.874,190.874,0,0,0,446.452,231.973Z"
-                    id="id_101"
-                    style="fill: rgb(252, 184, 25)"
-                  ></path>
-                  <path
-                    d="M247.421,364.863a21.333,21.333,0,0,0-30.294,30.046l7,7.055a149.413,149.413,0,0,1-61.435-262.585A21.334,21.334,0,1,0,136,106.091,192.091,192.091,0,0,0,226.438,445.77l-9.556,9.479a21.333,21.333,0,0,0,30.048,30.292l45.434-45.07a21.334,21.334,0,0,0,.123-30.169Z"
-                    id="id_102"
-                    style="fill: rgb(235, 173, 29)"
-                  ></path>
-                </svg>
-              </div> -->
             </td>
             <td>
               <div class="flex items-center">
@@ -376,10 +359,18 @@ import OrderService from "../services/OrderService.js";
 import InputItemText from "./InputItemText.vue";
 import InputItem from "./InputItem.vue";
 import LoadingSpinner from "./LoadingSpinner.vue";
+import LoadingSpinnerP from "./LoadingSpinnerPrice.vue";
+
 import Toggle from "./Toggle.vue";
 
 export default {
-  components: { InputItemText, LoadingSpinner, Toggle, InputItem },
+  components: {
+    InputItemText,
+    LoadingSpinner,
+    LoadingSpinnerP,
+    Toggle,
+    InputItem,
+  },
   data() {
     return {
       sys,
@@ -629,7 +620,6 @@ export default {
         items.typeunit = this.type_unit;
         // items.unit = "PC";
       }
-
       if (isUnit) {
         items = await this.getPriceMaster(items);
       }
