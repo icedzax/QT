@@ -10,6 +10,7 @@ const order = reactive({
   term: null,
   ship: null,
   plant: null,
+  note: null,
 });
 
 export { order };

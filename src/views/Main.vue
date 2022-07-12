@@ -154,6 +154,7 @@ export default {
     // console.log("### init ###", us.data[0]);
     if (us.data[0]) {
       auth.temp_qt = us.data[0].qt;
+      order.note = us.data[0].note;
       localStorage.setItem("tempqt", auth.temp_qt);
       order.kunnr = us.data[0].KUNNR;
       order.date = us.data[0].qt_date;
