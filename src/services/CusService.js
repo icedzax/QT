@@ -31,4 +31,7 @@ export default {
   updateVAT(body) {
     return Api().post("updateVAT/", body);
   },
+  searchCUSbycode(input) {
+    return Api().post("fetchCus/", input);
+  },
 };

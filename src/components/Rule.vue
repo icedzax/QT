@@ -225,11 +225,11 @@ export default {
 
       await OrderService.ship(payload);
     },
-    changeUpdate: debounce(async function () {
+    changeUpdate: debounce(async function (ip_con, id) {
       await OrderService.editCon({
-        con: con,
+        con: ip_con,
         qt: auth.temp_qt,
-        item: ids,
+        item: id,
       });
     }, 500),
 
@@ -242,7 +242,6 @@ export default {
       this.inputRules = "";
     },
     async delRules(index) {
-      console.log("DEL", { qt: auth.temp_qt, item: index });
       await OrderService.delcon({ qt: auth.temp_qt, item: index });
       const rules = await OrderService.Con(auth.temp_qt);
       order.con = rules.data;

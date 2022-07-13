@@ -191,6 +191,44 @@
             {{ item }}
           </option>
         </select>
+        <div class="text-gray-500 flex justify-inline">
+          <div class="pt-2">
+            <input
+              type="radio"
+              v-model="setdate"
+              value="1"
+              class="ml-2 p-2"
+              @click="clickchange(1)"
+            />
+            <span class="ml-1">เลือกวัน</span>
+            <input
+              type="radio"
+              v-model="setdate"
+              value="0"
+              class="ml-2 p-2"
+              checked
+              @click="clickchange(0)"
+            />
+            <label class="ml-1">ไม่เลือกวัน</label>
+          </div>
+          <div v-show="this.setdate == 1">
+            <label class="mx-2">เลือกช่วงวัน</label>
+            <input
+              type="date"
+              v-model="this.startdate"
+              class="bg-gray-50 border border-gray-300 rounded-lg p-2.5"
+              @change="selectdate"
+            />
+            <label class="mx-2">ถึง</label>
+            <input
+              type="date"
+              v-model="this.enddate"
+              class="bg-gray-50 border border-gray-300 rounded-lg p-2.5"
+              @change="selectdate"
+              :min="this.startdate"
+            />
+          </div>
+        </div>
       </div>
 
       <table-lite
@@ -212,10 +250,12 @@ import UserService from "@/services/UserService";
 import { auth } from "@/state/user";
 import { reactive } from "vue";
 import TableLite from "../components/TableLite.vue";
+import OrderService from "@/services/OrderService";
 
 const sampleData1 = (offst, limit) => {
   let data = [];
   auth.list.forEach((element) => {
+    element.qt = element.qt;
     element.status_cus = "";
     if (element.status == "D" || element.status == "TEMP") {
       element.classi =
@@ -231,7 +271,6 @@ const sampleData1 = (offst, limit) => {
       }
     }
   });
-
   for (let i = offst; i < limit; i++) {
     if (i < auth.list.length) {
       data.push({
@@ -241,6 +280,7 @@ const sampleData1 = (offst, limit) => {
         status: auth.list[i].status,
         classi: auth.list[i].classi,
         status_cus: auth.list[i].status_cus,
+        note: auth.list[i].note,
         other: "Edit",
       });
     }
@@ -275,6 +315,7 @@ const sampleData2 = (offst, limit) => {
         status: auth.list[i].status,
         status_cus: auth.list[i].status_cus,
         classi: auth.list[i].classi,
+        note: auth.list[i].note,
         other: "Edit",
       });
     }
@@ -288,6 +329,9 @@ export default {
       searchCus: "",
       selectSale: "ALL",
       salecode_group: ["ALL"],
+      startdate: "",
+      enddate: "",
+      setdate: 0,
     };
   },
 
@@ -299,7 +343,7 @@ export default {
         {
           label: "ลูกค้า",
           field: "CNAME",
-          width: "20%",
+          width: "15%",
           sortable: true,
           isKey: true,
         },
@@ -318,7 +362,13 @@ export default {
         {
           label: "สถานะ",
           field: "status_show",
-          width: "5%",
+          width: "7%",
+          sortable: true,
+        },
+        {
+          label: "โน็ต",
+          field: "note",
+          width: "8%",
           sortable: true,
         },
         {
@@ -340,9 +390,9 @@ export default {
       table.isLoading = true;
       setTimeout(() => {
         table.isReSearch = offset == undefined ? true : false;
-        if (offset >= 10 || limit >= 20) {
-          limit = auth.list.length;
-        }
+        // if (offset >= 10 || limit >= 20) {
+        //   limit = auth.list.length;
+        // }
         if (sort == "asc") {
           table.rows = sampleData1(offset, limit);
         } else {
@@ -378,28 +428,48 @@ export default {
     this.list_au = data_list.data;
     auth.list = data_list.data;
 
-    // this.list_au.map((data) => {
-    //   data.comfirm_cus = "";
-    //   if (data.status == "TEMP" || data.status == "D") {
-    //     data.status = "แบบร่าง";
-    //     data.classi =
-    //       "bg-gray-100 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300";
-    //   } else if (data.status == "A" || data.status == "C") {
-    //     if (data.status == "C") {
-    //       data.comfirm_cus = "ลูกค้า";
-    //     }
-    //     data.status = "อนุมัติแล้ว";
-    //     data.classi =
-    //       "bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900";
-    //   } else if (data.status == "W") {
-    //     data.status = "รออนุมัติ";
-    //     data.classi =
-    //       "bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900";
-    //   }
-    //   data.created_at = data.created_at.substring(0, 16);
+    var today = new Date();
+    let new_month = "";
+    let new_day = "";
+
+    let month = today.getMonth() + 1;
+    let day = today.getDate();
+
+    if (month.toString().length == 1) {
+      new_month = "0" + month;
+    }
+    if (day.toString().length == 1) {
+      new_day = "0" + day;
+    }
+
+    let day1 = today.getFullYear() + "-" + new_month + "-" + new_day;
+
+    this.startdate = day1;
+    this.enddate = day1;
     // });
   },
   methods: {
+    clickchange(set) {
+      this.setdate = set;
+      if (set == 0) {
+        this.searchcus_input();
+      } else {
+        this.selectdate();
+      }
+    },
+    async selectdate() {
+      // console.log("เริ่ม", this.startdate + "จบ", this.enddate);
+      const datafilter = await OrderService.filterdate({
+        day1: this.startdate,
+        day2: this.enddate,
+        empcode: auth.user_id,
+        customer: this.searchCus,
+      });
+
+      this.table.rows = datafilter.data;
+      auth.list = this.table.rows;
+      this.doSearch(0, 10, "id", "asc");
+    },
     async goto_qt(qt) {
       localStorage.setItem("tempqt", qt);
     },
@@ -417,11 +487,19 @@ export default {
       window.open("https://report.zubbsteel.com/tcpdf/pdf/ZQT.php?ref=" + qt);
     },
     async searchcus_input(input) {
-      input = input.trim();
+      if (input == "" || !input) {
+        input = this.searchCus;
+      } else {
+        input = input.trim();
+      }
+
       const data_list = await UserService.filterCustomer({
         emp_code: auth.user_id,
         customer: input,
         QT: this.selectSale,
+        day1: this.startdate,
+        day2: this.enddate,
+        statusdate: this.setdate,
       });
       this.list_au = data_list.data;
       this.table.rows = data_list.data;

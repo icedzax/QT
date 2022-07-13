@@ -1,5 +1,7 @@
 <template>
   <div class="mx-4">
+    <Modal @closeModal="searchCUS" :value="this.modalOpen"></Modal>
+
     <div
       class="grid overflow-y-visible grid-cols-6 grid-rows-1 gap-1 text-xs xl:text-sm p-1 xl:p-0"
     >
@@ -13,7 +15,7 @@
         />
         <span class="text-xs"> VAT</span>
         <vue3-simple-typeahead
-          class="text-black text-xl -mt-1 ml-1"
+          class="text-black text-sm -mt-1 ml-1"
           v-if="approveStat || !cus.data.KUNNR"
           id="typeahead_id"
           :placeholder="place_holder"
@@ -33,41 +35,64 @@
         <p class="font-bold" v-else>{{ place_holder }}</p>
       </div>
       <div class="w-full">
-        <div
-          v-if="!this.statusE && approveStat"
-          class="flex justify-center border-2 border-yellow-500 cursor-pointer rounded-md hover:text-yellow-500 hover:ring-1 hover:ring-yellow-300"
-          @click="chg_edit"
-        >
-          <div class="text-xs pt-1 font-semibold">EDIT</div>
-          <div class="py-0.5">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              class="w-5"
-            >
-              <defs></defs>
-              <title>Comments, compose, edit, note, write</title>
-              <g id="_01" data-name="01">
-                <polygon
-                  class="cls-1"
-                  points="7 3 7 19 17 19 17 21 4 21 4 3 7 3"
-                />
-                <polygon
-                  class="cls-1"
-                  points="20 7 10 17 10.5 13.5 18 6 20 7"
-                />
-                <path
-                  d="M17,22H4a1,1,0,0,1-1-1V3A1,1,0,0,1,4,2H17a1,1,0,0,1,1,1V7a1,1,0,0,1-2,0V4H5V20H16V13a1,1,0,0,1,2,0v8A1,1,0,0,1,17,22Z"
-                />
-                <path
-                  d="M13,18H10a1,1,0,0,1-1-1V14a1,1,0,0,1,.29-.71l8.5-8.5a1,1,0,0,1,1.42,0l2.5,2.5a1,1,0,0,1-1.42,1.42L18.5,6.91,11,14.41V16h1.59l5.7-5.71a1,1,0,0,1,1.42,1.42l-6,6A1,1,0,0,1,13,18Z"
-                />
-                <path d="M10,8H7A1,1,0,0,1,7,6h3a1,1,0,0,1,0,2Z" />
-                <path d="M9,11H7A1,1,0,0,1,7,9H9a1,1,0,0,1,0,2Z" />
-              </g>
-            </svg>
+        <div v-if="!this.statusE && approveStat" class="flex justify-inline">
+          <div
+            class="flex justify-center border-2 border-yellow-500 cursor-pointer rounded-md hover:text-yellow-500 hover:ring-1 hover:ring-yellow-300"
+            @click="chg_edit"
+          >
+            <div class="text-xs pt-1 font-semibold">EDIT</div>
+            <div class="">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                class="w-6"
+              >
+                <defs></defs>
+                <title>Edit customer detail</title>
+                <g id="_01" data-name="01">
+                  <polygon
+                    class="cls-1"
+                    points="7 3 7 19 17 19 17 21 4 21 4 3 7 3"
+                  />
+                  <polygon
+                    class="cls-1"
+                    points="20 7 10 17 10.5 13.5 18 6 20 7"
+                  />
+                  <path
+                    d="M17,22H4a1,1,0,0,1-1-1V3A1,1,0,0,1,4,2H17a1,1,0,0,1,1,1V7a1,1,0,0,1-2,0V4H5V20H16V13a1,1,0,0,1,2,0v8A1,1,0,0,1,17,22Z"
+                  />
+                  <path
+                    d="M13,18H10a1,1,0,0,1-1-1V14a1,1,0,0,1,.29-.71l8.5-8.5a1,1,0,0,1,1.42,0l2.5,2.5a1,1,0,0,1-1.42,1.42L18.5,6.91,11,14.41V16h1.59l5.7-5.71a1,1,0,0,1,1.42,1.42l-6,6A1,1,0,0,1,13,18Z"
+                  />
+                  <path d="M10,8H7A1,1,0,0,1,7,6h3a1,1,0,0,1,0,2Z" />
+                  <path d="M9,11H7A1,1,0,0,1,7,9H9a1,1,0,0,1,0,2Z" />
+                </g>
+              </svg>
+            </div>
           </div>
+
+          <svg
+            id="cloudicosn"
+            data-name="Layer 1"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            class="w-10 h-6 ml-1"
+            @click="searchCUS"
+          >
+            <title>Search code Customer</title>
+            <path
+              d="M20.57,9.43A8,8,0,0,0,5.26,10,5,5,0,1,0,5,20h5V18H5a3,3,0,0,1,0-6,3.1,3.1,0,0,1,.79.12l1.12.31.14-1.15a6,6,0,0,1,11.74-.82l.15.54.54.16A3.46,3.46,0,0,1,22,14.5,3.5,3.5,0,0,1,18.5,18H16v2h2.5A5.48,5.48,0,0,0,20.57,9.43Z"
+              id="id_101"
+              style="fill: slateblue"
+            ></path>
+            <polygon
+              points="12 11 12 15.59 10.71 14.29 9.29 15.71 13 19.41 16.71 15.71 15.29 14.29 14 15.59 14 11 12 11"
+              id="id_102"
+              style="fill: rgb(0, 0, 0)"
+            ></polygon>
+          </svg>
         </div>
+
         <div
           v-else-if="approveStat"
           class="flex justify-center border-2 border-violet-500 rounded-md cursor-pointer hover:bg-violet-100 hover:text-violet-600 hover:ring-1 hover:ring-violet-300"
@@ -232,6 +257,7 @@ import { debounce } from "lodash";
 import { order } from "../state/order";
 
 import CusService from "../services/CusService.js";
+import Modal from "./ModalCheckcus.vue";
 
 export default {
   props: ["customername", "statusApp"],
@@ -252,14 +278,19 @@ export default {
       },
       statusE: false,
       list_qt: this.$route.params.list_qt,
+      modalOpen: false,
+      idcus: false,
     };
+  },
+  components: {
+    Modal,
   },
   created() {},
 
   computed: {
     place_holder() {
-      return cus.data.KUNNR
-        ? `${cus.data.KUNNR} ${cus.data.CNAME || ""}`
+      return order.cust.CNAME
+        ? `${cus.data.KUNNR || ""} ${order.cust.CNAME}`
         : "รหัส / ชื่อลูกค้า";
     },
     cusdata() {
@@ -276,8 +307,18 @@ export default {
       }
       return cus.vat;
     },
+    returnID() {
+      return this.idcus;
+    },
   },
   methods: {
+    searchCUS() {
+      this.modalOpen = !this.modalOpen;
+    },
+    reRenderCus() {
+      //  localStorage.setItem("tempqt", nqt.data);
+      this.$router.go();
+    },
     lookupUser: debounce(async function () {
       const result = await CusService.search({ cus_name: this.data.input });
       this.customers = result.data;
@@ -324,8 +365,7 @@ export default {
       }
     },
     async update_data() {
-      console.log("this.vat:", this.vat);
-      if (this.data.selection !== null || this.cus.data.CNAME) {
+      if (this.data.selection !== null) {
         const send_update = await CusService.setCus({
           KUNNR: cus.data.KUNNR,
           LAND1: cus.data.LAND1,
@@ -343,7 +383,7 @@ export default {
         });
       } else {
         const send_update = await CusService.setCus({
-          KUNNR: "",
+          KUNNR: null,
           LAND1: "",
           CNAME: this.data.input,
           TELNU: this.cusdata.TELNU,
@@ -398,5 +438,9 @@ export default {
 }
 .cls-2 {
   fill: url(#linear-gradient);
+}
+#cloudicon {
+  width: 50px;
+  height: 10px;
 }
 </style>

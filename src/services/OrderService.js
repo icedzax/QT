@@ -50,4 +50,16 @@ export default {
   getLastQT(payload) {
     return Api().get(`/getLastQT/${payload}`);
   },
+  postplant(plant) {
+    return Api().post(`/editPlant`, plant);
+  },
+  getplant(qt) {
+    return Api().get("getplant/" + qt);
+  },
+  postnote(note) {
+    return Api().post(`/updatenote`, note);
+  },
+  filterdate(day) {
+    return Api().post(`/changeDate`, day);
+  },
 };
