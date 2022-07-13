@@ -1,20 +1,20 @@
 <template>
   <div class="mx-2">
-    <table class="table-fixed w-fit">
+    <table class="table-fixed text-xxs sm:text-xs w-full">
       <thead>
         <tr>
           <th class="w-12">ลำดับ</th>
-          <th class="w-2/12">รหัสสินค้า</th>
-          <th class="w-4/12">รายการสินค้า</th>
-          <th class="w-11">จำนวนเส้น</th>
-          <th class="w-11">เส้น/มัด</th>
-          <th class="w-28">ราคา</th>
-          <th class="w-1/12">น้ำหนัก</th>
-          <th class="w-14">หน่วย</th>
-          <th class="w-1/12">ราคาก่อน VAT7%</th>
-          <th class="w-1/12">รวม นน.</th>
-          <th class="w-1/12">จำนวนเงิน</th>
-          <th v-if="approveStat">
+          <th class="w-40">รหัสสินค้า</th>
+          <th>รายการสินค้า</th>
+          <th class="w-16">จำนวนเส้น</th>
+          <th class="w-16">เส้น/มัด</th>
+          <th class="w-32">ราคา</th>
+          <th class="w-16">น้ำหนัก</th>
+          <th class="w-12">หน่วย</th>
+          <th class="w-20">ราคาก่อน VAT7%</th>
+          <th class="w-20">รวม นน.</th>
+          <th class="w-20">จำนวนเงิน</th>
+          <th v-if="approveStat" class="w-8">
             <svg
               id="Layer_1"
               data-name="Layer 1"
@@ -84,20 +84,45 @@
               </span>
             </td>
             <td class="">
-              <select
-                :disabled="!approveStat"
-                class="tdlist border-none text-xs w-full"
-                v-model="items.ptype"
-                @change="itemChange(items, true), (items.loading = true)"
-              >
-                <option
-                  v-for="sItem in saleType"
-                  :key="sItem.t"
-                  :value="sItem.t"
+              <div class="flex justify-inline">
+                <select
+                  :disabled="!approveStat"
+                  class="border-none text-xs w-28"
+                  v-model="items.ptype"
+                  @change="itemChange(items, true), (items.loading = true)"
                 >
-                  {{ sItem.text }}
-                </option>
-              </select>
+                  <option
+                    v-for="sItem in saleType"
+                    :key="sItem.t"
+                    :value="sItem.t"
+                  >
+                    {{ sItem.text }}
+                  </option>
+                </select>
+                <svg
+                  v-if="approveStat"
+                  id="Layer_1"
+                  data-name="Layer 1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 512 512"
+                  class="mt-1 w-6"
+                  @click="itemUpdateprice(items)"
+                  v-show="!items.loading"
+                >
+                  <title>Refresh Price</title>
+                  <path
+                    d="M446.452,231.973A192.112,192.112,0,0,0,285.51,66.251l9.57-9.493a21.333,21.333,0,1,0-30.048-30.292L219.6,71.536a21.333,21.333,0,0,0-.123,30.169l45.067,45.44A21.333,21.333,0,0,0,294.834,117.1l-7-7.053A149.412,149.412,0,0,1,349.307,372.6a21.334,21.334,0,1,0,26.7,33.279A190.874,190.874,0,0,0,446.452,231.973Z"
+                    id="id_101"
+                    style="fill: rgb(252, 184, 25)"
+                  ></path>
+                  <path
+                    d="M247.421,364.863a21.333,21.333,0,0,0-30.294,30.046l7,7.055a149.413,149.413,0,0,1-61.435-262.585A21.334,21.334,0,1,0,136,106.091,192.091,192.091,0,0,0,226.438,445.77l-9.556,9.479a21.333,21.333,0,0,0,30.048,30.292l45.434-45.07a21.334,21.334,0,0,0,.123-30.169Z"
+                    id="id_102"
+                    style="fill: rgb(235, 173, 29)"
+                  ></path>
+                </svg>
+                <LoadingSpinner class="mt-2" v-show="items.loading" />
+              </div>
             </td>
             <td>
               <div class="flex flex-row items-center">
@@ -111,7 +136,6 @@
                 />
               </div>
             </td>
-
             <td>
               <select
                 v-model="items.unit"
@@ -129,6 +153,7 @@
               <input
                 id="price_u"
                 type="text"
+                @keypress="NumbersOnly"
                 v-model="items.price_unit"
                 @change="itemChange(items)"
                 class="tdlist p-1 text-sm border-none text-center"
@@ -364,12 +389,21 @@ import OrderService from "../services/OrderService.js";
 import InputItemText from "./InputItemText.vue";
 import InputItem from "./InputItem.vue";
 import LoadingSpinner from "./LoadingSpinner.vue";
+import LoadingSpinnerP from "./LoadingSpinnerPrice.vue";
+
 import Toggle from "./Toggle.vue";
 
 export default {
-  components: { InputItemText, LoadingSpinner, Toggle, InputItem },
+  components: {
+    InputItemText,
+    LoadingSpinner,
+    LoadingSpinnerP,
+    Toggle,
+    InputItem,
+  },
   data() {
     return {
+      times: 800,
       sys,
       auth,
       fg,
@@ -585,7 +619,43 @@ export default {
         return true;
       }
     },
+    async itemUpdateprice(items) {
+      this.setLoading(true);
+      if (!items.rmd_mat) {
+        items.rmd_mat = " ";
+        if (this.data.selection == null && !items.created_at) {
+          //ในช่อง input ล่างสุด
+        }
+      }
+      const checktype = {
+        VKORG: 1000,
+        MATNR: items.rmd_mat,
+        KONDA: items.ptype,
+      };
 
+      //เลือกเอา
+      // if (this.data.selection !== null) {
+      items.loading = await true;
+      // if (this.data.selection !== null){}
+      const alluom = await FgService.getUOM(checktype);
+      let UOM_LIST = [];
+      if (alluom.data[0]) {
+        alluom.data.map((x) => {
+          UOM_LIST.push(x.KMEIN);
+        });
+
+        items.typeunit = UOM_LIST;
+      } else {
+        items.typeunit = this.type_unit;
+        // items.unit = "PC";
+      }
+      items = await this.getPriceMaster(items);
+      items = await this.calItem(items);
+
+      await this.setOrder(items);
+      await this.setLoading(false);
+      items.loading = await false;
+    },
     itemChange: debounce(async function (items, isUnit) {
       //ถ้าไม่มี mat ให้ใส่ข้อมูลนี้
       this.setLoading(true);
@@ -617,7 +687,6 @@ export default {
         items.typeunit = this.type_unit;
         // items.unit = "PC";
       }
-
       if (isUnit) {
         items = await this.getPriceMaster(items);
       }
