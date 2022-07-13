@@ -9,7 +9,7 @@
           <th class="w-16">จำนวนเส้น</th>
           <th class="w-16">เส้น/มัด</th>
           <th class="w-32">ราคา</th>
-          <th class="w-28">น้ำหนัก</th>
+          <th class="w-16">น้ำหนัก</th>
           <th class="w-12">หน่วย</th>
           <th class="w-20">ราคาก่อน VAT7%</th>
           <th class="w-20">รวม นน.</th>
@@ -125,20 +125,17 @@
               </div>
             </td>
             <td>
-              <div class="flex items-center">
-                <span class="text-right text-xs w-3/6 mx-auto" v-if="items.min"
-                  >{{ items.min }} -
-                </span>
+              <div class="flex flex-row items-center">
                 <input
                   type="text"
+                  @keypress="NumbersOnly"
                   v-model="items.rmd_weight"
                   @change="itemChange(items)"
-                  class="text-xs p-1 text-center border-none focus:outline-none"
+                  class="tdlist text-xs p-1 text-center border-none focus:outline-none"
                   :disabled="!approveStat"
                 />
               </div>
             </td>
-
             <td>
               <select
                 v-model="items.unit"
