@@ -1,20 +1,20 @@
 <template>
   <div class="mx-2">
-    <table class="table-fixed text-xxs sm:text-xs w-fit">
+    <table class="table-fixed text-xxs sm:text-xs w-full">
       <thead>
         <tr>
           <th class="w-12">ลำดับ</th>
-          <th class="w-36">รหัสสินค้า</th>
-          <th class="w-3/12">รายการสินค้า</th>
-          <th class="w-11">จำนวนเส้น</th>
-          <th class="w-11">เส้น/มัด</th>
+          <th class="w-40">รหัสสินค้า</th>
+          <th>รายการสินค้า</th>
+          <th class="w-16">จำนวนเส้น</th>
+          <th class="w-16">เส้น/มัด</th>
           <th class="w-32">ราคา</th>
-          <th class="w-1/12">น้ำหนัก</th>
-          <th class="w-12">หน่วย</th>
-          <th class="w-1/12">ราคาก่อน VAT7%</th>
-          <th class="w-1/12">รวม นน.</th>
-          <th class="w-1/12">จำนวนเงิน</th>
-          <th v-if="approveStat">
+          <th class="w-16">น้ำหนัก</th>
+          <th class="w-16">หน่วย</th>
+          <th class="w-20">ราคาก่อน VAT7%</th>
+          <th class="w-20">รวม นน.</th>
+          <th class="w-20">จำนวนเงิน</th>
+          <th v-if="approveStat" class="w-8">
             <svg
               id="Layer_1"
               data-name="Layer 1"
@@ -105,8 +105,8 @@
                   data-name="Layer 1"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 512 512"
-                  class="mt-1"
-                  @click="itemChange(items, true)"
+                  class="mt-1 w-6"
+                  @click="itemChange(items, true, true)"
                   v-show="!items.loading"
                 >
                   <title>Refresh Price</title>
@@ -121,7 +121,7 @@
                     style="fill: rgb(235, 173, 29)"
                   ></path>
                 </svg>
-                <LoadingSpinnerP class="mt-2" v-show="items.loading" />
+                <LoadingSpinner class="mt-2" v-show="items.loading" />
               </div>
             </td>
             <td>
@@ -589,7 +589,12 @@ export default {
       }
     },
 
-    itemChange: debounce(async function (items, isUnit) {
+    itemChange: debounce(async function (items, isUnit, refresh) {
+      if (refresh) {
+        console.log("มานี่ๆ รีเฟรชราคา");
+      } else {
+        console.log("ปุ่มอื่น");
+      }
       //ถ้าไม่มี mat ให้ใส่ข้อมูลนี้
       this.setLoading(true);
       if (!items.rmd_mat) {
