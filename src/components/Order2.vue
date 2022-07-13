@@ -9,8 +9,8 @@
           <th class="w-16">จำนวนเส้น</th>
           <th class="w-16">เส้น/มัด</th>
           <th class="w-32">ราคา</th>
-          <th class="w-16">น้ำหนัก</th>
-          <th class="w-16">หน่วย</th>
+          <th class="w-28">น้ำหนัก</th>
+          <th class="w-12">หน่วย</th>
           <th class="w-20">ราคาก่อน VAT7%</th>
           <th class="w-20">รวม นน.</th>
           <th class="w-20">จำนวนเงิน</th>
@@ -106,7 +106,7 @@
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 512 512"
                   class="mt-1 w-6"
-                  @click="itemChange(items, true, true)"
+                  @click="itemUpdateprice(items)"
                   v-show="!items.loading"
                 >
                   <title>Refresh Price</title>
@@ -373,6 +373,7 @@ export default {
   },
   data() {
     return {
+      times: 800,
       sys,
       auth,
       fg,
@@ -588,13 +589,44 @@ export default {
         return true;
       }
     },
-
-    itemChange: debounce(async function (items, isUnit, refresh) {
-      if (refresh) {
-        console.log("มานี่ๆ รีเฟรชราคา");
-      } else {
-        console.log("ปุ่มอื่น");
+    async itemUpdateprice(items) {
+      this.setLoading(true);
+      if (!items.rmd_mat) {
+        items.rmd_mat = " ";
+        if (this.data.selection == null && !items.created_at) {
+          //ในช่อง input ล่างสุด
+        }
       }
+      const checktype = {
+        VKORG: 1000,
+        MATNR: items.rmd_mat,
+        KONDA: items.ptype,
+      };
+
+      //เลือกเอา
+      // if (this.data.selection !== null) {
+      items.loading = await true;
+      // if (this.data.selection !== null){}
+      const alluom = await FgService.getUOM(checktype);
+      let UOM_LIST = [];
+      if (alluom.data[0]) {
+        alluom.data.map((x) => {
+          UOM_LIST.push(x.KMEIN);
+        });
+
+        items.typeunit = UOM_LIST;
+      } else {
+        items.typeunit = this.type_unit;
+        // items.unit = "PC";
+      }
+      items = await this.getPriceMaster(items);
+      items = await this.calItem(items);
+
+      await this.setOrder(items);
+      await this.setLoading(false);
+      items.loading = await false;
+    },
+    itemChange: debounce(async function (items, isUnit) {
       //ถ้าไม่มี mat ให้ใส่ข้อมูลนี้
       this.setLoading(true);
       if (!items.rmd_mat) {
