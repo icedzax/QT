@@ -152,6 +152,7 @@
             <td>
               <input
                 type="text"
+                @keypress="NumbersOnly"
                 v-model="items.price_unit"
                 @change="itemChange(items)"
                 class="p-1 text-sm border-none text-center"
