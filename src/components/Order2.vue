@@ -1,6 +1,6 @@
 <template>
   <div class="mx-2">
-    <table class="table-fixed text-xxs sm:text-xs w-full">
+    <table class="text-xxs w-full table-fixed sm:text-xs">
       <thead>
         <tr>
           <th class="w-12">ลำดับ</th>
@@ -52,7 +52,7 @@
               <input
                 type="text"
                 v-model="items.rmd_mat"
-                class="tdlist text-xs p-1 text-center border-none"
+                class="tdlist border-none p-1 text-center text-xs"
                 :disabled="!approveStat"
                 @input="itemChange(items)"
               />
@@ -61,7 +61,7 @@
               <input
                 type="text"
                 v-model="items.rmd_size"
-                class="py-0.5 border-none text-center xl:text-sm text-xs"
+                class="border-none py-0.5 text-center text-xs xl:text-sm"
                 :disabled="!approveStat"
                 @input="itemChange(items)"
               />
@@ -71,12 +71,12 @@
                 type="text"
                 v-model="items.amount"
                 @keypress="NumbersOnly"
-                class="tdlist text-xs p-1 text-center border-none"
+                class="tdlist border-none p-1 text-center text-xs"
                 :disabled="!approveStat || items.loading"
                 @input="itemChange(items)"
               />
             </td>
-            <td class="bg-gray-50 text-xs text-center bundle">
+            <td class="bundle bg-gray-50 text-center text-xs">
               <span class="tdlist"
                 >{{
                   items.bundle === 1 || items.bundle === 0 ? "" : items.bundle
@@ -84,10 +84,10 @@
               </span>
             </td>
             <td class="">
-              <div class="flex justify-inline">
+              <div class="justify-inline flex">
                 <select
                   :disabled="!approveStat"
-                  class="border-none text-xs w-28"
+                  class="w-28 border-none text-xs"
                   v-model="items.ptype"
                   @change="itemChange(items, true), (items.loading = true)"
                 >
@@ -131,7 +131,7 @@
                   @keypress="NumbersOnly"
                   v-model="items.rmd_weight"
                   @change="itemChange(items)"
-                  class="tdlist text-xs p-1 text-center border-none focus:outline-none"
+                  class="tdlist border-none p-1 text-center text-xs focus:outline-none"
                   :disabled="!approveStat"
                 />
               </div>
@@ -139,7 +139,7 @@
             <td>
               <select
                 v-model="items.unit"
-                class="tdlist w-full text-xs p-1 border-none"
+                class="tdlist w-full border-none p-1 text-xs"
                 :disabled="!approveStat"
                 @change="itemChange(items, true), (items.loading = true)"
               >
@@ -156,7 +156,7 @@
                 @keypress="NumbersOnly"
                 v-model="items.price_unit"
                 @change="itemChange(items)"
-                class="tdlist p-1 text-sm border-none text-center"
+                class="tdlist border-none p-1 text-center text-sm"
                 :disabled="!approveStat"
               />
             </td>
@@ -188,7 +188,7 @@
                   d="M341.33,234.67H170.67a21.33,21.33,0,1,0,0,42.66H341.33a21.33,21.33,0,1,0,0-42.66Z"
                 />
               </svg>
-              <LoadingSpinner class="mx-1 w-5 h-5" v-show="items.loading" />
+              <LoadingSpinner class="mx-1 h-5 w-5" v-show="items.loading" />
             </td>
           </tr>
           <tr v-if="items.show" class="">
@@ -196,38 +196,38 @@
               <input
                 placeholder="หมายเหตุ : .."
                 type="text"
-                class="w-full text-xs p-1 text-left border-none"
+                class="w-full border-none p-1 text-left text-xs"
                 v-model="items.REMARK"
                 @input="itemChange(items)"
               />
             </td>
-            <td class="font-semibold text-center bg-gray-50">ช่วง</td>
-            <td class="text-xs bg-yellow-50">
-              <div class="flex items-center w-full">
+            <td class="bg-gray-50 text-center font-semibold">ช่วง</td>
+            <td class="bg-yellow-50 text-xs">
+              <div class="flex w-full items-center">
                 <input
                   @keypress="NumbersOnly"
                   type="text"
-                  class="w-full text-xs p-1 text-center border-none bg-yellow-50"
+                  class="w-full border-none bg-yellow-50 p-1 text-center text-xs"
                   v-model="items.min"
                   @input="itemChange(items)"
                 />-<input
                   @keypress="NumbersOnly"
                   type="text"
-                  class="w-full text-xs p-1 text-center border-none bg-yellow-50"
+                  class="w-full border-none bg-yellow-50 p-1 text-center text-xs"
                   v-model="items.max"
                   @input="itemChange(items)"
                 />
               </div>
             </td>
 
-            <td :colspan="2" class="font-semibold text-center bg-gray-50">
+            <td :colspan="2" class="bg-gray-50 text-center font-semibold">
               ราคาเบส
             </td>
             <td :colspan="3">
               <input
                 placeholder=""
                 type="text"
-                class="w-full text-xs p-1 text-left border-none"
+                class="w-full border-none p-1 text-left text-xs"
                 v-model="items.base_price"
                 @input="itemChange(items)"
               />
@@ -261,7 +261,7 @@
               type="text"
               v-model="inputField.amount"
               @keypress="NumbersOnly"
-              class="inputlist text-xs p-1 text-center border-none"
+              class="inputlist border-none p-1 text-center text-xs"
               :disabled="!approveStat || sys.loading"
               @change="itemChange(inputField)"
             />
@@ -271,7 +271,7 @@
               type="text"
               v-model="inputField.bundle"
               @keypress="NumbersOnly"
-              class="inputlist text-xs p-1 text-center border-none"
+              class="inputlist border-none p-1 text-center text-xs"
               disabled
               @input="itemChange(inputField)"
             />
@@ -296,7 +296,7 @@
           <td>
             <div class="flex items-center">
               <input
-                class="inputlist text-right text-xs w-4/6 mx-auto border-none focus:outline-none"
+                class="inputlist mx-auto w-4/6 border-none text-right text-xs focus:outline-none"
                 v-if="inputField.min"
                 :value="inputField.min + '  -'"
                 readonly="readonly"
@@ -306,7 +306,7 @@
                 @keypress="NumbersOnly"
                 v-model="inputField.rmd_weight"
                 @change="itemChange(inputField)"
-                class="inputlist text-xs p-1 text-center border-none focus:outline-none"
+                class="inputlist border-none p-1 text-center text-xs focus:outline-none"
                 :disabled="!approveStat"
               />
             </div>
@@ -315,7 +315,7 @@
           <td>
             <select
               v-model="inputField.unit"
-              class="inputlist w-full text-xs p-1 border-none"
+              class="inputlist w-full border-none p-1 text-xs"
               :disabled="!approveStat"
               @change="itemChange(inputField, true)"
             >
@@ -334,7 +334,7 @@
               type="text"
               v-model="inputField.price_unit"
               @change="itemChange(inputField)"
-              class="inputlist p-1 text-sm border-none text-center"
+              class="inputlist border-none p-1 text-center text-sm"
               :disabled="!approveStat"
             />
           </td>
@@ -368,7 +368,7 @@
                 <rect x="14" y="21" width="20" height="6" />
               </g>
             </svg>
-            <LoadingSpinner class="mx-1 w-5 h-5" v-show="sys.loading" />
+            <LoadingSpinner class="mx-1 h-5 w-5" v-show="sys.loading" />
           </td>
         </tr>
 
@@ -441,7 +441,8 @@ export default {
   computed: {
     saleType() {
       const scode = localStorage.getItem("tempqt").substring(3, 4);
-      if (["X", "L", "R"].includes(scode)) {
+      const scode3 = localStorage.getItem("tempqt").substring(3, 6);
+      if (["X", "L", "R"].includes(scode) || scode3 == "O02") {
         // console.log(this.type.retail);
         return this.type.retail;
       }
@@ -501,7 +502,8 @@ export default {
 
       let st = "T1";
       const rlx = ["X", "L", "R"];
-      if (rlx.includes(SaleCharacter)) {
+      const scode3 = localStorage.getItem("tempqt").substring(3, 6);
+      if (rlx.includes(SaleCharacter) || scode3 == "O02") {
         st = "R1";
       }
 
@@ -816,10 +818,10 @@ input {
 }
 
 th {
-  @apply font-light border border-slate-200 text-xs md:text-sm;
+  @apply border border-slate-200 text-xs font-light md:text-sm;
 }
 td {
-  @apply w-1/12 text-xs md:text-sm border border-slate-200;
+  @apply w-1/12 border border-slate-200 text-xs md:text-sm;
 }
 .bundle {
   font-size: 100%;
