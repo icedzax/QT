@@ -446,14 +446,17 @@ export default {
 
   computed: {
     saleType() {
-      const scode = localStorage.getItem("tempqt").substring(3, 4);
-      const scode3 = localStorage.getItem("tempqt").substring(3, 6);
-      if (["X", "L", "R"].includes(scode) || scode3 == "O02") {
-        // console.log(this.type.retail);
-        return this.type.retail;
-      }
-      // console.log(this.type.Wholesale);
-      return this.type.Wholesale;
+      return order.sale_office == "1015" || order.sale_office == '1014'
+        ? this.type.retail
+        : this.type.Wholesale;
+      //   const scode = localStorage.getItem("tempqt").substring(3, 4);
+      //   const scode3 = localStorage.getItem("tempqt").substring(3, 6);
+      //   if (["X", "L", "R"].includes(scode) || scode3 == "O02") {
+      //     // console.log(this.type.retail);
+      //     return this.type.retail;
+      //   }
+      //   // console.log(this.type.Wholesale);
+      //   return this.type.Wholesale;
     },
     approveStat() {
       // console.log(order.status);
@@ -507,11 +510,16 @@ export default {
       }
 
       let st = "T1";
-      const rlx = ["X", "L", "R"];
-      const scode3 = localStorage.getItem("tempqt").substring(3, 6);
-      if (rlx.includes(SaleCharacter) || scode3 == "O02") {
-        st = "R1";
+      // const rlx = ["X", "L", "R"];
+      // const scode3 = localStorage.getItem("tempqt").substring(3, 6);
+      // if (rlx.includes(SaleCharacter) || scode3 == "O02") {
+      //   st = "R1";
+      // }
+
+      if(order.sale_office == '1015' || order.sale_office == '1014'){
+         st = "R1";
       }
+      
 
       const prepush = await FgService.get(this.mat);
       // console.log("prepush", prepush);
