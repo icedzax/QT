@@ -62,4 +62,7 @@ export default {
   filterdate(day) {
     return Api().post(`/changeDate`, day);
   },
+  priceUpdate(matnr) {
+    return Api().post(`/priceUpdate`, matnr);
+  },
 };
