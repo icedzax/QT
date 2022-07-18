@@ -9,7 +9,7 @@
         รวมมูลค่าสินค้า
       </div>
       <div class="col-start-3 row-start-1 xl:col-start-2">
-        {{ Number(sumprice).toLocaleString() }}
+        {{ Number(sumprice).toFixed(2) }}
       </div>
       <div
         class="col-span-1 col-start-2 row-start-2 font-semibold xl:col-start-1"
@@ -17,9 +17,7 @@
         ค่าขนส่ง
       </div>
       <div class="col-start-3 row-start-2 xl:col-start-2">
-        <v-num #="{ number }" :value="tranf">
-          {{ number }}
-        </v-num>
+        {{ Number(tranf).toFixed(2) }}
       </div>
       <div
         class="col-span-1 col-start-2 row-start-3 font-semibold xl:col-start-1"
@@ -27,7 +25,7 @@
         มูลค่าทั้งสิ้น
       </div>
       <div class="col-start-3 row-start-3 xl:col-start-2">
-        {{ Number(sumprice_2).toLocaleString() }}
+        {{ Number(sumprice_2).toFixed(2) }}
       </div>
       <div
         class="col-span-1 col-start-2 row-start-4 font-semibold xl:col-start-1"
@@ -35,7 +33,7 @@
         ภาษีมูลค่าเพิ่ม
       </div>
       <div class="col-start-3 row-start-4 xl:col-start-2">
-        {{ Number(cal_vat).toLocaleString() }}
+        {{ Number(cal_vat).toFixed(2) }}
       </div>
       <div
         class="col-span-1 col-start-2 row-start-5 font-semibold xl:col-start-1"
@@ -43,7 +41,7 @@
         รวมสุทธิ
       </div>
       <div class="col-start-3 row-start-5 xl:col-start-2">
-        {{ Number(total_price).toLocaleString() }}
+        {{ Number(total_price).toFixed(2) }}
       </div>
     </div>
   </div>
@@ -59,27 +57,27 @@ export default {
   created() {},
   computed: {
     tranf() {
-      return parseFloat(this.tf).toFixed(2);
+      return parseFloat(this.tf);
     },
     sumprice() {
-      return parseFloat(this.sp).toFixed(2);
+      return parseFloat(this.sp);
     },
     sumprice_2() {
-      let fixsp = this.sp.toFixed(2);
+      let fixsp = this.sp;
       let sum = parseFloat(fixsp) + parseFloat(this.tranf);
 
-      return parseFloat(sum).toFixed(2);
+      return parseFloat(sum);
     },
     cal_vat() {
       const v = (parseFloat(this.sp) + parseFloat(this.tranf)) * this.vat;
 
-      return parseFloat(v).toFixed(2);
+      return parseFloat(v);
     },
     total_price() {
-      let fixsp = this.sp.toFixed(2);
+      let fixsp = this.sp;
       let sum = parseFloat(fixsp) + parseFloat(this.tranf);
       let v = (parseFloat(this.sp) + parseFloat(this.tranf)) * this.vat;
-      return parseFloat(sum + v).toFixed(2);
+      return parseFloat(sum + v);
     },
   },
   methods: {
