@@ -446,7 +446,7 @@ export default {
 
   computed: {
     saleType() {
-      return order.sale_office == "1015" || order.sale_office == '1014'
+      return order.sale_office == "1015" || order.sale_office == '1014' || order.sale_office == '1017'
         ? this.type.retail
         : this.type.Wholesale;
       //   const scode = localStorage.getItem("tempqt").substring(3, 4);
@@ -516,7 +516,7 @@ export default {
       //   st = "R1";
       // }
 
-      if(order.sale_office == '1015' || order.sale_office == '1014'){
+      if(order.sale_office == '1015' || order.sale_office == '1014'|| order.sale_office == '1017'){
          st = "R1";
       }
       
