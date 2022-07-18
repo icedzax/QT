@@ -9,7 +9,12 @@
         รวมมูลค่าสินค้า
       </div>
       <div class="col-start-3 row-start-1 xl:col-start-2">
-        {{ Number(sumprice).toFixed(2) }}
+        {{
+          sumprice.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+        }}
       </div>
       <div
         class="col-span-1 col-start-2 row-start-2 font-semibold xl:col-start-1"
@@ -17,7 +22,12 @@
         ค่าขนส่ง
       </div>
       <div class="col-start-3 row-start-2 xl:col-start-2">
-        {{ Number(tranf).toFixed(2) }}
+        {{
+          tranf.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+        }}
       </div>
       <div
         class="col-span-1 col-start-2 row-start-3 font-semibold xl:col-start-1"
@@ -25,7 +35,12 @@
         มูลค่าทั้งสิ้น
       </div>
       <div class="col-start-3 row-start-3 xl:col-start-2">
-        {{ Number(sumprice_2).toFixed(2) }}
+        {{
+          sumprice_2.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+        }}
       </div>
       <div
         class="col-span-1 col-start-2 row-start-4 font-semibold xl:col-start-1"
@@ -33,7 +48,12 @@
         ภาษีมูลค่าเพิ่ม
       </div>
       <div class="col-start-3 row-start-4 xl:col-start-2">
-        {{ Number(cal_vat).toFixed(2) }}
+        {{
+          cal_vat.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+        }}
       </div>
       <div
         class="col-span-1 col-start-2 row-start-5 font-semibold xl:col-start-1"
@@ -41,7 +61,12 @@
         รวมสุทธิ
       </div>
       <div class="col-start-3 row-start-5 xl:col-start-2">
-        {{ Number(total_price).toFixed(2) }}
+        {{
+          total_price.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+        }}
       </div>
     </div>
   </div>
