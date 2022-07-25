@@ -65,4 +65,7 @@ export default {
   priceUpdate(matnr) {
     return Api().post(`/priceUpdate`, matnr);
   },
+  bundleUpdate(matnr) {
+    return Api().post(`/bundleUpdate`, matnr);
+  },
 };
