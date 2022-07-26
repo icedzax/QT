@@ -2,13 +2,13 @@
   <div class="px-2">
     <Modal @closeModal="newQT" @newQ="reRenderNewQT" :value="modalOpen"></Modal>
     <div
-      class="row-start-1 row-span-1 col-start-3 col-span-1 text-center text-xs md:text-sm"
+      class="col-span-1 col-start-3 row-span-1 row-start-1 text-center text-xs md:text-sm"
     >
       <div class="flex">
-        <div class="text-base md:text-xl text-center lg:text-left">
+        <div class="text-center text-base md:text-lg lg:text-left">
           ใบเสนอราคา (สำนักงานใหญ่)
         </div>
-        <div class="flex justify-inline ml-2">
+        <div class="justify-inline ml-2 flex">
           <div class="h-10 w-10" @click="goto_pdf">
             <svg
               version="1"
@@ -135,6 +135,7 @@
           {{ order.date }}
         </div>
       </div> -->
+
       <div class="flex justify-start">
         <div class="w-32 text-left">เลขที่ใบเสนอราคา</div>
         <div class="w-32 text-left">
@@ -142,7 +143,7 @@
         </div>
         <div
           @click="newQT"
-          class="cursor-pointer rounded-md px-2 text-sm border-2 border-green-500 text-black hover:text-green-600 font-semibold shadow-lg ring-1 ring-green-200"
+          class="cursor-pointer rounded-md border-2 border-green-500 px-2 text-sm font-semibold text-black shadow-lg ring-1 ring-green-200 hover:text-green-600"
         >
           สร้างใหม่
         </div>

@@ -65,4 +65,10 @@ export default {
   priceUpdate(matnr) {
     return Api().post(`/priceUpdate`, matnr);
   },
+  getSoList(pay) {
+    return Api().post(`/appListWait`, pay);
+  },
+  soCheck(pay) {
+    return Api().post(`/soCheckApp`, pay);
+  },
 };
