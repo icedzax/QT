@@ -1,6 +1,11 @@
 <template>
   <div class="mx-4 h-auto">
-    <ModalSO :value="true" :list="waitlist" @onCheck="fecthSoList" />
+    <ModalSO
+      :value="modalOpen"
+      :list="waitlist"
+      @onCheck="fecthSoList"
+      @close="closey"
+    />
     <div
       class="grid grid-cols-2 grid-rows-1 gap-0.5 overflow-hidden lg:grid-cols-3"
     >
@@ -42,6 +47,7 @@
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                   stroke-width="2"
+                  @click="openModalSO()"
                 >
                   <path
                     stroke-linecap="round"
@@ -51,6 +57,7 @@
                 </svg>
                 <span
                   v-if="waitCount"
+                  @click="openModalSO()"
                   class="absolute top-0 right-1 inline-flex translate-x-1/2 -translate-y-1/2 transform items-center justify-center rounded-full bg-red-600 px-2 py-1 text-xs font-bold leading-none text-red-100"
                   >{{ waitCount }}</span
                 >
@@ -112,8 +119,12 @@ export default {
   },
   methods: {
     async fecthSoList() {
+      // if (this.modalOpen) {
+      //   this.modalOpen = !this.modalOpen;
+      // }
       const sl = await OrderService.getSoList({ empcode: auth.user_id });
       this.waitlist = sl.data;
+
       // this.waitlist = sl.data.map((m) => [...m, { loading: false }]);
     },
     async postPlant() {
@@ -121,6 +132,14 @@ export default {
       let code_plant = data[0];
       order.plant = parseInt(code_plant);
       await OrderService.postplant({ plant: code_plant, qt: auth.temp_qt });
+    },
+    openModalSO() {
+      //console.log("CLick:", this.modalOpen);
+      this.modalOpen = true;
+      //console.log("CLick:LL:", this.modalOpen);
+    },
+    closey() {
+      this.modalOpen = !this.modalOpen;
     },
   },
   components: { ModalSO },
