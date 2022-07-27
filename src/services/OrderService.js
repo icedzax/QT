@@ -68,7 +68,13 @@ export default {
   getSoList(pay) {
     return Api().post(`/appListWait`, pay);
   },
+  getSoListReg(pay) {
+    return Api().post(`/appListWaitReg`, pay);
+  },
   soCheck(pay) {
     return Api().post(`/soCheckApp`, pay);
+  },
+  soApp(pay) {
+    return Api().post(`/soApp`, pay);
   },
 };

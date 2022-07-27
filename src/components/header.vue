@@ -1,6 +1,7 @@
 <template>
   <div class="mx-4 h-auto">
-    <ModalSO :value="true" :list="waitlist" @onCheck="fecthSoList" />
+    <!-- <ModalSO :value="true" :list="waitlist" @onCheck="fecthSoList" /> -->
+    <ModalRegion :value="true" />
     <div
       class="grid grid-cols-2 grid-rows-1 gap-0.5 overflow-hidden lg:grid-cols-3"
     >
@@ -68,6 +69,7 @@ import OrderService from "../services/OrderService.js";
 import { auth } from "../state/user";
 import { order } from "../state/order";
 import ModalSO from "./ModalSO.vue";
+import ModalRegion from "./ModalRegion.vue";
 
 export default {
   data() {
@@ -123,6 +125,6 @@ export default {
       await OrderService.postplant({ plant: code_plant, qt: auth.temp_qt });
     },
   },
-  components: { ModalSO },
+  components: { ModalSO, ModalRegion },
 };
 </script>
