@@ -28,12 +28,12 @@
           </h3>
           <button
             type="button"
-            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+            class="ml-auto inline-flex items-center rounded-lg bg-transparent p-1.5 text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white"
             data-modal-toggle="defaultModal"
             @click="close()"
           >
             <svg
-              class="w-5 h-5"
+              class="h-5 w-5"
               fill="currentColor"
               viewBox="0 0 20 20"
               xmlns="http://www.w3.org/2000/svg"
@@ -47,12 +47,12 @@
           </button>
         </div>
         <!-- Modal body -->
-        <div class="w-full justify-center space-y-2 px-6 mt-2 tab">
-          <table class="mx-auto w-full table-auto px-2 text-base fixedHeader">
+        <div class="tab mt-2 w-full justify-center space-y-2 px-6">
+          <table class="fixedHeader mx-auto w-full table-auto px-2 text-base">
             <thead>
               <tr class="bg-gray-100">
                 <th class="text-left">QT</th>
-                <th class="text-left">SO</th>
+                <!-- <th class="text-left">SO</th> -->
                 <th class="text-left">ลูกค้า</th>
                 <th>สถานะ</th>
               </tr>
@@ -70,7 +70,7 @@
                 class="border-b"
                 v-show="list.length !== 0"
               >
-                <td class="py-1 text-left flex justify-inline">
+                <td class="justify-inline flex py-1 text-left">
                   <div
                     @click="openPDF(item.qt)"
                     class="w-2/3 cursor-pointer hover:text-blue-600 hover:underline"
@@ -95,7 +95,7 @@
                     </svg>
                   </div>
                 </td>
-                <td>{{ item.VBELN }}</td>
+                <!-- <td>{{ item.VBELN }}</td> -->
                 <td>
                   {{ item.cname }}
 

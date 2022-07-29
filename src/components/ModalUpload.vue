@@ -42,7 +42,7 @@
             <thead>
               <th>ลำดับ</th>
               <th>ชื่อไฟล์แนบ</th>
-              <th>อื่นๆ</th>
+              <th></th>
             </thead>
             <tbody>
               <tr v-show="this.filelist.length == 0">
