@@ -74,7 +74,10 @@ export default {
   soCheck(pay) {
     return Api().post(`/soCheckApp`, pay);
   },
-  soApp(pay) {
-    return Api().post(`/soApp`, pay);
+  loadFile(QT) {
+    return Api().post(`/loadFile`, QT);
+  },
+  del(filename) {
+    return Api().post(`/deleteFile`, filename);
   },
 };
