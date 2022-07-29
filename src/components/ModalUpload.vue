@@ -3,27 +3,27 @@
     id="defaultModal"
     tabindex="-1"
     aria-hidden="true"
-    class="overflow-y-auto overflow-x-hidden fixed mx-auto top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal h-full bg-slate-400 bg-opacity-30"
+    class="h-modal fixed top-0 right-0 left-0 z-50 mx-auto h-full w-full overflow-y-auto overflow-x-hidden bg-slate-400 bg-opacity-30 md:inset-0"
     v-show="value"
   >
-    <div class="relative p-4 w-full max-w-2xl h-full md:h-auto mx-auto mt-4">
+    <div class="relative mx-auto mt-4 h-full w-full max-w-2xl p-4 md:h-auto">
       <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+      <div class="relative rounded-lg bg-white shadow dark:bg-gray-700">
         <!-- Modal header -->
         <div
-          class="flex justify-between items-start p-4 rounded-t border-b dark:border-gray-600"
+          class="flex items-start justify-between rounded-t border-b p-4 dark:border-gray-600"
         >
           <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
             File Upload : {{ this.QT }}
           </h3>
           <button
             type="button"
-            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+            class="ml-auto inline-flex items-center rounded-lg bg-transparent p-1.5 text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white"
             data-modal-toggle="defaultModal"
             @click="close()"
           >
             <svg
-              class="w-5 h-5"
+              class="h-5 w-5"
               fill="currentColor"
               viewBox="0 0 20 20"
               xmlns="http://www.w3.org/2000/svg"
@@ -37,7 +37,7 @@
           </button>
         </div>
         <!-- Modal body -->
-        <div class="p-6 space-y-2 tab">
+        <div class="tab space-y-2 p-6">
           <table class="mx-auto w-full table-auto px-2 text-base">
             <thead>
               <th>ลำดับ</th>
@@ -46,7 +46,7 @@
             </thead>
             <tbody>
               <tr v-show="this.filelist.length == 0">
-                <td colspan="3" class="text-red-500 text-center">
+                <td colspan="3" class="text-center text-red-500">
                   ยังไม่มีไฟล์แนบ
                 </td>
               </tr>
@@ -57,7 +57,7 @@
               >
                 <td>{{ index + 1 }}</td>
                 <td
-                  class="text-left cursor-pointer hover:underline hover:text-blue-500"
+                  class="cursor-pointer text-left hover:text-blue-500 hover:underline"
                   @click="download(1, item)"
                 >
                   {{ item }}
@@ -66,7 +66,7 @@
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 64 58.67"
-                    class="w-4 mt-1"
+                    class="mt-1 w-4"
                     @click="del(item)"
                   >
                     <defs></defs>
@@ -101,7 +101,7 @@
         </div>
         <!-- Modal footer -->
         <div
-          class="mb-4 flex justify-center p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600"
+          class="mb-4 flex justify-center space-x-2 rounded-b border-t border-gray-200 p-6 dark:border-gray-600"
         >
           <input
             type="file"
@@ -116,7 +116,7 @@
             ><svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 64 44.44"
-              class="w-10 transition ease-in-out duration-700 hover:-translate-y-1 hover:scale-125"
+              class="w-10 transition duration-700 ease-in-out hover:-translate-y-1 hover:scale-125"
             >
               <defs></defs>
               <title>Attach File</title>
@@ -229,7 +229,7 @@ export default {
             "Content-Type": "multipart/form-data",
           },
         });
-        alert("Upload Success :)");
+        // alert("Upload Success :)");
       }
       this.$emit("fetchList", this.QT);
     },
@@ -238,7 +238,7 @@ export default {
         await OrderService.del({ filename: item, QT: this.QT });
 
         this.$emit("fetchList", this.QT);
-        alert("Delete file success");
+        // alert("Delete file success");
       }
     },
   },
