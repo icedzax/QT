@@ -75,6 +75,7 @@ import OrderService from "../services/OrderService.js";
 import { auth } from "../state/user";
 import { order } from "../state/order";
 import ModalSO from "./ModalSO.vue";
+import ModalRegion from "./ModalRegion.vue";
 
 export default {
   data() {
@@ -142,6 +143,6 @@ export default {
       this.modalOpen = !this.modalOpen;
     },
   },
-  components: { ModalSO },
+  components: { ModalSO, ModalRegion },
 };
 </script>
