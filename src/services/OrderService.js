@@ -77,7 +77,7 @@ export default {
   loadFile(QT) {
     return Api().post(`/loadFile`, QT);
   },
-  del(filename) {
+  delf(filename) {
     return Api().post(`/deleteFile`, filename);
   },
   soApp(pay) {
