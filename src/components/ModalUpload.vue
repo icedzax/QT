@@ -217,7 +217,8 @@ export default {
       let type = this.filename;
       type = type.split(".");
       let nametype = type.length - 1;
-      let name = this.QT + "_" + type[0];
+      let newname = type[0].replace(" ", "");
+      let name = this.QT + "_" + newname;
       if (this.file.size > 10000000) {
         alert("ไฟล์ใหญ่เกินไป แนบได้ไม่เกิน 10 MB");
       } else {
