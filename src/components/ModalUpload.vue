@@ -230,7 +230,7 @@ export default {
             "Content-Type": "multipart/form-data",
           },
         });
-        // alert("Upload Success :)");
+        alert("Upload Success :)");
       }
       this.$emit("fetchList", this.QT);
     },
