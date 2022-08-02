@@ -9,7 +9,7 @@
           <th class="w-16">จำนวนเส้น</th>
           <th class="w-16">เส้น/มัด</th>
           <th class="w-32">ราคา</th>
-          <th class="w-16">น้ำหนัก</th>
+          <th class="w-20">น้ำหนัก</th>
           <th class="w-16">หน่วย</th>
           <th class="w-20">ราคาก่อน VAT7%</th>
           <th class="w-20">รวม นน.</th>
@@ -63,7 +63,7 @@
               <input
                 type="text"
                 v-model="items.rmd_size"
-                class="border-none py-0.5 text-center text-xs xl:text-sm"
+                class="border-none py-0.5 text-center text-xs xl:text-sm cusfontmat"
                 :disabled="!approveStat"
                 @input="itemChange(items)"
               />
@@ -172,10 +172,9 @@
                 {{ number }}
               </v-num>
             </td>
-            <td>
+            <td v-if="approveStat">
               <div class="flex justify-center">
                 <svg
-                  v-if="approveStat"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 512 512"
                   fill="red"
@@ -203,6 +202,7 @@
                 class="w-full border-none p-1 text-left text-xs"
                 v-model="items.REMARK"
                 @input="itemChange(items)"
+                :disabled="!approveStat"
               />
             </td>
             <td class="bg-gray-50 text-center font-semibold">ช่วง</td>
@@ -211,15 +211,17 @@
                 <input
                   @keypress="NumbersOnly"
                   type="text"
-                  class="w-full border-none bg-yellow-50 p-1 text-center text-xs"
+                  class="w-full border-none bg-yellow-50 p-1 text-center text-xs cusfont"
                   v-model="items.min"
                   @input="itemChange(items)"
+                  :disabled="!approveStat"
                 />-<input
                   @keypress="NumbersOnly"
                   type="text"
-                  class="w-full border-none bg-yellow-50 p-1 text-center text-xs"
+                  class="w-full border-none bg-yellow-50 p-1 text-center text-xs cusfont"
                   v-model="items.max"
                   @input="itemChange(items)"
+                  :disabled="!approveStat"
                 />
               </div>
             </td>
@@ -227,13 +229,14 @@
             <td :colspan="2" class="bg-gray-50 text-center font-semibold">
               ราคาเบส
             </td>
-            <td :colspan="3">
+            <td :colspan="approveStat ? 3 : 2">
               <input
                 placeholder=""
                 type="text"
                 class="w-full border-none p-1 text-left text-xs"
                 v-model="items.base_price"
                 @input="itemChange(items)"
+                :disabled="!approveStat"
               />
             </td>
           </tr>
@@ -303,7 +306,7 @@
                 class="inputlist mx-auto w-4/6 border-none text-right text-xs focus:outline-none"
                 v-if="inputField.min"
                 :value="inputField.min + '  -'"
-                readonly="readonly"
+                disabled="disabled"
               />
               <input
                 type="text"
@@ -355,7 +358,7 @@
               {{ number }}
             </v-num>
           </td>
-          <td>
+          <td v-if="this.List.length == 0 || approveStat">
             <div class="flex justify-center">
               <svg
                 version="1"
@@ -364,7 +367,6 @@
                 enable-background="new 0 0 48 48"
                 class="w-4"
                 v-show="!sys.loading"
-                v-if="this.List.length == 0 || approveStat"
                 @click="addFG(inputField)"
               >
                 <circle fill="#4CAF50" cx="24" cy="24" r="21" />
@@ -446,7 +448,9 @@ export default {
 
   computed: {
     saleType() {
-      return order.sale_office == "1015" || order.sale_office == '1014' || order.sale_office == '1017'
+      return order.sale_office == "1015" ||
+        order.sale_office == "1014" ||
+        order.sale_office == "1017"
         ? this.type.retail
         : this.type.Wholesale;
       //   const scode = localStorage.getItem("tempqt").substring(3, 4);
@@ -516,10 +520,13 @@ export default {
       //   st = "R1";
       // }
 
-      if(order.sale_office == '1015' || order.sale_office == '1014'|| order.sale_office == '1017'){
-         st = "R1";
+      if (
+        order.sale_office == "1015" ||
+        order.sale_office == "1014" ||
+        order.sale_office == "1017"
+      ) {
+        st = "R1";
       }
-      
 
       const prepush = await FgService.get(this.mat);
       // console.log("prepush", prepush);
@@ -850,5 +857,12 @@ td {
 .optionalcss,
 th {
   font-size: 100%;
+}
+
+.cusfont {
+  font-size: 9px;
+}
+.cusfontmat {
+  font-size: 12px;
 }
 </style>
