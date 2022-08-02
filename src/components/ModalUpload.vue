@@ -225,14 +225,16 @@ export default {
         formData.append("file", this.file, name + "." + type[nametype]);
         console.log(formData);
 
-        axios.post(urlapi_upload, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        alert("Upload Success :)");
+        await axios
+          .post(urlapi_upload, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then(this.$emit("fetchList", this.QT));
+
+        //alert("Upload Success :)");
       }
-      this.$emit("fetchList", this.QT);
     },
     async del(item) {
       if (confirm("ต้องการลบไฟล์แนบชื่อ " + item + " ใช่หรือไม่?")) {
