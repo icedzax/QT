@@ -101,8 +101,13 @@
 
                   <span
                     v-if="item.soCheckBy"
-                    class="bg-gray-50 text-xs font-semibold text-green-600"
+                    class="bg-green-50 text-xs font-semibold text-green-600"
                     >{{ item.soCheckBy }} ✅
+                  </span>
+                  <span
+                    v-if="item.soApproveBy"
+                    class="bg-blue-50 text-xs font-semibold text-blue-600"
+                    >{{ item.soApproveBy }} ✅
                   </span>
                 </td>
                 <td class="text-center">
@@ -113,8 +118,9 @@
                         v-if="!item.loading"
                         @click="soCheck(item)"
                         class="rounded px-1 text-xs"
+                        :disabled="item.emp_code == auth.user_id"
                         :class="
-                          item.empcode == auth.user_id
+                          item.emp_code == auth.user_id
                             ? 'disable cursor-not-allowed bg-slate-300 text-slate-500'
                             : ' bg-blue-600  text-white hover:bg-blue-700'
                         "

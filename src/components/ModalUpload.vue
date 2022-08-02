@@ -225,13 +225,13 @@ export default {
         formData.append("file", this.file, name + "." + type[nametype]);
         console.log(formData);
 
-        await axios
-          .post(urlapi_upload, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-          .then(this.$emit("fetchList", this.QT));
+        await axios.post(urlapi_upload, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        this.$emit("fetchList", this.QT);
+        return;
 
         //alert("Upload Success :)");
       }
