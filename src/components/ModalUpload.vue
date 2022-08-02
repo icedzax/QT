@@ -238,7 +238,7 @@ export default {
     },
     async del(item) {
       if (confirm("ต้องการลบไฟล์แนบชื่อ " + item + " ใช่หรือไม่?")) {
-        await OrderService.del({ filename: item, QT: this.QT });
+        await OrderService.delf({ filename: item, QT: this.QT });
 
         this.$emit("fetchList", this.QT);
         // alert("Delete file success");
