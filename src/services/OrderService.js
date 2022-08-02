@@ -83,4 +83,7 @@ export default {
   soApp(pay) {
     return Api().post(`/soApp`, pay);
   },
+  bundleUpdate(matnr) {
+    return Api().post(`/bundleUpdate`, matnr);
+  },
 };
