@@ -79,11 +79,14 @@
               />
             </td>
             <td class="bundle bg-gray-50 text-center text-xs">
-              <span class="tdlist"
-                >{{
-                  items.bundle === 1 || items.bundle === 0 ? "" : items.bundle
-                }}
-              </span>
+              <input
+                type="text"
+                v-model="items.bundle"
+                @keypress="NumbersOnly"
+                class="tdlist bg-blue-100 border-none p-1 text-center text-xs"
+                :disabled="!approveStat || items.loading"
+                @input="itemChange(items, 'bundle')"
+              />
             </td>
             <td class="">
               <div class="justify-inline flex">
@@ -446,7 +449,9 @@ export default {
 
   computed: {
     saleType() {
-      return order.sale_office == "1015" || order.sale_office == '1014' || order.sale_office == '1017'
+      return order.sale_office == "1015" ||
+        order.sale_office == "1014" ||
+        order.sale_office == "1017"
         ? this.type.retail
         : this.type.Wholesale;
       //   const scode = localStorage.getItem("tempqt").substring(3, 4);
@@ -516,10 +521,13 @@ export default {
       //   st = "R1";
       // }
 
-      if(order.sale_office == '1015' || order.sale_office == '1014'|| order.sale_office == '1017'){
-         st = "R1";
+      if (
+        order.sale_office == "1015" ||
+        order.sale_office == "1014" ||
+        order.sale_office == "1017"
+      ) {
+        st = "R1";
       }
-      
 
       const prepush = await FgService.get(this.mat);
       // console.log("prepush", prepush);
@@ -706,9 +714,17 @@ export default {
         items.typeunit = this.type_unit;
         // items.unit = "PC";
       }
-      if (isUnit) {
+      if (isUnit == true) {
         items = await this.getPriceMaster(items);
       }
+
+      if (isUnit == "bundle") {
+        await OrderService.bundleUpdate({
+          matnr: items.rmd_mat,
+          bundle: items.bundle,
+        });
+      }
+
       items = await this.calItem(items);
 
       await this.setOrder(items);
