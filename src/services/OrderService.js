@@ -65,6 +65,24 @@ export default {
   priceUpdate(matnr) {
     return Api().post(`/priceUpdate`, matnr);
   },
+  getSoList(pay) {
+    return Api().post(`/appListWait`, pay);
+  },
+  getSoListReg(pay) {
+    return Api().post(`/appListWaitReg`, pay);
+  },
+  soCheck(pay) {
+    return Api().post(`/soCheckApp`, pay);
+  },
+  loadFile(QT) {
+    return Api().post(`/loadFile`, QT);
+  },
+  del(filename) {
+    return Api().post(`/deleteFile`, filename);
+  },
+  soApp(pay) {
+    return Api().post(`/soApp`, pay);
+  },
   bundleUpdate(matnr) {
     return Api().post(`/bundleUpdate`, matnr);
   },
