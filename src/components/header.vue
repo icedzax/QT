@@ -6,6 +6,7 @@
       @onCheck="fecthSoList"
       @close="closey"
     />
+    <!-- <ModalRegion :value="modalRegOpen" @closeR="closeReg" /> -->
     <div
       class="grid grid-cols-2 grid-rows-1 gap-0.5 overflow-hidden lg:grid-cols-3"
     >
@@ -38,7 +39,7 @@
               </option>
             </select>
             <div hidden>{{ pplant }}</div>
-            <div class="mx-2">
+            <div class="mx-2 flex">
               <span class="relative inline-block cursor-pointer">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -63,6 +64,20 @@
                 >
               </span>
             </div>
+
+            <!-- <div class="mx-1 flex">
+              <span
+                @click="openModalReg()"
+                class="relative inline-block cursor-pointer"
+              >
+                <ClipboardCheckIcon class="mx-1 h-6 w-6 text-gray-700" />
+                <span
+                  v-if="waitRegCount"
+                  class="absolute top-0 right-1 inline-flex translate-x-1/2 -translate-y-1/2 transform items-center justify-center rounded-full bg-red-600 px-2 py-1 text-xs font-bold leading-none text-red-100"
+                  >{{ waitRegCount }}</span
+                >
+              </span>
+            </div> -->
           </div>
         </div>
       </div>
@@ -76,15 +91,18 @@ import { auth } from "../state/user";
 import { order } from "../state/order";
 import ModalSO from "./ModalSO.vue";
 import ModalRegion from "./ModalRegion.vue";
+import { ClipboardCheckIcon } from "@heroicons/vue/outline";
 
 export default {
   data() {
     return {
       modalOpen: false,
+      modalRegOpen: false,
       Selectplant: "",
       auth,
       order,
       waitlist: [],
+      waitlistReg: [],
       PLANT: [
         { plant: "1010", name: "ZUBB" },
         { plant: "1020", name: "OPS" },
@@ -98,6 +116,7 @@ export default {
   created() {
     this.pplant;
     this.fecthSoList();
+    // this.fecthSoListReg();
   },
   computed: {
     wlist() {
@@ -105,6 +124,9 @@ export default {
     },
     waitCount() {
       return this.waitlist.length;
+    },
+    waitRegCount() {
+      return this.waitlistReg.length;
     },
     pplant() {
       let showplant = "1010 - ZUBB";
@@ -128,6 +150,10 @@ export default {
 
       // this.waitlist = sl.data.map((m) => [...m, { loading: false }]);
     },
+    async fecthSoListReg() {
+      const sl = await OrderService.getSoListReg({ empcode: auth.user_id });
+      this.waitlistReg = sl.data;
+    },
     async postPlant() {
       const data = this.Selectplant.split("-");
       let code_plant = data[0];
@@ -139,10 +165,16 @@ export default {
       this.modalOpen = true;
       //console.log("CLick:LL:", this.modalOpen);
     },
+    openModalReg() {
+      this.modalRegOpen = true;
+    },
     closey() {
       this.modalOpen = !this.modalOpen;
     },
+    closeReg() {
+      this.modalRegOpen = !this.modalRegOpen;
+    },
   },
-  components: { ModalSO, ModalRegion },
+  components: { ModalSO, ModalRegion, ClipboardCheckIcon },
 };
 </script>

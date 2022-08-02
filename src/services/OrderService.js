@@ -80,4 +80,7 @@ export default {
   del(filename) {
     return Api().post(`/deleteFile`, filename);
   },
+  soApp(pay) {
+    return Api().post(`/soApp`, pay);
+  },
 };
