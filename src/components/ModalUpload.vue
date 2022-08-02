@@ -98,6 +98,9 @@
               </tr>
             </tbody>
           </table>
+          <div class="flex justify-center" v-show="this.loading">
+            <LoadingSpinner class="mx-1 h-5 w-5" />
+          </div>
         </div>
         <!-- Modal footer -->
         <div
@@ -142,6 +145,8 @@
 import OrderService from "@/services/OrderService";
 import { auth } from "../state/user";
 import axios from "axios";
+import LoadingSpinner from "./LoadingSpinner.vue";
+
 const urlapi_upload = "https://hook.zubbsteel.com/line-ci/QT/api.php";
 
 export default {
@@ -159,6 +164,7 @@ export default {
       clickQT: "",
       modalOpen: false,
       allFile: this.filelist,
+      loading: false,
     };
   },
   // props: {
@@ -173,6 +179,7 @@ export default {
       return this.filelist;
     },
   },
+  components: { LoadingSpinner },
   methods: {
     close() {
       this.$emit("closeModal", !this.value);
@@ -225,12 +232,16 @@ export default {
         formData.append("file", this.file, name + "." + type[nametype]);
         console.log(formData);
 
-        await axios.post(urlapi_upload, formData, {
+        axios.post(urlapi_upload, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         });
-        this.$emit("fetchList", this.QT);
+        this.loading = true;
+        setTimeout(() => {
+          this.$emit("fetchList", this.QT);
+          this.loading = false;
+        }, 1200);
         return;
 
         //alert("Upload Success :)");
