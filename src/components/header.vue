@@ -6,7 +6,7 @@
       @onCheck="fecthSoList"
       @close="closey"
     />
-    <!-- <ModalRegion :value="modalRegOpen" @closeR="closeReg" /> -->
+    <ModalRegion :value="modalRegOpen" @closeR="closeReg" />
     <div
       class="grid grid-cols-2 grid-rows-1 gap-0.5 overflow-hidden lg:grid-cols-3"
     >
@@ -65,7 +65,7 @@
               </span>
             </div>
 
-            <!-- <div class="mx-1 flex">
+            <div v-if="waitRegCount > 0" class="mx-1 flex">
               <span
                 @click="openModalReg()"
                 class="relative inline-block cursor-pointer"
@@ -77,7 +77,7 @@
                   >{{ waitRegCount }}</span
                 >
               </span>
-            </div> -->
+            </div>
           </div>
         </div>
       </div>
@@ -116,7 +116,7 @@ export default {
   created() {
     this.pplant;
     this.fecthSoList();
-    // this.fecthSoListReg();
+    this.fecthSoListReg();
   },
   computed: {
     wlist() {
