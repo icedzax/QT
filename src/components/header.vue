@@ -39,7 +39,7 @@
               </option>
             </select>
             <div hidden>{{ pplant }}</div>
-            <div class="mx-2 flex">
+            <div v-if="waitlist.length > 0" class="mx-2 flex">
               <span class="relative inline-block cursor-pointer">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -65,7 +65,7 @@
               </span>
             </div>
 
-            <div v-if="waitRegCount > 0" class="mx-1 flex">
+            <div v-if="waitlistReg.length > 0" class="mx-1 flex">
               <span
                 @click="openModalReg()"
                 class="relative inline-block cursor-pointer"
@@ -123,11 +123,28 @@ export default {
       return this.waitlist.map((m) => m, { loading: false });
     },
     waitCount() {
-      return this.waitlist.length;
+      const count = this.waitlist.filter((obj) => {
+        if (obj.soCheckBy == null) {
+          return true;
+        }
+
+        return false;
+      }).length;
+
+      return count;
     },
     waitRegCount() {
-      return this.waitlistReg.length;
+      const count = this.waitlistReg.filter((obj) => {
+        if (obj.soApproveBy == null) {
+          return true;
+        }
+
+        return false;
+      }).length;
+
+      return count;
     },
+
     pplant() {
       let showplant = "1010 - ZUBB";
       console.log("ODP:", order.plant);
