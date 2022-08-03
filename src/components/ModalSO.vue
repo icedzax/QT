@@ -24,7 +24,7 @@
           class="flex items-start justify-center rounded-t border-b p-4 dark:border-gray-600"
         >
           <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-            รายการตรวจสอบใบสั่งขาย
+            รายการตรวจสอบใบสั่งขาย ✅
           </h3>
           <button
             type="button"
