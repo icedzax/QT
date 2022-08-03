@@ -108,14 +108,14 @@
         >
           <input
             type="file"
-            id="upload"
-            ref="file"
+            id="uploadREG"
+            ref="fileREG"
             name=""
             @change="onChangeFileUpload"
             hidden
           />
           <span class="mr-2">เพิ่มไฟล์แนบ</span>
-          <label for="upload"
+          <label for="uploadREG"
             ><svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 64 44.44"
@@ -226,7 +226,6 @@ export default {
       let nametype = type.length - 1;
       let newname = type[0].replace(" ", "");
       let name = this.QT + "_" + newname;
-
       if (this.file.size > 10000000) {
         alert("ไฟล์ใหญ่เกินไป แนบได้ไม่เกิน 10 MB");
       } else {
