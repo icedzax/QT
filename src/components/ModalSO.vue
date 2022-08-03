@@ -216,44 +216,6 @@ export default {
       }, 700);
     },
 
-    onChangeFileUpload(e) {
-      const file = e.target.files[0];
-      this.image = file;
-      this.filename = file.name;
-      this.item.fileUrl = URL.createObjectURL(file);
-      this.file = this.$refs.file[0].files;
-
-      // this.fnChangename();
-      // let type = this.file.name;
-      // type = type.split(".");
-      // let nametype = type.length - 1;
-      // this.arrayFile.push({
-      //   name: this.file.name,
-      //   sname: this.nowIMG,
-      //   type: type[nametype],
-      // });
-      this.uploadfile();
-    },
-    async uploadfile() {
-      let formData = new FormData();
-      let type = this.file[0].name;
-      type = type.split(".");
-      let nametype = type.length - 1;
-      let name = this.clickQT + "_" + type[0];
-      if (this.file.size > 10000000) {
-        alert("ไฟล์ใหญ่เกินไป แนบได้ไม่เกิน 10 MB");
-      } else {
-        formData.append("file", this.file[0], name + "." + type[nametype]);
-        console.log(formData);
-
-        axios.post(urlapi_upload, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        // alert("Upload Success :)");
-      }
-    },
     async loadFile(QT) {
       await this.minimodalOpen(QT);
     },

@@ -1,9 +1,16 @@
 <template>
+  <ModalUploadR
+    :value="modalRegOpen"
+    :QT="this.clickQT"
+    :filelist="this.datalist"
+    @closeModal="closey"
+    @fetchList="loadFile"
+  />
   <div
     id="defaultModal"
     tabindex="-1"
     aria-hidden="true"
-    class="h-modal fixed top-0 right-0 left-0 z-50 mx-auto h-full w-full overflow-y-auto overflow-x-hidden bg-slate-400 bg-opacity-30 md:inset-0"
+    class="h-modal fixed top-0 right-0 left-0 z-40 mx-auto h-full w-full overflow-y-auto overflow-x-hidden bg-slate-400 bg-opacity-30 md:inset-0"
     v-show="value"
   >
     <div
@@ -55,11 +62,30 @@
                 :key="index"
                 class="border-b"
               >
-                <td
-                  @click="openPDF(item.qt)"
-                  class="cursor-pointer py-1 text-left hover:text-blue-600 hover:underline"
-                >
-                  {{ item.qt }}
+                <td class="justify-inline flex py-1 text-left">
+                  <div
+                    @click="openPDF(item.qt)"
+                    class="w-2/3 cursor-pointer hover:text-blue-600 hover:underline"
+                  >
+                    {{ item.qt }}
+                  </div>
+                  <div>
+                    <svg
+                      id="Layer_1"
+                      data-name="Layer 1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      class="w-5"
+                      @click="minimodalOpen(item.qt)"
+                    >
+                      <title>attach file</title>
+                      <path
+                        d="M12.76,19.94A5.49,5.49,0,0,1,5,12.18l8.76-8.75A3.72,3.72,0,0,1,20.1,6.06,3.68,3.68,0,0,1,19,8.68L10.67,17A1.36,1.36,0,0,1,8.75,15.1l8.34-8.34L15.67,5.35,7.33,13.69a3.36,3.36,0,0,0,4.75,4.75l8.35-8.34A5.72,5.72,0,0,0,12.34,2L3.58,10.77A7.49,7.49,0,0,0,14.17,21.36l7.92-7.93L20.68,12Z"
+                        id="id_101"
+                        style="fill: rgb(19, 109, 115)"
+                      ></path>
+                    </svg>
+                  </div>
                 </td>
 
                 <td>
@@ -112,11 +138,18 @@ import PdfIcon from "./PdfIcon.vue";
 import LoadingSpinner from "./LoadingSpinner.vue";
 import OrderService from "@/services/OrderService";
 import { auth } from "../state/user";
+import ModalUploadR from "./ModalUploadReg.vue";
 
 export default {
-  name: "ModalSO",
+  name: "ModalReg",
   data() {
-    return { auth, waitlist: [] };
+    return {
+      auth,
+      waitlist: [],
+      clickQT: "",
+      modalRegOpen: false,
+      datalist: [],
+    };
   },
   props: {
     value: {
@@ -130,6 +163,18 @@ export default {
     this.fecthSoListReg();
   },
   methods: {
+    async minimodalOpen(QT) {
+      this.clickQT = QT;
+      this.modalRegOpen = true;
+      const dataFile = await OrderService.loadFile({ QT: this.clickQT });
+      this.datalist = dataFile.data;
+    },
+    async loadFile(QT) {
+      await this.minimodalOpen(QT);
+    },
+    closey() {
+      this.modalRegOpen = !this.modalRegOpen;
+    },
     closeReg() {
       this.$emit("closeR", !this.value);
     },
@@ -162,7 +207,7 @@ export default {
     },
   },
 
-  components: { PdfIcon, LoadingSpinner },
+  components: { PdfIcon, LoadingSpinner, ModalUploadR },
 };
 </script>
 
