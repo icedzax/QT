@@ -51,13 +51,31 @@
               </div>
             </td>
             <td class="py-1 text-center">
-              <input
+              <!-- <input
                 type="text"
                 v-model="items.rmd_mat"
                 class="tdlist border-none p-1 text-center text-xs"
                 :disabled="!approveStat"
                 @input="itemChange(items)"
-              />
+              /> -->
+              <vue3-simple-typeahead
+                ref="typeahead"
+                id="typeahead_iditem"
+                class="typeitem"
+                :placeholder="items.rmd_mat"
+                :items="fg.items"
+                @selectItem="selectItemList"
+                @onInput="onInput"
+                @onBlur="onBlur"
+                @input="lookupFGList(items.id)"
+                :minInputLength="1"
+                :itemProjection="
+                  (fg) => {
+                    return fg.rmd_mat;
+                  }
+                "
+              >
+              </vue3-simple-typeahead>
             </td>
             <td>
               <input
@@ -445,6 +463,7 @@ export default {
       type_unit: ["PC", "KG", "TRP"],
       tprice: [],
       inputField: {},
+      idList: "",
     };
   },
   props: ["statusApp", "mat"],
@@ -611,6 +630,51 @@ export default {
       this.setLoading(false);
     },
 
+    async selectItemList(item) {
+      const r_price = ["X", "R", "L"];
+      const saleChannel = r_price.includes(
+        localStorage.getItem("tempqt").substring(3, 4)
+      )
+        ? "R1"
+        : "T1";
+      document.getElementsByClassName(
+        "simple-typeahead-list"
+      )[0].style.visibility = "hidden";
+
+      this.order.list.map(async (x) => {
+        if (x.id == this.idList) {
+          x.rmd_size = item.rmd_size;
+          x.rmd_mat = item.rmd_mat;
+          x.rmd_weight = item.max > 0 ? item.max : item.stdweight;
+          x.amount = 1;
+          x.min = item.min == 0.0 ? 0 : item.min;
+
+          x.ptype = saleChannel;
+          x.unit = "PC";
+          x.typeunit = ["PC", "KG", "EA", "LE", "ROL"];
+          console.log("X ptype::", x.ptype);
+          const payloadi = {
+            VKORG: 1000,
+            MATNR: x.rmd_mat,
+            KONDA: x.ptype,
+          };
+          const alluom = await FgService.getUOM(payloadi);
+          let UOM_LIST = [];
+          if (alluom.data[0]) {
+            alluom.data.map((x) => {
+              UOM_LIST.push(x.KMEIN);
+            });
+
+            x.typeunit = UOM_LIST;
+          }
+          const pmt = await this.getPriceMaster(x);
+          x = await this.calItem(pmt);
+
+          await this.setOrder(x);
+        }
+      });
+    },
+
     onInput(event) {
       this.data.selection = null;
       this.data.input = event.input;
@@ -631,6 +695,13 @@ export default {
       const result = await FgService.search({ input: this.data.input });
 
       this.fg.items = result.data;
+      console.log(this.fg.items);
+    }, 500),
+    lookupFGList: debounce(async function (id) {
+      const result = await FgService.search({ input: this.data.input });
+
+      this.fg.items = result.data;
+      this.idList = id;
     }, 500),
     NumbersOnly(evt) {
       evt = evt ? evt : window.event;
@@ -828,7 +899,17 @@ export default {
   border-style: none;
 }
 
+#typeahead_iditem {
+  width: 95%;
+  font-size: 10px;
+  line-height: 0.96rem;
+  padding: 0.25rem;
+  text-align: center;
+  border-style: none;
+}
+
 div.simple-typeahead-list {
+  font-size: 10px;
   height: 130px;
 }
 .cls-1 {
@@ -868,6 +949,10 @@ td {
 .optionalcss,
 th {
   font-size: 100%;
+}
+
+#typeitem {
+  font-size: 10px;
 }
 
 .cusfont {
