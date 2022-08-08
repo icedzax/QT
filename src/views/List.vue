@@ -362,13 +362,25 @@ export default {
         {
           label: "สถานะ",
           field: "status_show",
-          width: "7%",
+          width: "6%",
+          sortable: true,
+        },
+        {
+          label: "SO",
+          field: "SO",
+          width: "3%",
+          sortable: true,
+        },
+        {
+          label: "สถานะ SO",
+          field: "StatusSO",
+          width: "5%",
           sortable: true,
         },
         {
           label: "โน็ต",
           field: "note",
-          width: "8%",
+          width: "2%",
           sortable: true,
         },
         {
@@ -468,6 +480,7 @@ export default {
 
       this.table.rows = datafilter.data;
       auth.list = this.table.rows;
+      console.log("AUTH LIST:", auth.list);
       this.doSearch(0, 10, "id", "asc");
     },
     async goto_qt(qt) {
