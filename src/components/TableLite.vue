@@ -248,6 +248,7 @@
                           @change="updatenote(row.QT, row[col.field])"
                         />
                       </div>
+
                       <span :class="col.field" v-else>{{
                         row[col.field]
                       }}</span>
@@ -640,6 +641,7 @@ export default defineComponent({
       // 該頁數最大值 (Maximum number of pages0
       limit: computed(() => {
         props.rows.forEach((data) => {
+          console.log(data);
           if (data.status == "C" || data.status == "A") {
             if (data.status == "C") {
               data.status_cus = "ลูกค้า";

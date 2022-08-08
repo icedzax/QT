@@ -257,6 +257,7 @@ const sampleData1 = (offst, limit) => {
   auth.list.forEach((element) => {
     element.qt = element.qt;
     element.status_cus = "";
+
     if (element.status == "D" || element.status == "TEMP") {
       element.classi =
         "bg-gray-100 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300";
@@ -282,6 +283,8 @@ const sampleData1 = (offst, limit) => {
         status_cus: auth.list[i].status_cus,
         note: auth.list[i].note,
         other: "Edit",
+        SO: auth.list[i].vbeln,
+        StatusSO: auth.list[i].StatusSO,
       });
     }
   }
@@ -290,7 +293,7 @@ const sampleData1 = (offst, limit) => {
 const sampleData2 = (offst, limit) => {
   auth.list.forEach((element) => {
     element.status_cus = "";
-
+    element.vbeln = element.vbeln;
     if (element.status == "D" || element.status == "TEMP") {
       element.classi =
         "bg-gray-100 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300";
@@ -317,6 +320,8 @@ const sampleData2 = (offst, limit) => {
         classi: auth.list[i].classi,
         note: auth.list[i].note,
         other: "Edit",
+        SO: auth.list[i].vbeln,
+        StatusSO: auth.list[i].StatusSO,
       });
     }
   }
