@@ -257,6 +257,7 @@ const sampleData1 = (offst, limit) => {
   auth.list.forEach((element) => {
     element.qt = element.qt;
     element.status_cus = "";
+
     if (element.status == "D" || element.status == "TEMP") {
       element.classi =
         "bg-gray-100 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300";
@@ -282,15 +283,17 @@ const sampleData1 = (offst, limit) => {
         status_cus: auth.list[i].status_cus,
         note: auth.list[i].note,
         other: "Edit",
+        VBELN: auth.list[i].VBELN,
+        StatusSO: auth.list[i].StatusSO,
       });
     }
   }
+  // console.log("Push Data:", data);
   return data;
 };
 const sampleData2 = (offst, limit) => {
   auth.list.forEach((element) => {
     element.status_cus = "";
-
     if (element.status == "D" || element.status == "TEMP") {
       element.classi =
         "bg-gray-100 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300";
@@ -317,6 +320,8 @@ const sampleData2 = (offst, limit) => {
         classi: auth.list[i].classi,
         note: auth.list[i].note,
         other: "Edit",
+        VBELN: auth.list[i].VBELN,
+        StatusSO: auth.list[i].StatusSO,
       });
     }
   }
@@ -362,13 +367,25 @@ export default {
         {
           label: "สถานะ",
           field: "status_show",
-          width: "7%",
+          width: "6%",
+          sortable: true,
+        },
+        {
+          label: "SO",
+          field: "VBELN",
+          width: "3%",
+          sortable: true,
+        },
+        {
+          label: "สถานะ SO",
+          field: "StatusSO",
+          width: "5%",
           sortable: true,
         },
         {
           label: "โน็ต",
           field: "note",
-          width: "8%",
+          width: "2%",
           sortable: true,
         },
         {
@@ -421,13 +438,13 @@ export default {
     },
   },
   async created() {
-    const data_list = await UserService.list({
+    const data_list = await UserService.listdev({
       emp_code: auth.user_id,
       sale_code: this.selectSale,
     });
     this.list_au = data_list.data;
     auth.list = data_list.data;
-
+    console.log("ในหน้าList:", auth.list);
     var today = new Date();
     let new_month = "";
     let new_day = "";
@@ -468,6 +485,7 @@ export default {
 
       this.table.rows = datafilter.data;
       auth.list = this.table.rows;
+      console.log("AUTH LIST:", auth.list);
       this.doSearch(0, 10, "id", "asc");
     },
     async goto_qt(qt) {

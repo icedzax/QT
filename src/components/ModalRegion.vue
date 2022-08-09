@@ -134,81 +134,87 @@
 </template>
 
 <script>
-import PdfIcon from "./PdfIcon.vue";
-import LoadingSpinner from "./LoadingSpinner.vue";
-import OrderService from "@/services/OrderService";
-import { auth } from "../state/user";
-import ModalUploadR from "./ModalUploadReg.vue";
+  import PdfIcon from "./PdfIcon.vue";
+  import LoadingSpinner from "./LoadingSpinner.vue";
+  import OrderService from "@/services/OrderService";
+  import { auth } from "../state/user";
+  import ModalUploadR from "./ModalUploadReg.vue";
 
-export default {
-  name: "ModalReg",
-  data() {
-    return {
-      auth,
-      waitlist: [],
-      clickQT: "",
-      modalRegOpen: false,
-      datalist: [],
-    };
-  },
-  props: {
-    value: {
-      required: true,
+  export default {
+    name: "ModalReg",
+    emits: ["closeR"],
+    data() {
+      return {
+        auth,
+        waitlist: [],
+        clickQT: "",
+        modalRegOpen: false,
+        datalist: [],
+      };
     },
-    list: {
-      Type: Array,
+    props: {
+      value: {
+        required: true,
+      },
+      list: {
+        Type: Array,
+      },
     },
-  },
-  created() {
-    this.fecthSoListReg();
-  },
-  methods: {
-    async minimodalOpen(QT) {
-      this.clickQT = QT;
-      this.modalRegOpen = true;
-      const dataFile = await OrderService.loadFile({ QT: this.clickQT });
-      this.datalist = dataFile.data;
-    },
-    async loadFile(QT) {
-      await this.minimodalOpen(QT);
-    },
-    closey() {
-      this.modalRegOpen = !this.modalRegOpen;
-    },
-    closeReg() {
-      this.$emit("closeR", !this.value);
-    },
-    openPDF(qt = "") {
-      window.open(
-        `https://report.zubbsteel.com/tcpdf/pdf/ZORDER_A5.php?ref=` + qt
-      );
-    },
-    async fecthSoListReg() {
-      const sl = await OrderService.getSoListReg({ empcode: auth.user_id });
-      this.waitlist = sl.data;
-      // this.waitlist = sl.data.map((m) => [...m, { loading: false }]);
-    },
-    async soApp(item) {
-      item.loading = true;
-      const pay = { user: auth.user_id, qt: item.qt };
-      const res = await OrderService.soApp(pay);
-
-      if (typeof res.data === "object") {
-        alert("SO ถูกอนุมัติแล้วแล้วโดย " + res.data[0].soApproveBy);
-      }
-      // console.log("item", typeof res.data);
-
-      // await this.$emit("onCheck");
-      // item.loading = await false;
+    created() {
+      this.fecthSoListReg();
       setInterval(() => {
         this.fecthSoListReg();
-        item.loading = false;
-      }, 700);
+        // this.fecthSoListReg();
+        // console.log("X");
+      }, 15000);
     },
-  },
+    methods: {
+      async minimodalOpen(QT) {
+        this.clickQT = QT;
+        this.modalRegOpen = true;
+        const dataFile = await OrderService.loadFile({ QT: this.clickQT });
+        this.datalist = dataFile.data;
+      },
+      async loadFile(QT) {
+        await this.minimodalOpen(QT);
+      },
+      closey() {
+        this.modalRegOpen = !this.modalRegOpen;
+      },
+      closeReg() {
+        this.$emit("closeR", !this.value);
+      },
+      openPDF(qt = "") {
+        window.open(
+          `https://report.zubbsteel.com/tcpdf/pdf/ZORDER_A5.php?ref=` + qt
+        );
+      },
+      async fecthSoListReg() {
+        const sl = await OrderService.getSoListReg({ empcode: auth.user_id });
+        this.waitlist = sl.data;
+        // this.waitlist = sl.data.map((m) => [...m, { loading: false }]);
+      },
+      async soApp(item) {
+        item.loading = true;
+        const pay = { user: auth.user_id, qt: item.qt };
+        const res = await OrderService.soApp(pay);
 
-  components: { PdfIcon, LoadingSpinner, ModalUploadR },
-};
+        if (typeof res.data === "object") {
+          alert("SO ถูกอนุมัติแล้วแล้วโดย " + res.data[0].soApproveBy);
+        }
+        // console.log("item", typeof res.data);
+
+        // await this.$emit("onCheck");
+        // item.loading = await false;
+        setInterval(() => {
+          this.fecthSoListReg();
+          item.loading = false;
+        }, 700);
+      },
+    },
+
+    components: { PdfIcon, LoadingSpinner, ModalUploadR },
+  };
 </script>
 
 <style lang="css" scoped></style>
