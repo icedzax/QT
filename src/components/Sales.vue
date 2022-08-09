@@ -87,9 +87,7 @@ export default {
       }
     },
   },
-  created() {
-    console.log("DataSale from Sale.vue::", auth.data_sale);
-  },
+  created() {},
   methods: {
     selectOption(event) {
       const v_office = auth.data_sale.team
@@ -101,7 +99,6 @@ export default {
             sale_team: data.sale_team,
           };
         });
-      console.log(v_office[0]);
       order.sale_office = v_office[0].sale_office;
       UserService.setSalOff(v_office[0]);
     },

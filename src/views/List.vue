@@ -283,17 +283,17 @@ const sampleData1 = (offst, limit) => {
         status_cus: auth.list[i].status_cus,
         note: auth.list[i].note,
         other: "Edit",
-        SO: auth.list[i].vbeln,
+        VBELN: auth.list[i].VBELN,
         StatusSO: auth.list[i].StatusSO,
       });
     }
   }
+  // console.log("Push Data:", data);
   return data;
 };
 const sampleData2 = (offst, limit) => {
   auth.list.forEach((element) => {
     element.status_cus = "";
-    element.vbeln = element.vbeln;
     if (element.status == "D" || element.status == "TEMP") {
       element.classi =
         "bg-gray-100 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300";
@@ -320,7 +320,7 @@ const sampleData2 = (offst, limit) => {
         classi: auth.list[i].classi,
         note: auth.list[i].note,
         other: "Edit",
-        SO: auth.list[i].vbeln,
+        VBELN: auth.list[i].VBELN,
         StatusSO: auth.list[i].StatusSO,
       });
     }
@@ -372,7 +372,7 @@ export default {
         },
         {
           label: "SO",
-          field: "SO",
+          field: "VBELN",
           width: "3%",
           sortable: true,
         },
@@ -438,13 +438,13 @@ export default {
     },
   },
   async created() {
-    const data_list = await UserService.list({
+    const data_list = await UserService.listdev({
       emp_code: auth.user_id,
       sale_code: this.selectSale,
     });
     this.list_au = data_list.data;
     auth.list = data_list.data;
-
+    console.log("ในหน้าList:", auth.list);
     var today = new Date();
     let new_month = "";
     let new_day = "";
