@@ -240,6 +240,7 @@
                           </g>
                         </svg>
                       </div>
+
                       <div v-else-if="col.field == 'note'">
                         <input
                           type="text"
@@ -641,7 +642,7 @@ export default defineComponent({
       // 該頁數最大值 (Maximum number of pages0
       limit: computed(() => {
         props.rows.forEach((data) => {
-          console.log(data);
+          // console.log(data);
           if (data.status == "C" || data.status == "A") {
             if (data.status == "C") {
               data.status_cus = "ลูกค้า";
