@@ -438,7 +438,7 @@ export default {
     },
   },
   async created() {
-    const data_list = await UserService.listdev({
+    const data_list = await UserService.list({
       emp_code: auth.user_id,
       sale_code: this.selectSale,
     });
