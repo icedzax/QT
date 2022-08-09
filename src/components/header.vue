@@ -85,113 +85,122 @@
   </div>
 </template>
 <script>
-import OrderService from "../services/OrderService.js";
+  import OrderService from "../services/OrderService.js";
 
-import { auth } from "../state/user";
-import { order } from "../state/order";
-import ModalSO from "./ModalSO.vue";
-import ModalRegion from "./ModalRegion.vue";
-import { ClipboardCheckIcon } from "@heroicons/vue/outline";
+  import { auth } from "../state/user";
+  import { order } from "../state/order";
+  import ModalSO from "./ModalSO.vue";
+  import ModalRegion from "./ModalRegion.vue";
+  import { ClipboardCheckIcon } from "@heroicons/vue/outline";
 
-export default {
-  data() {
-    return {
-      modalOpen: false,
-      modalRegOpen: false,
-      Selectplant: "",
-      auth,
-      order,
-      waitlist: [],
-      waitlistReg: [],
-      PLANT: [
-        { plant: "1010", name: "ZUBB" },
-        { plant: "1020", name: "OPS" },
-        { plant: "2010", name: "OCP" },
-        { plant: "1040", name: "SPS" },
-        { plant: "1050", name: "WPN" },
-        { plant: "3030", name: "MMT" },
-      ],
-    };
-  },
-  created() {
-    this.pplant;
-    this.fecthSoList();
-    this.fecthSoListReg();
-  },
-  computed: {
-    wlist() {
-      return this.waitlist.map((m) => m, { loading: false });
+  export default {
+    data() {
+      return {
+        modalOpen: false,
+        modalRegOpen: false,
+        Selectplant: "",
+        auth,
+        order,
+        waitlist: [],
+        waitlistReg: [],
+        PLANT: [
+          { plant: "1010", name: "ZUBB" },
+          { plant: "1020", name: "OPS" },
+          { plant: "2010", name: "OCP" },
+          { plant: "1040", name: "SPS" },
+          { plant: "1050", name: "WPN" },
+          { plant: "3030", name: "MMT" },
+        ],
+      };
     },
-    waitCount() {
-      const count = this.waitlist.filter((obj) => {
-        if (obj.soCheckBy == null) {
-          return true;
+
+    created() {
+      this.pplant;
+      this.fecthSoList();
+      // this.fecthSoListReg();
+
+      setInterval(() => {
+        this.fecthSoList();
+        // this.fecthSoListReg();
+        // console.log("X");
+      }, 15000);
+    },
+    computed: {
+      wlist() {
+        return this.waitlist.map((m) => m, { loading: false });
+      },
+      waitCount() {
+        const count = this.waitlist.filter((obj) => {
+          if (obj.soCheckBy == null) {
+            return true;
+          }
+
+          return false;
+        }).length;
+
+        return count;
+      },
+      waitRegCount() {
+        const count = this.waitlistReg.filter((obj) => {
+          if (obj.soApproveBy == null) {
+            return true;
+          }
+
+          return false;
+        }).length;
+
+        return count;
+      },
+
+      pplant() {
+        let showplant = "1010 - ZUBB";
+        // console.log("ODP:", order.plant);
+        if (order.plant) {
+          const p = this.PLANT.filter((x) => x.plant == order.plant);
+          showplant = p[0].plant + " - " + p[0].name;
         }
+        this.Selectplant = showplant;
+        // console.log("sss", this.Selectplant);
+        return showplant;
+      },
+    },
+    methods: {
+      async fecthSoList() {
+        // if (this.modalOpen) {
+        //   this.modalOpen = !this.modalOpen;
+        // }
+        // console.log("Fe");
+        const sl = await OrderService.getSoList({ empcode: auth.user_id });
+        this.waitlist = sl.data;
 
-        return false;
-      }).length;
-
-      return count;
+        // this.waitlist = sl.data.map((m) => [...m, { loading: false }]);
+      },
+      async fecthSoListReg() {
+        const sl = await OrderService.getSoListReg({ empcode: auth.user_id });
+        this.waitlistReg = sl.data;
+      },
+      async postPlant() {
+        const data = this.Selectplant.split("-");
+        let code_plant = data[0];
+        order.plant = parseInt(code_plant);
+        await OrderService.postplant({ plant: code_plant, qt: auth.temp_qt });
+      },
+      openModalSO() {
+        //console.log("CLick:", this.modalOpen);
+        this.modalOpen = true;
+        //console.log("CLick:LL:", this.modalOpen);
+      },
+      openModalReg() {
+        this.modalRegOpen = true;
+      },
+      closey() {
+        this.modalOpen = !this.modalOpen;
+      },
+      closeReg() {
+        this.modalRegOpen = !this.modalRegOpen;
+        this.fecthSoList;
+      },
     },
-    waitRegCount() {
-      const count = this.waitlistReg.filter((obj) => {
-        if (obj.soApproveBy == null) {
-          return true;
-        }
-
-        return false;
-      }).length;
-
-      return count;
-    },
-
-    pplant() {
-      let showplant = "1010 - ZUBB";
-      console.log("ODP:", order.plant);
-      if (order.plant) {
-        const p = this.PLANT.filter((x) => x.plant == order.plant);
-        showplant = p[0].plant + " - " + p[0].name;
-      }
-      this.Selectplant = showplant;
-      console.log("sss", this.Selectplant);
-      return showplant;
-    },
-  },
-  methods: {
-    async fecthSoList() {
-      // if (this.modalOpen) {
-      //   this.modalOpen = !this.modalOpen;
-      // }
-      const sl = await OrderService.getSoList({ empcode: auth.user_id });
-      this.waitlist = sl.data;
-
-      // this.waitlist = sl.data.map((m) => [...m, { loading: false }]);
-    },
-    async fecthSoListReg() {
-      const sl = await OrderService.getSoListReg({ empcode: auth.user_id });
-      this.waitlistReg = sl.data;
-    },
-    async postPlant() {
-      const data = this.Selectplant.split("-");
-      let code_plant = data[0];
-      order.plant = parseInt(code_plant);
-      await OrderService.postplant({ plant: code_plant, qt: auth.temp_qt });
-    },
-    openModalSO() {
-      //console.log("CLick:", this.modalOpen);
-      this.modalOpen = true;
-      //console.log("CLick:LL:", this.modalOpen);
-    },
-    openModalReg() {
-      this.modalRegOpen = true;
-    },
-    closey() {
-      this.modalOpen = !this.modalOpen;
-    },
-    closeReg() {
-      this.modalRegOpen = !this.modalRegOpen;
-    },
-  },
-  components: { ModalSO, ModalRegion, ClipboardCheckIcon },
-};
+    components: { ModalSO, ModalRegion, ClipboardCheckIcon },
+  };
 </script>

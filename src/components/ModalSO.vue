@@ -146,93 +146,94 @@
 </template>
 
 <script>
-import PdfIcon from "./PdfIcon.vue";
-import LoadingSpinner from "./LoadingSpinner.vue";
-import OrderService from "@/services/OrderService";
-import ModalUpload from "./ModalUpload.vue";
-import { auth } from "../state/user";
-import axios from "axios";
-const urlapi_upload = "https://hook.zubbsteel.com/line-ci/QT/api.php";
+  import PdfIcon from "./PdfIcon.vue";
+  import LoadingSpinner from "./LoadingSpinner.vue";
+  import OrderService from "@/services/OrderService";
+  import ModalUpload from "./ModalUpload.vue";
+  import { auth } from "../state/user";
+  import axios from "axios";
+  const urlapi_upload = "https://hook.zubbsteel.com/line-ci/QT/api.php";
 
-export default {
-  name: "ModalSO",
-  data() {
-    return {
-      auth,
-      file: "",
-      filename: "",
-      item: {
-        image: null,
-        imageUrl: null,
-        fileUrl: null,
+  export default {
+    name: "ModalSO",
+    emits: ["close", "onCheck"],
+    data() {
+      return {
+        auth,
+        file: "",
+        filename: "",
+        item: {
+          image: null,
+          imageUrl: null,
+          fileUrl: null,
+        },
+        clickQT: "",
+        modalOpen: false,
+        datalist: [],
+      };
+    },
+    props: {
+      value: {
+        required: true,
       },
-      clickQT: "",
-      modalOpen: false,
-      datalist: [],
-    };
-  },
-  props: {
-    value: {
-      required: true,
-    },
-    list: {
-      Type: Array,
-    },
-  },
-
-  created() {},
-  methods: {
-    async minimodalOpen(QT) {
-      this.clickQT = QT;
-      this.modalOpen = true;
-      const dataFile = await OrderService.loadFile({ QT: this.clickQT });
-      this.datalist = dataFile.data;
-    },
-    openPDF(qt = "") {
-      window.open(
-        `https://report.zubbsteel.com/tcpdf/pdf/ZORDER_A5.php?ref=` + qt
-      );
-    },
-    closey() {
-      this.modalOpen = !this.modalOpen;
-    },
-    close() {
-      this.$emit("close", !this.value);
-    },
-    async soCheck(item) {
-      item.loading = true;
-      const pay = { user: auth.user_id, qt: item.qt };
-      const res = await OrderService.soCheck(pay);
-
-      if (typeof res.data === "object") {
-        alert("ถูกยืนยันแล้วโดย " + res.data[0].soCheckBy);
-      }
-      console.log("item", typeof res.data);
-
-      await this.$emit("onCheck");
-      // item.loading = await false;
-      setInterval(() => {
-        item.loading = false;
-      }, 700);
+      list: {
+        Type: Array,
+      },
     },
 
-    async loadFile(QT) {
-      await this.minimodalOpen(QT);
-    },
-  },
+    created() {},
+    methods: {
+      async minimodalOpen(QT) {
+        this.clickQT = QT;
+        this.modalOpen = true;
+        const dataFile = await OrderService.loadFile({ QT: this.clickQT });
+        this.datalist = dataFile.data;
+      },
+      openPDF(qt = "") {
+        window.open(
+          `https://report.zubbsteel.com/tcpdf/pdf/ZORDER_A5.php?ref=` + qt
+        );
+      },
+      closey() {
+        this.modalOpen = !this.modalOpen;
+      },
+      close() {
+        this.$emit("close", !this.value);
+      },
+      async soCheck(item) {
+        item.loading = true;
+        const pay = { user: auth.user_id, qt: item.qt };
+        const res = await OrderService.soCheck(pay);
 
-  components: { PdfIcon, LoadingSpinner, ModalUpload },
-};
+        if (typeof res.data === "object") {
+          alert("ถูกยืนยันแล้วโดย " + res.data[0].soCheckBy);
+        }
+        // console.log("item", typeof res.data);
+
+        await this.$emit("onCheck");
+        // item.loading = await false;
+        setInterval(() => {
+          item.loading = false;
+        }, 700);
+      },
+
+      async loadFile(QT) {
+        await this.minimodalOpen(QT);
+      },
+    },
+
+    components: { PdfIcon, LoadingSpinner, ModalUpload },
+  };
 </script>
 
 <style lang="css" scoped>
-.tab {
-  overflow: auto;
-  height: 400px;
-}
-th {
-  top: 0;
-  position: sticky;
-  background-color: white;
-}
+  .tab {
+    overflow: auto;
+    height: 400px;
+  }
+  th {
+    top: 0;
+    position: sticky;
+    background-color: white;
+  }
 </style>
