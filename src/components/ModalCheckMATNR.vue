@@ -91,7 +91,7 @@ export default {
         this.close();
         this.$emit("updateMAT", matnrSearch.data);
       } else {
-        alert("ไม่พบลูกค้ารหัสนี้");
+        alert("ไม่พบรหัสสินค้านี้");
       }
     },
   },
