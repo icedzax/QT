@@ -579,7 +579,7 @@ export default defineComponent({
   },
 
   setup(props, { emit, slots }) {
-    // console.log("**setup load**");
+    console.log("**setup load**");
     let localTable = ref(null);
 
     // 檢查下拉選單中是否包含預設一頁顯示筆數 (Validate dropdown's values have page-size value or not)
@@ -642,7 +642,6 @@ export default defineComponent({
       // 該頁數最大值 (Maximum number of pages0
       limit: computed(() => {
         props.rows.forEach((data) => {
-          // console.log(data);
           if (data.status == "C" || data.status == "A") {
             if (data.status == "C") {
               data.status_cus = "ลูกค้า";

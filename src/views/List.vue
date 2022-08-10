@@ -288,7 +288,7 @@ const sampleData1 = (offst, limit) => {
       });
     }
   }
-  // console.log("Push Data:", data);
+  //console.log("Push Data:", data);
   return data;
 };
 const sampleData2 = (offst, limit) => {
@@ -412,13 +412,14 @@ export default {
         // }
         if (sort == "asc") {
           table.rows = sampleData1(offset, limit);
+          //console.log("ROWS:", table.rows);
         } else {
           table.rows = sampleData2(offset, limit);
         }
         table.totalRecordCount = 20;
         table.sortable.order = order;
         table.sortable.sort = sort;
-      }, 300);
+      }, 800);
     };
 
     // First get data
@@ -444,7 +445,6 @@ export default {
     });
     this.list_au = data_list.data;
     auth.list = data_list.data;
-    console.log("ในหน้าList:", auth.list);
     var today = new Date();
     let new_month = "";
     let new_day = "";
@@ -485,7 +485,6 @@ export default {
 
       this.table.rows = datafilter.data;
       auth.list = this.table.rows;
-      console.log("AUTH LIST:", auth.list);
       this.doSearch(0, 10, "id", "asc");
     },
     async goto_qt(qt) {
