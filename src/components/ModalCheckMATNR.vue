@@ -87,36 +87,12 @@ export default {
       const matnrSearch = await FgService.searchMATNRbycode({
         matcode: this.matcode,
       });
-      this.close();
-      this.$emit("updateMAT", matnrSearch.data);
-
-      // const result = await CusService.search({ cus_name: this.matcode });
-      // if (result.data[0]) {
-      //   let vat_value = 0;
-      //   if (cus.vat == "0.07") {
-      //     vat_value = 1;
-      //   }
-      //   await CusService.setCus({
-      //     KUNNR: result.data[0].KUNNR,
-      //     LAND1: result.data[0].LAND1,
-      //     CNAME: result.data[0].CNAME,
-      //     TELNU: result.data[0].TELNU,
-      //     TELFX: result.data[0].TELFX,
-      //     FAXNU: result.data[0].FAXNU,
-      //     TAXNO: result.data[0].TAXNO,
-      //     EMAIL: result.data[0].EMAIL,
-      //     ADDRS: result.data[0].ADDRS,
-      //     MOBILE: result.data[0].MOBILE,
-      //     CONTACTNAME: result.data[0].CONTACTNAME,
-      //     qt: auth.temp_qt,
-      //     vat: vat_value,
-      //   });
-      //   this.close();
-      //   this.$router.go();
-      // } else {
-      //   alert("ไม่พบลูกค้ารหัสนี้");
-      // }
-      //cus.data = result.data;
+      if (matnrSearch.data[0]) {
+        this.close();
+        this.$emit("updateMAT", matnrSearch.data);
+      } else {
+        alert("ไม่พบลูกค้ารหัสนี้");
+      }
     },
   },
 };
