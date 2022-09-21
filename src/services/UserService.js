@@ -25,6 +25,9 @@ export default {
   getUser(userId) {
     return Api().post("auth/", userId);
   },
+  SaleList(emp_code) {
+    return Api().post("Salecode_List/", emp_code);
+  },
   push() {
     return Api().push("user/", user.id, user);
   },
@@ -42,6 +45,9 @@ export default {
   },
   filterCustomer(body) {
     return Api().post("qtList_customers", body);
+  },
+  filterCustomerdev(body) {
+    return Api().post("qtList_customersdev", body);
   },
   newQT(body) {
     return Api().post("newQT/", body);

@@ -106,6 +106,7 @@ export default {
           "W3:ราคาปลีก",
         ],
       },
+      emp_cte: "",
     };
   },
   props: {
@@ -134,9 +135,23 @@ export default {
     } else {
       initQT = this.$route.params.list_qt;
     }
+
     // localStorage.setItem("tempqt", null);
-    let us = await UserService.temp({ emp: auth.user_id });
-    // console.log("qt:::", us.data[0]);
+    let us;
+    if (
+      this.$route.params.empcreated !== auth.user_id &&
+      this.$route.params.empcreated
+    ) {
+      console.log("เข้าบน");
+      us = await UserService.temp({ emp: this.$route.params.empcreated });
+      this.emp_cte = this.$route.params.empcreated;
+    } else {
+      console.log("เข้าล่าง");
+      us = await UserService.temp({ emp: auth.user_id });
+      this.emp_cte = auth.user_id;
+    }
+
+    console.log("qt:::", us.data[0]);
 
     let sale = await UserService.isSale({ emp_code: auth.user_id });
     if (sale.data) {
@@ -144,15 +159,18 @@ export default {
     } else {
       auth.position = "Sale";
     }
+    localStorage.setItem("StatusPosition", auth.position);
+    console.log("initQT:", initQT);
     if (initQT) {
       us = await UserService.tempQT({
-        emp: auth.user_id,
+        emp: this.emp_cte,
         qt: initQT,
       });
     }
 
     // console.log("### init ###", us.data[0]);
     if (us.data[0]) {
+      console.log("QT:", us.data[0].qt);
       auth.temp_qt = us.data[0].qt;
       order.note = us.data[0].note;
       localStorage.setItem("tempqt", auth.temp_qt);
@@ -179,7 +197,7 @@ export default {
       };
       order.plant = us.data[0].plant;
     }
-
+    console.log("มี QT TEMP ไหม", auth.temp_qt);
     if (auth.temp_qt) {
       const items = await FgService.items(auth.temp_qt);
       //const data_sale = await UserService.sale(auth.user_id);
@@ -196,6 +214,7 @@ export default {
       }
       //console.log("dataSale:", data_sale);
       auth.data_sale = data_sale.data;
+      localStorage.setItem("sale_code", auth.data_sale.sale_code);
       if (data_cus.data[0]) {
         cus.data = data_cus.data[0];
         // console.log("look-kha=>", cus.data);
