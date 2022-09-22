@@ -6,7 +6,7 @@
     >
       <div class="flex">
         <div class="text-center text-base md:text-lg lg:text-left">
-          ใบเสนอราคา (สำนักงานใหญ่)
+          ใบเสนอราคา
         </div>
         <div class="justify-inline ml-2 flex">
           <div class="h-10 w-10" @click="goto_pdf">
@@ -36,6 +36,159 @@
               <g fill="#1976D2">
                 <rect x="16" y="33" width="17" height="2" />
                 <rect x="16" y="37" width="13" height="2" />
+              </g>
+            </svg>
+          </div>
+          <div @click="goto_pdf_middle">
+            <svg
+              class="h-10 w-9"
+              version="1"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              enable-background="new 0 0 48 48"
+              title="ขนาดกลาง"
+            >
+              <rect
+                x="9"
+                y="11"
+                fill="#424242"
+                width="30"
+                height="3"
+                id="id_111"
+              ></rect>
+              <path
+                fill="#616161"
+                d="M4,25h40v-7c0-2.2-1.8-4-4-4H8c-2.2,0-4,1.8-4,4V25z"
+                id="id_112"
+              ></path>
+              <path
+                fill="#424242"
+                d="M8,36h32c2.2,0,4-1.8,4-4v-8H4v8C4,34.2,5.8,36,8,36z"
+                id="id_113"
+              ></path>
+              <circle fill="#db8a28" cx="40" cy="18" r="1" id="id_114"></circle>
+              <rect
+                x="11"
+                y="4"
+                fill="#d6c528"
+                width="26"
+                height="10"
+                id="id_115"
+              ></rect>
+              <path
+                fill="#242424"
+                d="M37.5,31h-27C9.7,31,9,30.3,9,29.5v0c0-0.8,0.7-1.5,1.5-1.5h27c0.8,0,1.5,0.7,1.5,1.5v0 C39,30.3,38.3,31,37.5,31z"
+                id="id_116"
+              ></path>
+              <rect
+                x="11"
+                y="31"
+                fill="#f7e96b"
+                width="26"
+                height="11"
+                id="id_117"
+              ></rect>
+              <rect
+                x="11"
+                y="29"
+                fill="#c9b92b"
+                width="26"
+                height="2"
+                id="id_118"
+              ></rect>
+              <g fill="#1976D2">
+                <rect
+                  x="16"
+                  y="33"
+                  width="17"
+                  height="2"
+                  id="id_119"
+                  style="fill: rgb(222, 204, 40)"
+                ></rect>
+                <rect
+                  x="16"
+                  y="37"
+                  width="13"
+                  height="2"
+                  id="id_120"
+                  style="fill: rgb(219, 201, 40)"
+                ></rect>
+              </g>
+            </svg>
+          </div>
+          <div @click="goto_pdf_mini">
+            <svg
+              class="h-10 w-7"
+              version="1"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              enable-background="new 0 0 48 48"
+            >
+              <rect
+                x="9"
+                y="11"
+                fill="#424242"
+                width="30"
+                height="3"
+                id="id_111"
+              ></rect>
+              <path
+                fill="#616161"
+                d="M4,25h40v-7c0-2.2-1.8-4-4-4H8c-2.2,0-4,1.8-4,4V25z"
+                id="id_112"
+              ></path>
+              <path
+                fill="#424242"
+                d="M8,36h32c2.2,0,4-1.8,4-4v-8H4v8C4,34.2,5.8,36,8,36z"
+                id="id_113"
+              ></path>
+              <circle fill="#5968eb" cx="40" cy="18" r="1" id="id_114"></circle>
+              <rect
+                x="11"
+                y="4"
+                fill="#f08d8d"
+                width="26"
+                height="10"
+                id="id_115"
+              ></rect>
+              <path
+                fill="#242424"
+                d="M37.5,31h-27C9.7,31,9,30.3,9,29.5v0c0-0.8,0.7-1.5,1.5-1.5h27c0.8,0,1.5,0.7,1.5,1.5v0 C39,30.3,38.3,31,37.5,31z"
+                id="id_116"
+              ></path>
+              <rect
+                x="11"
+                y="31"
+                fill="#f27979"
+                width="26"
+                height="11"
+                id="id_117"
+              ></rect>
+              <rect
+                x="11"
+                y="29"
+                fill="#eb5959"
+                width="26"
+                height="2"
+                id="id_118"
+              ></rect>
+              <g fill="#1976D2">
+                <rect
+                  x="16"
+                  y="33"
+                  width="17"
+                  height="2"
+                  id="id_119"
+                  style="fill: rgb(242, 44, 44)"
+                ></rect>
+                <rect
+                  x="16"
+                  y="37"
+                  width="13"
+                  height="2"
+                  id="id_120"
+                  style="fill: rgb(240, 45, 45)"
+                ></rect>
               </g>
             </svg>
           </div>
@@ -158,65 +311,75 @@
   </div>
 </template>
 <script>
-import { auth } from "../state/user";
-import { order } from "../state/order";
-import UserService from "../services/UserService";
+  import { auth } from "../state/user";
+  import { order } from "../state/order";
+  import UserService from "../services/UserService";
 
-import { sys } from "../state/system";
-import Modal from "./Modal.vue";
+  import { sys } from "../state/system";
+  import Modal from "./Modal.vue";
 
-export default {
-  data() {
-    return {
-      auth,
-      order,
-      sys,
-      modalOpen: false,
-    };
-  },
-  components: {
-    Modal,
-  },
-  created() {},
-  methods: {
-    goto_pdf() {
-      window.open(
-        "https://report.zubbsteel.com/tcpdf/pdf/ZQT.php?ref=" + auth.temp_qt
-      );
+  export default {
+    data() {
+      return {
+        auth,
+        order,
+        sys,
+        modalOpen: false,
+      };
     },
-    goto_so() {
-      window.open(
-        "https://report.zubbsteel.com/tcpdf/pdf/ZORDER_A5.php?ref=" +
-          auth.temp_qt
-      );
+    components: {
+      Modal,
     },
-    goto_list() {
-      this.$router.push({
-        name: "List",
-      });
-    },
-    reRenderNewQT() {
-      //  localStorage.setItem("tempqt", nqt.data);
-      this.$router.go();
-    },
-    async newQT() {
-      const sale = await UserService.showSale({ emp_code: auth.user_id });
-      if (sale.data.length > 0) {
-        this.modalOpen = !this.modalOpen;
-      } else {
-        if (confirm("ยืนยันสร้างใบเสนอราคาใหม่ ?")) {
-          sys.loading = true;
-          const nqt = await UserService.newQT({
-            qt: auth.temp_qt,
-            emp_code: auth.user_id,
-          });
-          sys.loading = await false;
-          await console.log("NQT", nqt.data);
-          await localStorage.setItem("tempqt", nqt.data);
-          await this.$router.go();
+    created() {},
+    methods: {
+      goto_pdf() {
+        window.open(
+          "https://report.zubbsteel.com/tcpdf/pdf/ZQT.php?ref=" + auth.temp_qt
+        );
+      },
+      goto_pdf_middle() {
+        window.open(
+          "https://report.zubbsteel.com/tcpdf/pdf/ZQT2.php?ref=" + auth.temp_qt
+        );
+      },
+      goto_pdf_mini() {
+        window.open(
+          "https://report.zubbsteel.com/tcpdf/pdf/ZQT3.php?ref=" + auth.temp_qt
+        );
+      },
+      goto_so() {
+        window.open(
+          "https://report.zubbsteel.com/tcpdf/pdf/ZORDER_A5.php?ref=" +
+            auth.temp_qt
+        );
+      },
+      goto_list() {
+        this.$router.push({
+          name: "List",
+        });
+      },
+      reRenderNewQT() {
+        //  localStorage.setItem("tempqt", nqt.data);
+        this.$router.go();
+      },
+      async newQT() {
+        const sale = await UserService.showSale({ emp_code: auth.user_id });
+        if (sale.data.length > 0) {
+          this.modalOpen = !this.modalOpen;
+        } else {
+          if (confirm("ยืนยันสร้างใบเสนอราคาใหม่ ?")) {
+            sys.loading = true;
+            const nqt = await UserService.newQT({
+              qt: auth.temp_qt,
+              emp_code: auth.user_id,
+            });
+            sys.loading = await false;
+            await console.log("NQT", nqt.data);
+            await localStorage.setItem("tempqt", nqt.data);
+            await this.$router.go();
+          }
         }
-      }
+      },
     },
-  },
-};
+  };
 </script>
