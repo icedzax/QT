@@ -187,11 +187,7 @@
           v-model="selectSale"
           @change="SelectSale_met"
         >
-          <option
-            :value="item"
-            v-for="(item, index) in this.examsale"
-            :key="index"
-          >
+          <option :value="item" v-for="(item, index) in Sale_code" :key="index">
             {{ item }}
           </option>
         </select>
@@ -259,7 +255,6 @@ import OrderService from "@/services/OrderService";
 const sampleData1 = (offst, limit) => {
   let data = [];
   auth.list.forEach((element) => {
-    // console.log(element);
     element.qt = element.qt;
     element.status_cus = "";
 
@@ -279,7 +274,6 @@ const sampleData1 = (offst, limit) => {
   });
   for (let i = offst; i < limit; i++) {
     if (i < auth.list.length) {
-      //console.log("empcd:", auth.list[i].emp_code);
       data.push({
         CNAME: auth.list[i].CNAME,
         QT: auth.list[i].QT,
@@ -291,7 +285,6 @@ const sampleData1 = (offst, limit) => {
         other: "Edit",
         VBELN: auth.list[i].VBELN,
         StatusSO: auth.list[i].StatusSO,
-        emp_create: auth.list[i].emp_code,
       });
     }
   }
@@ -329,7 +322,6 @@ const sampleData2 = (offst, limit) => {
         other: "Edit",
         VBELN: auth.list[i].VBELN,
         StatusSO: auth.list[i].StatusSO,
-        emp_create: auth.list[i].emp_code,
       });
     }
   }
@@ -345,7 +337,6 @@ export default {
       startdate: "",
       enddate: "",
       setdate: 0,
-      examsale: [],
     };
   },
 
@@ -424,12 +415,10 @@ export default {
         } else {
           table.rows = sampleData2(offset, limit);
         }
-
-        console.log(table.rows);
         table.totalRecordCount = 20;
         table.sortable.order = order;
         table.sortable.sort = sort;
-      }, 800);
+      }, 300);
     };
 
     // First get data
@@ -449,51 +438,25 @@ export default {
     },
   },
   async created() {
-    const allCode = await UserService.SaleList({ emp_code: auth.user_id });
-    // console.log(allCode.data);
-    const allsale = [];
-    allCode.data.forEach((data) => {
-      allsale.push(data.sale_code);
-    });
-    //  console.log(allsale);
-    allsale.push("ALL");
-    this.examsale = allsale;
-    let salecodeHAVE = "";
-
-    if (auth.data_sale.length == 0) {
-      auth.data_sale.sale_code = localStorage.getItem("sale_code");
-      auth.position = localStorage.getItem("StatusPosition");
-    }
-    if (auth.position == "Sale") {
-      salecodeHAVE = auth.data_sale.sale_code;
-    }
-
-    const data_list = await UserService.listdev({
+    const data_list = await UserService.list({
       emp_code: auth.user_id,
       sale_code: this.selectSale,
-      my_salecode: salecodeHAVE,
-      position: auth.position,
     });
     this.list_au = data_list.data;
     auth.list = data_list.data;
-
+    console.log("ในหน้าList:", auth.list);
     var today = new Date();
     let new_month = "";
     let new_day = "";
 
     let month = today.getMonth() + 1;
     let day = today.getDate();
-    //console.log("day fresh:", day);
+
     if (month.toString().length == 1) {
       new_month = "0" + month;
-    } else {
-      new_month = month;
     }
-
     if (day.toString().length == 1) {
       new_day = "0" + day;
-    } else {
-      new_day = day;
     }
 
     let day1 = today.getFullYear() + "-" + new_month + "-" + new_day;
@@ -512,19 +475,17 @@ export default {
       }
     },
     async selectdate() {
-      //console.log("เริ่ม", this.startdate + "จบ", this.enddate);
-      const datafilter = await OrderService.filterdatedev({
+      // console.log("เริ่ม", this.startdate + "จบ", this.enddate);
+      const datafilter = await OrderService.filterdate({
         day1: this.startdate,
         day2: this.enddate,
         empcode: auth.user_id,
         customer: this.searchCus,
-        salecode: this.selectSale,
-        position: auth.position,
-        my_code: auth.data_sale.sale_code,
       });
 
       this.table.rows = datafilter.data;
       auth.list = this.table.rows;
+      console.log("AUTH LIST:", auth.list);
       this.doSearch(0, 10, "id", "asc");
     },
     async goto_qt(qt) {
@@ -532,14 +493,10 @@ export default {
     },
     async SelectSale_met() {
       //แสดงข้อมูลในตารางใหม่ ให้ auth.list = ข้อมูลใหม่ แล้วใช้ฟังก์ชัน doSearch
-      //  console.log(this.setdate);
       const data_list = await UserService.filterlist({
         emp_code: auth.user_id,
         sale_code: this.selectSale,
         customer: this.searchCus,
-        vardate: this.setdate,
-        sdate: this.startdate,
-        edate: this.enddate,
       });
       auth.list = data_list.data;
       this.doSearch(0, 10, "id", "asc");
@@ -554,20 +511,18 @@ export default {
         input = input.trim();
       }
 
-      const data_list = await UserService.filterCustomerdev({
+      const data_list = await UserService.filterCustomer({
         emp_code: auth.user_id,
         customer: input,
         QT: this.selectSale,
         day1: this.startdate,
         day2: this.enddate,
         statusdate: this.setdate,
-        position: auth.position,
-        my_code: auth.data_sale.sale_code,
       });
       this.list_au = data_list.data;
       this.table.rows = data_list.data;
       auth.list = this.table.rows;
-      await this.doSearch(0, 10, "id", "asc");
+      this.doSearch(0, 10, "id", "asc");
     },
   },
 };

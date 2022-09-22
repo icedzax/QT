@@ -124,7 +124,7 @@
                       >
                         <span
                           class="hover:underline cursor-pointer mr-3 text-gray-500"
-                          @click="goto_qt(row[col.field], row)"
+                          @click="goto_qt(row[col.field])"
                           >{{ row[col.field] }}</span
                         >
                         <svg
@@ -417,8 +417,7 @@ export default defineComponent({
   },
   async created() {},
   methods: {
-    async goto_qt(qt, row) {
-      //console.log("emp คนสร้าง:", row.emp_create);
+    async goto_qt(qt) {
       const v_vat = await CusService.findVAT({ qt: qt });
       cus.vat = v_vat.data[0].vat;
       if (cus.vat == 1) {
@@ -430,7 +429,7 @@ export default defineComponent({
       localStorage.setItem("tempqt", qt);
       this.$router.push({
         name: "Home",
-        params: { list_qt: qt, empcreated: row.emp_create },
+        params: { list_qt: qt },
       });
     },
     goto_pdf(qt) {
