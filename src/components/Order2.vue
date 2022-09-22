@@ -1,10 +1,5 @@
 <template>
   <div class="mx-2">
-    <Modal
-      @closeModal="searchMATNR"
-      :value="this.modalOpen"
-      @updateMAT="fetchMAT"
-    ></Modal>
     <table class="text-xxs w-full table-fixed sm:text-xs">
       <thead>
         <tr>
@@ -251,47 +246,25 @@
         </template>
         <!-- INPUT AREA -->
         <tr class="w-full">
-          <td colspan="3" class="">
-            <div class="flex justify-inline">
-              <vue3-simple-typeahead
-                ref="typeahead"
-                id="typeahead_id"
-                class="tdi inputlist"
-                :placeholder="options.placeholder"
-                :items="fg.items"
-                @selectItem="selectItem"
-                @onInput="onInput"
-                @onBlur="onBlur"
-                @input="lookupFG"
-                :minInputLength="1"
-                :itemProjection="
-                  (fg) => {
-                    return fg.search;
-                  }
-                "
-              >
-              </vue3-simple-typeahead>
-              <svg
-                id="cloudicosn"
-                data-name="Layer 1"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                class="w-10 h-6 ml-1"
-                @click="searchMATNR"
-              >
-                <title>Search matcode</title>
-                <path
-                  d="M20.57,9.43A8,8,0,0,0,5.26,10,5,5,0,1,0,5,20h5V18H5a3,3,0,0,1,0-6,3.1,3.1,0,0,1,.79.12l1.12.31.14-1.15a6,6,0,0,1,11.74-.82l.15.54.54.16A3.46,3.46,0,0,1,22,14.5,3.5,3.5,0,0,1,18.5,18H16v2h2.5A5.48,5.48,0,0,0,20.57,9.43Z"
-                  id="id_101"
-                  style="fill: slateblue"
-                ></path>
-                <polygon
-                  points="12 11 12 15.59 10.71 14.29 9.29 15.71 13 19.41 16.71 15.71 15.29 14.29 14 15.59 14 11 12 11"
-                  id="id_102"
-                  style="fill: rgb(0, 0, 0)"
-                ></polygon>
-              </svg>
-            </div>
+          <td colspan="3">
+            <vue3-simple-typeahead
+              ref="typeahead"
+              id="typeahead_id"
+              class="tdi inputlist"
+              :placeholder="options.placeholder"
+              :items="fg.items"
+              @selectItem="selectItem"
+              @onInput="onInput"
+              @onBlur="onBlur"
+              @input="lookupFG"
+              :minInputLength="1"
+              :itemProjection="
+                (fg) => {
+                  return fg.search;
+                }
+              "
+            >
+            </vue3-simple-typeahead>
           </td>
           <td>
             <input
@@ -430,7 +403,6 @@ import LoadingSpinner from "./LoadingSpinner.vue";
 import LoadingSpinnerP from "./LoadingSpinnerPrice.vue";
 
 import Toggle from "./Toggle.vue";
-import Modal from "./ModalCheckMATNR.vue";
 
 export default {
   components: {
@@ -439,7 +411,6 @@ export default {
     LoadingSpinnerP,
     Toggle,
     InputItem,
-    Modal,
   },
   data() {
     return {
@@ -474,7 +445,6 @@ export default {
       type_unit: ["PC", "KG", "TRP"],
       tprice: [],
       inputField: {},
-      modalOpen: false,
     };
   },
   props: ["statusApp", "mat"],
@@ -601,26 +571,7 @@ export default {
   },
 
   methods: {
-    searchMATNR() {
-      this.modalOpen = !this.modalOpen;
-    },
-    fetchMAT(items) {
-      items.forEach((element) => {
-        element.MEINS = element.Unit;
-        element.max = element.maxweight;
-        element.min = element.minweight;
-        element.rmd_mat = element.MatCode;
-        element.rmd_size = element.MatDescription;
-        element.rmd_spec = element.MatGroup;
-        element.rmd_weight = element.maxweight;
-      });
-
-      const obj = Object.assign({}, items);
-
-      this.selectItem(obj[0], 0);
-    },
-    async selectItem(item, i) {
-      this.options.placeholder = item.rmd_size;
+    async selectItem(item) {
       this.setLoading(true);
       const r_price = ["X", "R", "L"];
       const saleChannel = r_price.includes(
@@ -628,12 +579,9 @@ export default {
       )
         ? "R1"
         : "T1";
-      if (i !== 0) {
-        document.getElementsByClassName(
-          "simple-typeahead-list"
-        )[0].style.visibility = "hidden";
-      }
-
+      document.getElementsByClassName(
+        "simple-typeahead-list"
+      )[0].style.visibility = "hidden";
       // console.log(item);
       this.data.selection = item;
       item.rmd_weight = item.max > 0 ? item.max : item.stdweight;
@@ -642,13 +590,11 @@ export default {
       item.ptype = saleChannel;
       item.unit = "PC";
       item.typeunit = ["PC", "KG", "EA", "LE", "ROL"];
-
       const payloadi = {
         VKORG: 1000,
         MATNR: item.rmd_mat,
         KONDA: item.ptype,
       };
-      console.log(payloadi);
       const alluom = await FgService.getUOM(payloadi);
       let UOM_LIST = [];
       if (alluom.data[0]) {

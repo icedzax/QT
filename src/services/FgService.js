@@ -19,7 +19,4 @@ export default {
   getUOM(body) {
     return Api().post(`/uom`, body);
   },
-  searchMATNRbycode(matcode) {
-    return Api().post(`/fetchMat`, matcode);
-  },
 };
