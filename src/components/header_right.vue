@@ -289,7 +289,7 @@
         </div>
       </div> -->
 
-      <div class="flex justify-start">
+      <div class="flex">
         <div class="w-32 text-left">เลขที่ใบเสนอราคา</div>
         <div class="w-32 text-left">
           {{ auth.temp_qt }}
@@ -301,10 +301,16 @@
           สร้างใหม่
         </div>
       </div>
-      <div class="flex justify-start">
+      <div class="mt-1 flex">
         <div class="w-32 text-left">วันที่เสนอราคา</div>
-        <div>
+        <div class="w-32">
           {{ order.date }}
+        </div>
+        <div
+          @click="dupQT"
+          class="cursor-pointer rounded-md border-2 border-yellow-500 px-2 text-sm font-semibold text-black shadow-lg ring-1 ring-yellow-200 hover:text-yellow-600"
+        >
+          Duplicate
         </div>
       </div>
     </div>
@@ -373,11 +379,27 @@
               qt: auth.temp_qt,
               emp_code: auth.user_id,
             });
-            sys.loading = await false;
-            await console.log("NQT", nqt.data);
+            sys.loading = false;
+            // await console.log("NQT", nqt.data);
             await localStorage.setItem("tempqt", nqt.data);
             await this.$router.go();
           }
+        }
+      },
+      async dupQT() {
+        if (
+          confirm(
+            "ยืนยันสร้างใบเสนอราคาใหม่ ?\nอ้างอิงเอกสารเลขที่ " + auth.temp_qt
+          )
+        ) {
+          sys.loading = true;
+          const nqt = await UserService.dupQT({
+            qt: auth.temp_qt,
+            emp_code: auth.user_id,
+          });
+          sys.loading = false;
+          await this.$router.go();
+          await localStorage.setItem("tempqt", nqt.data);
         }
       },
     },
