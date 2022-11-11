@@ -117,11 +117,11 @@
     created() {
       this.pplant;
       this.fecthSoList();
-      // this.fecthSoListReg();
+      this.fecthSoListReg();
 
       setInterval(() => {
         this.fecthSoList();
-        // this.fecthSoListReg();
+        this.fecthSoListReg();
         // console.log("X");
       }, 15000);
     },
